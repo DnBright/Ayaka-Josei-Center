@@ -93,22 +93,95 @@ const LandingPage = ({ content }) => {
             )}
 
             <style jsx="true">{`
-        .bg-light { background: #f8fafc; }
-        .feature-list { list-style: none; margin-top: 2rem; }
-        .feature-list li { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; font-weight: 500; }
-        .stat-card { padding: 2rem; text-align: center; border-radius: 16px; }
-        .stat-card h4 { font-size: 2rem; margin: 1rem 0 0.5rem; }
-        .program-card { padding: 3rem 2rem; transition: var(--transition); border-radius: 20px; }
-        .program-card:hover { transform: translateY(-10px); border-color: var(--accent); }
-        .program-icon { color: var(--accent); margin-bottom: 1.5rem; }
-        .learn-more { color: var(--accent); font-weight: 600; margin-top: 1.5rem; display: inline-block; }
-        .benefit-circle { width: 64px; height: 64px; background: rgba(211, 47, 47, 0.1); color: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; }
-        .galeri-placeholder { height: 200px; display: flex; align-items: center; justify-content: center; background: #fee2e2; color: var(--accent); border-radius: 12px; font-weight: 600; }
-        .blog-card { padding: 2rem; border-radius: 16px; border: 1px solid #fee2e2; }
-        .blog-date { font-size: 0.75rem; color: var(--accent); font-weight: 700; margin-bottom: 0.5rem; }
-        .read-more { color: var(--accent); font-weight: 600; margin-top: 1rem; display: inline-block; }
-        .testimonial-card { padding: 2rem; border-radius: 16px; border-left: 4px solid var(--accent); }
-        .testimonial-card h4 { margin-top: 1rem; color: var(--primary); }
+        .landing-page {
+          background: var(--surface);
+          color: var(--foreground);
+        }
+        
+        .about-grid { gap: 4rem; align-items: center; }
+        .about-text p { font-size: 1.15rem; line-height: 1.8; color: var(--secondary); margin-bottom: 2rem; }
+        
+        .feature-list { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
+        .feature-list li { display: flex; align-items: center; gap: 1rem; font-weight: 600; color: var(--foreground); }
+        
+        .stat-card { 
+          padding: 2.5rem; 
+          text-align: center; 
+          border-radius: 24px; 
+          background: white;
+          box-shadow: var(--shadow-md);
+          transition: transform 0.3s ease;
+        }
+        .stat-card:hover { transform: translateY(-5px); }
+        .stat-card h4 { font-size: 2.5rem; color: var(--brand-red); margin: 1rem 0 0.5rem; }
+        .stat-card p { font-weight: 700; color: var(--secondary); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; }
+
+        .program-card {
+          padding: 3rem 2rem;
+          background: white;
+          border-radius: 24px;
+          border: 1px solid rgba(218, 41, 28, 0.05);
+          box-shadow: var(--shadow-sm);
+          transition: all 0.3s ease;
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+        }
+        .program-card:hover {
+          transform: translateY(-10px);
+          box-shadow: var(--shadow-lg);
+          border-color: rgba(218, 41, 28, 0.1);
+        }
+        .program-icon { width: 64px; height: 64px; background: rgba(218, 41, 28, 0.05); color: var(--brand-red); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 2rem; }
+        .program-card h3 { font-size: 1.5rem; margin-bottom: 1rem; color: var(--foreground); }
+        .program-card p { color: var(--secondary); line-height: 1.6; flex: 1; }
+        .learn-more { margin-top: 2rem; color: var(--brand-red); font-weight: 800; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+
+        .galeri-grid { gap: 1.5rem; }
+        .galeri-item { 
+          aspect-ratio: 4/3; 
+          border-radius: 20px; 
+          overflow: hidden; 
+          background: #eee;
+          position: relative;
+        }
+        .galeri-placeholder {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: linear-gradient(45deg, #f8fafc, #f1f5f9);
+          color: var(--secondary);
+          font-weight: 600;
+        }
+
+        .blog-card {
+          padding: 0;
+          overflow: hidden;
+          background: white;
+          border-radius: 24px;
+          box-shadow: var(--shadow-md);
+        }
+        .blog-image { height: 200px; background: #f1f5f9; }
+        .blog-content { padding: 2rem; }
+        .blog-date { color: var(--brand-red); font-weight: 700; font-size: 0.8rem; margin-bottom: 0.75rem; display: block; }
+        .blog-card h3 { font-size: 1.25rem; margin-bottom: 1rem; line-height: 1.4; }
+        .read-more { color: var(--brand-red); font-weight: 800; text-decoration: none; }
+
+        .testimonial-card {
+          padding: 3rem;
+          background: white;
+          border-radius: 24px;
+          border-left: 6px solid var(--brand-red);
+          box-shadow: var(--shadow-md);
+        }
+        .testimonial-card p { font-style: italic; font-size: 1.1rem; line-height: 1.7; color: var(--foreground); }
+        .testimonial-details { margin-top: 2rem; }
+        .testimonial-details h4 { font-size: 1rem; margin-bottom: 0.25rem; }
+        .testimonial-details span { font-size: 0.8rem; color: var(--secondary); }
+
+        .bg-light { background: white; }
       `}</style>
         </div>
     );

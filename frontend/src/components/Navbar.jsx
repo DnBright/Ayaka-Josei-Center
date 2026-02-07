@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Menu, X, Globe, User } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
+  const isLandingPage = location.pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -14,43 +16,93 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const navItems = [
+    { name: 'HOME', href: '#home' },
+    { name: 'PROFIL', href: '#profil' },
+    { name: 'PROGRAM', href: '#program' },
+    { name: 'GALERI', href: '#galeri' },
+    { name: 'BLOG', href: '#blog' },
+    { name: 'ALUMNI', href: '#alumni' },
+    { name: 'KONTAK', href: '#kontak' },
+  ];
+
+  // Dynamic classes for contrast
+  const navClass = `navbar ${scrolled ? 'nav-scrolled' : ''} ${!isLandingPage ? 'nav-solid' : ''}`;
+
   return (
-    <nav className={`navbar ${scrolled ? 'scrolled shadow' : ''}`}>
-      <div className="container nav-content">
-        <Link to="/" className="logo">
-          <div className="logo-wrapper">
-            <span className="brand-text">AYAKA <small>JOSEI CENTER</small></span>
-            <div className="vertical-divider"></div>
-            <span className="tagline">LPK JEPANG <br /> <small>SPESIALIS PUTRI</small></span>
+    <nav className={navClass}>
+      <div className="container nav-container">
+        {/* Logo Section */}
+        <Link to="/" className="logo-section">
+          <div className="logo-placeholder">
+            <Globe size={24} />
+          </div>
+          <div className="logo-text">
+            <span className="brand-primary">AYAKA</span>
+            <span className="brand-secondary">JOSEI CENTER</span>
           </div>
         </Link>
 
-        <div className="desktop-menu">
-          <a href="#home">HOME</a>
-          <a href="#profil">PROFIL</a>
-          <a href="#program">PROGRAM SO AYAKA JOSEI CENTER</a>
-          <a href="#galeri">GALERI</a>
-          <a href="#blog">BLOG</a>
-          <a href="#alumni">ALUMNI</a>
-          <a href="#kontak">KONTAK</a>
+        {/* Desktop Navigation */}
+        <div className="nav-menu desktop-only">
+          {navItems.map((item) => (
+            <a key={item.name} href={item.href} className="nav-link">
+              {item.name}
+            </a>
+          ))}
         </div>
 
-        <button className="mobile-toggle" onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
+        {/* Action Buttons */}
+        <div className="nav-actions desktop-only">
+          <Link to="/login" className="btn-login-pill">
+            <User size={18} />
+            <span>Admin</span>
+          </Link>
+        </div>
+
+        {/* Mobile Toggle */}
+        <button
+          className={`mobile-toggle-btn ${isOpen ? 'active' : ''}`}
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label="Toggle Menu"
+        >
+          <span className="hamburger-line"></span>
+          <span className="hamburger-line"></span>
+          <span className="hamburger-line"></span>
         </button>
       </div>
 
-      {isOpen && (
-        <div className="mobile-menu glass fade-in">
-          <a href="#home" onClick={() => setIsOpen(false)}>HOME</a>
-          <a href="#profil" onClick={() => setIsOpen(false)}>PROFIL</a>
-          <a href="#program" onClick={() => setIsOpen(false)}>PROGRAM SO AYAKA JOSEI CENTER</a>
-          <a href="#galeri" onClick={() => setIsOpen(false)}>GALERI</a>
-          <a href="#blog" onClick={() => setIsOpen(false)}>BLOG</a>
-          <a href="#alumni" onClick={() => setIsOpen(false)}>ALUMNI</a>
-          <a href="#kontak" onClick={() => setIsOpen(false)}>KONTAK</a>
-        </div>
-      )}
+      {/* Mobile Drawer Overlay */}
+      <div className={`mobile-overlay ${isOpen ? 'is-open' : ''}`} onClick={() => setIsOpen(false)}>
+        <aside className="mobile-drawer" onClick={(e) => e.stopPropagation()}>
+          <div className="drawer-header">
+            <div className="logo-section" style={{ color: 'var(--brand-red)' }}>
+              <Globe size={24} />
+              <span className="brand-primary">AYAKA</span>
+            </div>
+            <button className="close-btn" onClick={() => setIsOpen(false)}>
+              <X size={32} />
+            </button>
+          </div>
+          <div className="drawer-links">
+            {navItems.map((item) => (
+              <a
+                key={item.name}
+                href={item.href}
+                className="drawer-link"
+                onClick={() => setIsOpen(false)}
+              >
+                {item.name}
+              </a>
+            ))}
+          </div>
+          <div className="drawer-footer">
+            <Link to="/login" className="mobile-admin-btn" onClick={() => setIsOpen(false)}>
+              Access Admin Panel
+            </Link>
+          </div>
+        </aside>
+      </div>
 
       <style jsx="true">{`
         .navbar {
@@ -59,93 +111,236 @@ const Navbar = () => {
           left: 0;
           width: 100%;
           z-index: 1000;
-          transition: var(--transition);
-          padding: 1rem 0;
-          background: var(--accent);
-          color: white;
+          padding: 1.5rem 0;
+          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+          color: var(--foreground); /* Dark text by default for visibility on light Hero */
         }
-        .navbar.scrolled {
+
+        .nav-scrolled, .nav-solid {
           padding: 0.75rem 0;
-          background: #e60000;
-          box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+          background: rgba(255, 255, 255, 0.85);
+          backdrop-filter: blur(15px);
+          -webkit-backdrop-filter: blur(15px);
+          border-bottom: 1px solid rgba(218, 41, 28, 0.1);
+          box-shadow: var(--shadow-md);
         }
-        .nav-content {
+
+        .nav-container {
           display: flex;
           justify-content: space-between;
           align-items: center;
         }
-        .logo {
-          font-family: 'Outfit', sans-serif;
-          color: white;
-          text-decoration: none;
-        }
-        .logo-wrapper {
+
+        .logo-section {
           display: flex;
           align-items: center;
           gap: 0.75rem;
+          text-decoration: none;
+          color: inherit;
         }
-        .brand-text {
-          font-size: 1.25rem;
-          font-weight: 800;
-          line-height: 1;
+
+        .logo-placeholder {
+          width: 40px;
+          height: 40px;
+          background: var(--brand-red);
+          color: white;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: var(--shadow-sm);
         }
-        .brand-text small { font-size: 0.6rem; font-weight: 400; display: block; margin-top: 2px; }
-        .vertical-divider {
-          width: 1px;
-          height: 30px;
-          background: rgba(255, 255, 255, 0.5);
-        }
-        .tagline {
-          font-size: 0.75rem;
-          font-weight: 700;
-          line-height: 1.1;
-          letter-spacing: 0.5px;
-        }
-        .tagline small { font-size: 0.55rem; font-weight: 500; }
-        .desktop-menu {
-          display: none;
-        }
-        @media (min-width: 1024px) {
-          .desktop-menu {
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
-          }
-          .desktop-menu a {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: rgba(255, 255, 255, 0.9);
-            text-transform: uppercase;
-          }
-          .desktop-menu a:hover {
-            color: white;
-            text-shadow: 0 0 10px rgba(255,255,255,0.5);
-          }
-        }
-        .mobile-toggle {
-          display: block;
-          background: none;
-        }
-        @media (min-width: 768px) {
-          .mobile-toggle { display: none; }
-        }
-        .mobile-menu {
-          position: absolute;
-          top: 100%;
-          left: 0;
-          width: 100%;
-          padding: 2rem;
+
+        .logo-text {
           display: flex;
           flex-direction: column;
-          gap: 1.5rem;
-          background: white;
-          border-bottom: 1px solid var(--glass-border);
+          line-height: 1;
         }
-        .btn-admin {
-          background: var(--primary);
-          color: white !important;
-          padding: 0.5rem 1.25rem;
-          border-radius: 8px;
+
+        .brand-primary {
+          font-family: 'Outfit', sans-serif;
+          font-weight: 900;
+          font-size: 1.5rem;
+          letter-spacing: -0.5px;
+          color: var(--brand-red);
+        }
+
+        .brand-secondary {
+          font-size: 0.7rem;
+          font-weight: 600;
+          letter-spacing: 2px;
+          opacity: 0.8;
+          color: var(--foreground);
+        }
+
+        .nav-menu {
+          display: flex;
+          gap: 2rem;
+        }
+
+        .nav-link {
+          font-size: 0.85rem;
+          font-weight: 800;
+          letter-spacing: 0.5px;
+          text-decoration: none;
+          color: inherit;
+          padding: 0.5rem 0;
+          position: relative;
+          transition: opacity 0.3s ease;
+        }
+
+        .nav-link::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 0;
+          height: 2px;
+          background: var(--brand-red);
+          transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+          width: 100%;
+        }
+
+        .btn-login-pill {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.6rem 1.25rem;
+          background: var(--brand-red);
+          color: white;
+          border-radius: 50px;
+          font-weight: 800;
+          font-size: 0.85rem;
+          text-decoration: none;
+          box-shadow: var(--shadow-sm);
+          transition: all 0.3s ease;
+        }
+
+        .btn-login-pill:hover {
+          transform: translateY(-2px);
+          box-shadow: var(--shadow-md);
+        }
+
+        .desktop-only { display: none; }
+        @media (min-width: 1024px) {
+          .desktop-only { display: flex; }
+        }
+
+        /* Mobile Hamburger */
+        .mobile-toggle-btn {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 8px;
+          color: var(--foreground);
+          z-index: 2001;
+        }
+
+        @media (min-width: 1024px) {
+          .mobile-toggle-btn { display: none; }
+        }
+
+        .hamburger-line {
+          width: 25px;
+          height: 2px;
+          background: currentColor;
+          border-radius: 4px;
+          transition: all 0.3s ease;
+        }
+
+        .active .hamburger-line:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+        .active .hamburger-line:nth-child(2) { opacity: 0; }
+        .active .hamburger-line:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+        /* Mobile Drawer */
+        .mobile-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0,0,0,0.5);
+          backdrop-filter: blur(5px);
+          z-index: 2000;
+          opacity: 0;
+          visibility: hidden;
+          transition: all 0.4s ease;
+        }
+
+        .mobile-overlay.is-open {
+          opacity: 1;
+          visibility: visible;
+        }
+
+        .mobile-drawer {
+          position: absolute;
+          top: 0;
+          right: -300px;
+          width: 300px;
+          height: 100%;
+          background: white;
+          padding: 3rem 2rem;
+          display: flex;
+          flex-direction: column;
+          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+          box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+        }
+
+        .is-open .mobile-drawer {
+          right: 0;
+        }
+
+        .drawer-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 3rem;
+        }
+
+        .close-btn {
+          background: none;
+          border: none;
+          color: var(--secondary);
+          cursor: pointer;
+        }
+
+        .drawer-links {
+          display: flex;
+          flex-direction: column;
+          gap: 1.25rem;
+        }
+
+        .drawer-link {
+          font-size: 1.25rem;
+          font-weight: 800;
+          color: var(--foreground);
+          text-decoration: none;
+          padding: 0.75rem 0;
+          border-bottom: 1px solid #f1f5f9;
+          transition: color 0.3s ease;
+        }
+
+        .drawer-link:hover {
+          color: var(--brand-red);
+        }
+
+        .drawer-footer {
+          margin-top: auto;
+        }
+
+        .mobile-admin-btn {
+          display: block;
+          padding: 1rem;
+          background: var(--brand-red);
+          color: white;
+          text-align: center;
+          border-radius: 12px;
+          font-weight: 700;
+          text-decoration: none;
+          box-shadow: 0 10px 20px -5px rgba(218, 41, 28, 0.3);
         }
       `}</style>
     </nav>

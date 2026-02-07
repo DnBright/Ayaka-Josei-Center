@@ -41,7 +41,7 @@ function App() {
             <Route path="/login" element={<Login />} />
           </Routes>
         </main>
-        <Footer content={content?.contact} />
+        <Footer content={content?.kontak} />
       </div>
     </Router>
   );

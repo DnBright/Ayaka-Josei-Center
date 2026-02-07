@@ -41,13 +41,35 @@ const initDb = () => {
 
                 // Default Sections to match Navbar labels
                 const sections = [
-                    ['home', JSON.stringify({ title: 'AYAKA JOSEI CENTER', subtitle: 'Lembaga Pelatihan Kerja Jepang Spesialis Putri', buttonText: 'Pelajari Selengkapnya' })],
-                    ['profil', JSON.stringify({ title: 'Profil Perusahaan', text: 'Ayaka Josei Center adalah LPK Jepang yang berdedikasi membantu putri Indonesia berkarir profesional di Jepang.' })],
-                    ['program', JSON.stringify({ title: 'Program SO Ayaka Josei Center', items: [] })],
-                    ['galeri', JSON.stringify({ title: 'Galeri Kegiatan', items: [] })],
-                    ['blog', JSON.stringify({ title: 'Berita & Blog', posts: [] })],
-                    ['alumni', JSON.stringify({ title: 'Alumni & Testimoni', items: [] })],
-                    ['kontak', JSON.stringify({ email: 'info@ayakajoseicenter.com', phone: '+628123456789', address: 'Jakarta, Indonesia' })]
+                    ['home', JSON.stringify({ title: 'AYAKA JOSEI CENTER', subtitle: 'Lembaga Pelatihan Kerja Jepang Spesialis Putri', buttonText: 'Pelajari Selengkapnya', isVisible: true })],
+                    ['profil', JSON.stringify({ title: 'Profil Perusahaan', text: 'Ayaka Josei Center adalah LPK Jepang yang berdedikasi membantu putri Indonesia berkarir profesional di Jepang dengan sistem pelatihan terpadu dan penempatan kerja yang aman.', isVisible: true })],
+                    ['program', JSON.stringify({
+                        title: 'Program SO Ayaka Josei Center',
+                        items: [
+                            { name: 'Food Service', desc: 'Persiapan kerja untuk industri restoran dan pengolahan makanan.' },
+                            { name: 'Nursing Care', desc: 'Pelatihan khusus untuk perawat lansia (Kaigo) dengan standar Jepang.' },
+                            { name: 'Agriculture', desc: 'Penempatan kerja di sektor pertanian modern di berbagai prefektur.' }
+                        ],
+                        isVisible: true
+                    })],
+                    ['galeri', JSON.stringify({ title: 'Galeri Kegiatan', items: ['G-1', 'G-2', 'G-3', 'G-4'], isVisible: true })],
+                    ['blog', JSON.stringify({
+                        title: 'Berita & Blog',
+                        posts: [
+                            { title: 'Pentingnya Sertifikat JLPT', date: '2026-02-07' },
+                            { title: 'Tips Wawancara dengan User Jepang', date: '2026-02-06' }
+                        ],
+                        isVisible: true
+                    })],
+                    ['alumni', JSON.stringify({
+                        title: 'Alumni & Testimoni',
+                        items: [
+                            { name: 'Siti Aminah', quote: 'Sangat terbantu sejak pendaftaran hingga terbang ke Tokyo.' },
+                            { name: 'Lani Wijaya', quote: 'Materi pelatihannya sangat relevan dengan pekerjaan di Jepang.' }
+                        ],
+                        isVisible: true
+                    })],
+                    ['kontak', JSON.stringify({ email: 'info@ayakajoseicenter.com', phone: '+628123456789', address: 'Jakarta, Indonesia', isVisible: true })]
                 ];
 
                 const stmt = db.prepare("INSERT OR IGNORE INTO content (section_name, content_data) VALUES (?, ?)");
