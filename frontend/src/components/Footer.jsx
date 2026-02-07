@@ -6,7 +6,11 @@ const Footer = ({ content }) => {
     <footer className="footer">
       <div className="container footer-grid">
         <div className="footer-brand">
-          <div className="footer-logo">AJC</div>
+          <img
+            src="/assets/logo ayakan.png"
+            alt="Ayaka Josei Center"
+            className="footer-logo-img"
+          />
           <h3>Ayaka Josei Center</h3>
           <p>Membantu mewujudkan karir profesional putri Indonesia di Jepang dengan aman, bermartabat, dan terpercaya.</p>
         </div>
@@ -62,7 +66,8 @@ const Footer = ({ content }) => {
         ul li { margin-bottom: 0.75rem; }
         ul li a { color: #94a3b8; text-decoration: none; transition: color 0.3s ease; font-weight: 500; }
         ul li a:hover { color: var(--brand-red); }
-        .footer-logo { font-size: 1.5rem; font-weight: 900; color: var(--brand-red); margin-bottom: 1rem; }
+        ul li a:hover { color: var(--brand-red); }
+        .footer-logo-img { height: 60px; width: auto; margin-bottom: 1.5rem; }
         .legal-text { font-size: 0.75rem; color: #64748b; margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem; font-weight: 600; }
         .contact-item {
           display: flex;

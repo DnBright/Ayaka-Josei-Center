@@ -475,16 +475,19 @@ const ProgramPage = ({ content }) => {
                 }
                 .center-inner span { font-weight: 900; letter-spacing: 2px; font-size: 0.8rem; margin-top: 1rem; display: block; }
                 
-                .radial-item { position: absolute; width: 300px; padding: 2.5rem; background: #fff; border: 1px solid #f1f5f9; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.03); transition: 0.4s; }
+                .radial-item { position: absolute; width: 280px; padding: 2rem; background: #fff; border: 1px solid #cbd5e1; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.08); transition: 0.4s; z-index: 5; }
+                .radial-item:hover { transform: translateY(-5px) scale(1.05); border-color: var(--bg-red); z-index: 20; }
                 .radial-item:hover { transform: translateY(-5px); border-color: var(--bg-red); }
                 .item-label { color: var(--bg-red); font-weight: 900; margin-bottom: 0.5rem; }
                 .radial-item p { font-weight: 700; color: #1e293b; line-height: 1.4; font-size: 0.95rem; }
 
-                .item-1 { top: 0; left: 50px; }
-                .item-2 { top: 10%; right: 50px; }
-                .item-3 { bottom: 0; right: 20%; }
-                .item-4 { bottom: 10%; left: 100px; }
-                .item-5 { top: 40%; left: -50px; }
+                .item-1 { top: -20px; left: 0; }
+                .item-2 { top: 0; right: 0; }
+                .item-3 { bottom: -20px; right: 50px; }
+                .item-4 { bottom: 0; left: 50px; }
+                .item-5 { top: 40%; left: -80px; } /* Improved spacing */
+                
+                /* Ensure no overlap by checking screen width media queries below */
 
                 /* BENTO GRID */
                 .bento-grid-vangu { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 1.5rem; height: 600px; margin-top: 5rem; }
@@ -497,9 +500,11 @@ const ProgramPage = ({ content }) => {
 
                 .bento-icon { margin-bottom: 2rem; color: inherit; }
                 .tile-2 .bento-icon, .tile-4 .bento-icon { color: var(--bg-red); }
-                .bento-content h4 { font-size: 1.8rem; font-weight: 900; margin-bottom: 1rem; }
-                .tile-1 .bento-content h4 { font-size: 3rem; }
-                .bento-content p { opacity: 0.7; font-size: 1.1rem; line-height: 1.5; }
+                .bento-content h4 { font-size: 1.8rem; font-weight: 900; margin-bottom: 1rem; color: var(--bg-dark); }
+                .tile-1 .bento-content h4, .tile-3 .bento-content h4 { color: white; }
+                
+                .bento-content p { font-size: 1.1rem; line-height: 1.6; font-weight: 600; color: #334155; }
+                .tile-1 .bento-content p, .tile-3 .bento-content p { color: rgba(255,255,255,0.9); font-weight: 500; }
 
                 /* SNAKEPATH - FLOW */
                 .snakepath-container { position: relative; margin-top: 8rem; padding: 2rem 0; }
@@ -513,10 +518,12 @@ const ProgramPage = ({ content }) => {
                 .node-left .node-num { right: -30px; }
                 .node-right .node-num { left: -30px; }
 
-                .node-box { background: #f8fafc; padding: 3rem; border-radius: 30px; width: 100%; max-width: 450px; transition: 0.4s; }
-                .node-box:hover { background: var(--bg-dark); color: white; transform: scale(1.05); }
-                .node-box h4 { font-size: 1.6rem; font-weight: 900; margin-bottom: 1rem; }
-                .node-box p { opacity: 0.7; }
+                .node-box { background: #f8fafc; padding: 3rem; border-radius: 30px; width: 100%; max-width: 450px; transition: 0.4s; border: 1px solid #e2e8f0; }
+                .node-box:hover { background: var(--bg-dark); color: white; transform: scale(1.05); border-color: var(--bg-dark); }
+                .node-box:hover h4, .node-box:hover p { color: white; }
+                
+                .node-box h4 { font-size: 1.6rem; font-weight: 900; margin-bottom: 1rem; color: var(--bg-dark); }
+                .node-box p { font-size: 1.1rem; line-height: 1.6; color: #334155; font-weight: 500; opacity: 1; }
 
                 /* MODERN DISCLAIMER */
                 .modern-disclaimer { display: flex; gap: 3rem; background: #fdf2f2; padding: 5rem; border-radius: 50px; border-left: 15px solid var(--bg-red); }

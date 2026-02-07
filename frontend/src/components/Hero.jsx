@@ -76,7 +76,11 @@ const Hero = ({ content }) => {
         <div className={`hero-highlight ${isLoaded ? 'animate-fade-in delay-4' : ''}`} style={{ transform: glassTransform }}>
           <div className="glass-card">
             <div className="glass-logo">
-              <Globe size={56} strokeWidth={1.5} />
+              <img
+                src="/assets/logo ayakan.png"
+                alt="AJC Logo"
+                className="hero-logo-img"
+              />
             </div>
             <div className="glass-info">
               <h3>AJC</h3>
@@ -172,7 +176,10 @@ const Hero = ({ content }) => {
           margin-bottom: 1.5rem;
           letter-spacing: -3px;
           opacity: 0;
+          text-shadow: 2px 4px 8px rgba(0,0,0,0.8); /* Stronger shadow */
         }
+
+        .text-white { color: #ffffff; }
 
         .text-gradient {
           background: linear-gradient(to right, #ff4d4d, #da291c);
@@ -275,6 +282,13 @@ const Hero = ({ content }) => {
           align-items: center;
           justify-content: center;
           box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+          overflow: hidden;
+        }
+        
+        .hero-logo-img {
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
         }
 
         .glass-info { text-align: center; }

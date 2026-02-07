@@ -1,316 +1,278 @@
 import React, { useEffect, useState } from 'react';
-import { Globe, Target, Shield, Award, Users, FileCheck, Info, Sparkles, ArrowRight, Layers, Compass } from 'lucide-react';
+import { Shield, Target, Award, Users, FileCheck, ArrowRight, Compass, Layers } from 'lucide-react';
 import FragmentedValues from '../components/FragmentedValues';
 
 const ProfilPage = ({ content }) => {
     const data = content?.profil_halaman;
-    const [scrollY, setScrollY] = useState(0);
+    const [activeSection, setActiveSection] = useState('pengantar');
 
     useEffect(() => {
         window.scrollTo(0, 0);
 
-        const handleScroll = () => {
-            setScrollY(window.scrollY);
-        };
-
-        window.addEventListener('scroll', handleScroll, { passive: true });
-
         const observerOptions = {
             threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
+            rootMargin: '0px 0px -50px 0px'
         };
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('is-revealed');
+                    entry.target.classList.add('is-visible');
                 }
             });
         }, observerOptions);
 
-        const revealElements = document.querySelectorAll('.page-reveal');
+        const revealElements = document.querySelectorAll('.professional-reveal');
         revealElements.forEach(el => observer.observe(el));
 
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-            observer.disconnect();
-        };
+        return () => observer.disconnect();
     }, [content]);
 
     if (!data) return null;
 
     return (
-        <div className="profil-page-wrapper">
-            <div className="noise-overlay"></div>
-
-            {/* EDITORIAL HERO - ASYMMETRIC */}
-            <header className="edito-hero">
-                <div className="edito-hero-bg">
-                    <div className="floating-shape shape-1" style={{ transform: `translate(${scrollY * 0.1}px, ${scrollY * 0.05}px)` }}></div>
-                    <div className="floating-shape shape-2" style={{ transform: `translate(${-scrollY * 0.1}px, ${-scrollY * 0.08}px)` }}></div>
-                </div>
-                <div className="container-edito">
-                    <div className="hero-grid-edito">
-                        <div className="hero-text-side">
-                            <div className="reveal-stagger">
-                                <span className="journal-label">EDITION 2026 // IDENTITY</span>
-                                <h1 className="editorial-title">
-                                    <span className="line-small">Eksklusivitas</span>
-                                    <span className="line-huge">Pemberdayaan</span>
-                                    <span className="line-medium">Wanita Indonesia</span>
-                                </h1>
-                                <p className="editorial-lead">
-                                    Membangun jembatan masa depan bagi putri Indonesia untuk berkarir profesional di Jepang dengan standar kelas dunia yang tak tertandingi.
-                                </p>
-                            </div>
-                        </div>
-                        <div className="hero-visual-side">
-                            <div className="image-magazine-frame">
-                                <div className="magazine-img" style={{ transform: `scale(${1 + scrollY * 0.0002}) translateY(${scrollY * 0.05}px)` }}></div>
-                                <div className="magazine-overlay"></div>
-                                <div className="magazine-badge">
-                                    <Compass size={32} />
-                                    <span>TRUSTED PROVIDER</span>
-                                </div>
-                            </div>
-                        </div>
+        <div className="professional-profil-page">
+            {/* CLEAN INSTITUTIONAL HERO */}
+            <header className="prof-hero">
+                <div className="container-prof">
+                    <div className="hero-content-prof text-center professional-reveal">
+                        <span className="prof-label">PROFIL LEMBAGA</span>
+                        <h1 className="prof-main-title">
+                            Menemani Langkah Menuju <span className="title-accent">Masa Depan Global</span>
+                        </h1>
+                        <p className="prof-hero-lead">
+                            LPK Ayaka Global Indonesia adalah mitra strategis dalam pengembangan kompetensi dan pemberdayaan wanita Indonesia untuk berkarir di kancah internasional.
+                        </p>
                     </div>
+                </div>
+                <div className="hero-decoration">
+                    <div className="hero-blob"></div>
                 </div>
             </header>
 
-            {/* BENTO INTRO - NON-GRID MONOTONY BREAK */}
-            <section className="bento-intro page-reveal reveal-up">
-                <div className="container-edito">
-                    <div className="bento-layout">
-                        <div className="bento-item item-main glass-panel-edito">
-                            <div className="bento-meta">EST. 2026</div>
-                            <h2 className="bento-title">{data.pengantar?.title}</h2>
-                            <p className="bento-desc">{data.pengantar?.content}</p>
-                            <div className="bento-footer">
-                                <ArrowRight className="spin-arrow" />
-                                <span>LPK AYAKA GLOBAL INDONESIA</span>
-                            </div>
-                        </div>
-                        <div className="bento-item item-accent-1">
-                            <h3>Visi Strategis</h3>
-                            <p>{data.visi?.content}</p>
-                        </div>
-                        <div className="bento-item item-accent-2">
-                            <div className="year-highlight">100+</div>
-                            <span>Alumni Sukses</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* LATAR BELAKANG - SPLIT FOCUS */}
-            <section className="bg-editorial page-reveal reveal-up">
-                <div className="container-edito">
-                    <div className="editorial-split">
-                        <div className="split-visual">
-                            <div className="minimal-card" style={{ transform: `rotate(${-scrollY * 0.01}deg)` }}>
-                                <Layers size={40} color="#da291c" />
-                                <h4>Warisan & Dedikasi</h4>
-                            </div>
-                        </div>
-                        <div className="split-text">
-                            <span className="accent-red-bold">SEJARAH KAMI</span>
-                            <h2 className="h2-editorial">{data.latarBelakang?.title}</h2>
-                            <p className="p-editorial">{data.latarBelakang?.content}</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* MISSION PARALLAX STACK */}
-            <section className="mission-parallax-section">
-                <div className="container-edito">
-                    <div className="parallax-stack">
-                        <div className="stack-header">
-                            <h2 className="h2-editorial white">Misi & Komitmen Terukur</h2>
-                            <p className="white-opacity">Langkah nyata kami dalam mencetak profesionalisme global.</p>
-                        </div>
-                        <div className="stack-items">
-                            {(data.misi?.items || []).map((item, idx) => (
-                                <div key={idx} className="stack-row page-reveal reveal-left" style={{ transitionDelay: `${idx * 0.1}s` }}>
-                                    <span className="row-num">0{idx + 1}</span>
-                                    <p className="row-text">{item}</p>
-                                    <div className="row-line"></div>
+            {/* STRUCTURED CONTENT: PENGANTAR & LATAR BELAKANG */}
+            <section className="prof-narrative-section">
+                <div className="container-prof">
+                    <div className="grid-narrative professional-reveal">
+                        <div className="narrative-visual">
+                            <div className="image-stack">
+                                <div className="img-main">
+                                    <img src="/assets/hero-bg.png" alt="Ayaka Office" />
                                 </div>
-                            ))}
+                                <div className="img-accent"></div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div className="parallax-bg-accent"></div>
-            </section>
-
-            {/* FRAGMENTED VALUES - BREAKING CARD GRID */}
-            <section className="values-fragmented-section page-reveal reveal-up">
-                <div className="container-edito text-center">
-                    <span className="accent-red-bold">NILAI UTAMA</span>
-                    <h2 className="h2-editorial">Pilar Integritas Ayaka</h2>
-                </div>
-                <div className="container-edito">
-                    <FragmentedValues items={data.nilai?.items || []} />
-                </div>
-            </section>
-
-            {/* LEGAL & IMPACT GRID */}
-            <section className="impact-grid-section page-reveal reveal-up">
-                <div className="container-edito">
-                    <div className="grid-edito-4">
-                        <div className="edito-block dark-block">
-                            <h3>{data.fokus?.title}</h3>
-                            <p>{data.fokus?.content}</p>
-                        </div>
-                        <div className="edito-block glass-block">
-                            <h3>{data.legalitas?.title}</h3>
-                            <p>{data.legalitas?.content}</p>
+                        <div className="narrative-text-box">
+                            <div className="narrative-block">
+                                <h2 className="section-title-prof">{data.pengantar?.title}</h2>
+                                <p className="section-p-prof">
+                                    {data.pengantar?.content}
+                                </p>
+                            </div>
+                            <div className="narrative-divider"></div>
+                            <div className="narrative-block mt-12">
+                                <h2 className="section-title-prof">{data.latarBelakang?.title}</h2>
+                                <p className="section-p-prof">
+                                    {data.latarBelakang?.content}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* FINAL CLOSING - MAGAZINE FINALE */}
-            <section className="finale-section">
-                <div className="container-edito">
-                    <div className="finale-wrap page-reveal reveal-up">
-                        <h2 className="finale-title">{data.penutup?.title}</h2>
-                        <p className="finale-desc">{data.penutup?.content}</p>
-                        <div className="finale-cta">
-                            <button className="btn-magazine">
-                                GABUNG SEKARANG
-                                <ArrowRight size={20} />
-                            </button>
+            {/* PRESTIGIOUS VISION & MISSION */}
+            <section className="prof-vision-section bg-slate-50">
+                <div className="container-prof">
+                    <div className="vision-card professional-reveal">
+                        <div className="vision-header text-center mb-16">
+                            <Target className="icon-main-red" size={48} />
+                            <h2 className="section-title-prof mt-6">Visi & Misi Strategis</h2>
                         </div>
+                        <div className="grid md:grid-cols-2 gap-12">
+                            <div className="vision-text">
+                                <h3 className="sub-title-prof">Visi Kami</h3>
+                                <p className="text-xl leading-relaxed text-slate-700 italic">
+                                    "{data.visi?.content}"
+                                </p>
+                            </div>
+                            <div className="mission-list space-y-6">
+                                <h3 className="sub-title-prof">Misi Utama</h3>
+                                {(data.misi?.items || []).map((item, idx) => (
+                                    <div key={idx} className="mission-item-prof">
+                                        <div className="num-dot">{idx + 1}</div>
+                                        <p>{item}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* CORE VALUES - CLEAN MASONRY */}
+            <section className="prof-values-section py-24">
+                <div className="container-prof">
+                    <div className="text-center mb-20 professional-reveal">
+                        <h2 className="section-title-prof">Pilar Nilai & Prinsip</h2>
+                        <p className="text-slate-500 max-w-2xl mx-auto mt-4">Landasan integritas kami dalam mendidik dan membina tunas bangsa.</p>
+                    </div>
+                    <div className="professional-reveal">
+                        <FragmentedValues items={data.nilai?.items || []} layout="structured" />
+                    </div>
+                </div>
+            </section>
+
+            {/* IMPACT GRID: LEGAL & FOCUS */}
+            <section className="prof-impact-section py-24 bg-slate-900 text-white">
+                <div className="container-prof">
+                    <div className="grid md:grid-cols-2 gap-px bg-slate-800 border border-slate-800 overflow-hidden rounded-2xl">
+                        <div className="impact-block-prof bg-slate-900 p-12 md:p-16">
+                            <Layers className="text-red-500 mb-8" size={32} />
+                            <h3 className="text-2xl font-bold mb-6">{data.fokus?.title}</h3>
+                            <p className="text-slate-400 leading-relaxed text-lg">{data.fokus?.content}</p>
+                        </div>
+                        <div className="impact-block-prof bg-slate-900 p-12 md:p-16">
+                            <Shield className="text-red-500 mb-8" size={32} />
+                            <h3 className="text-2xl font-bold mb-6">{data.legalitas?.title}</h3>
+                            <p className="text-slate-400 leading-relaxed text-lg">{data.legalitas?.content}</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* CALL TO ACTION */}
+            <section className="prof-cta py-32 text-center bg-white relative overflow-hidden">
+                <div className="container-prof professional-reveal">
+                    <h2 className="prof-cta-title">{data.penutup?.title}</h2>
+                    <p className="prof-cta-desc mt-8">{data.penutup?.content}</p>
+                    <div className="mt-12">
+                        <button className="btn-prof-primary">
+                            HUBUNGI KAMI SEKARANG
+                            <ArrowRight size={20} />
+                        </button>
                     </div>
                 </div>
             </section>
 
             <style jsx="true">{`
-                .profil-page-wrapper {
-                    background: #fdfdfd;
-                    overflow-x: hidden;
+                .professional-profil-page {
+                    background: #fff;
                     font-family: 'Inter', sans-serif;
+                    color: #1e293b;
+                    overflow-x: hidden;
                 }
 
-                .noise-overlay {
-                    position: fixed;
-                    inset: 0;
-                    background: url('https://grainy-gradients.vercel.app/noise.svg');
-                    opacity: 0.03;
-                    pointer-events: none;
-                    z-index: 1000;
-                }
-
-                .container-edito {
-                    max-width: 1400px;
+                .container-prof {
+                    max-width: 1200px;
                     margin: 0 auto;
                     padding: 0 5%;
                 }
 
-                /* Reveal Styles */
-                .page-reveal { opacity: 0; transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); }
-                .reveal-up { transform: translateY(50px); }
-                .reveal-left { transform: translateX(-50px); }
-                .is-revealed { opacity: 1; transform: translate(0,0); }
-
-                /* EDITORIAL HERO */
-                .edito-hero {
-                    height: 100vh;
-                    min-height: 800px;
-                    display: flex;
-                    align-items: center;
-                    background: #fff;
-                    position: relative;
-                    overflow: hidden;
+                .professional-reveal {
+                    opacity: 0;
+                    transform: translateY(30px);
+                    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
                 }
-                .edito-hero-bg { position: absolute; inset: 0; z-index: 1; }
-                .floating-shape { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.05; }
-                .shape-1 { width: 600px; height: 600px; background: #da291c; top: -10%; left: -10%; }
-                .shape-2 { width: 500px; height: 500px; background: #0f172a; bottom: -10%; right: -10%; }
+                .professional-reveal.is-visible {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
 
-                .hero-grid-edito { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 4rem; align-items: center; position: relative; z-index: 10; }
-                .journal-label { display: block; font-weight: 900; letter-spacing: 5px; color: #da291c; font-size: 0.8rem; margin-bottom: 2rem; }
+                /* HERO */
+                .prof-hero {
+                    padding: 10rem 0 8rem;
+                    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+                    position: relative;
+                }
+                .prof-label {
+                    display: inline-block;
+                    font-weight: 800;
+                    letter-spacing: 0.2em;
+                    color: #da291c;
+                    font-size: 0.8rem;
+                    margin-bottom: 2rem;
+                    padding: 0.5rem 1.5rem;
+                    background: rgba(218, 41, 28, 0.05);
+                    border-radius: 100px;
+                }
+                .prof-main-title {
+                    font-size: clamp(2.5rem, 8vw, 4.5rem);
+                    font-weight: 900;
+                    letter-spacing: -0.02em;
+                    line-height: 1.1;
+                    color: #0f172a;
+                    max-width: 900px;
+                    margin: 0 auto 2.5rem;
+                }
+                .title-accent { color: #da291c; }
+                .prof-hero-lead {
+                    font-size: 1.25rem;
+                    line-height: 1.6;
+                    color: #64748b;
+                    max-width: 700px;
+                    margin: 0 auto;
+                }
+
+                /* NARRATIVE */
+                .prof-narrative-section { padding: 8rem 0; }
+                .grid-narrative { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; }
                 
-                .editorial-title { font-family: 'Outfit', sans-serif; font-weight: 900; line-height: 1; letter-spacing: -4px; color: #0f172a; }
-                .editorial-title span { display: block; margin-bottom: 0.5rem; }
-                .line-small { font-size: clamp(1rem, 3vw, 2rem); letter-spacing: 2px; text-transform: uppercase; font-weight: 400; color: #64748b; }
-                .line-huge { font-size: clamp(3.5rem, 15vw, 8rem); color: #da291c; }
-                .line-medium { font-size: clamp(2.5rem, 10vw, 5rem); }
+                .image-stack { position: relative; }
+                .img-main { border-radius: 20px; overflow: hidden; box-shadow: 0 40px 100px rgba(0,0,0,0.1); }
+                .img-main img { width: 100%; height: 500px; object-fit: cover; }
+                .img-accent { position: absolute; -bottom: 40px; -right: 40px; width: 200px; height: 200px; background: #da291c; border-radius: 20px; z-index: -1; opacity: 0.1; }
 
-                .editorial-lead { font-size: clamp(1.1rem, 4vw, 1.5rem); line-height: 1.6; color: #334155; max-width: 600px; margin-top: 3rem; }
+                .section-title-prof {
+                    font-size: 2.5rem;
+                    font-weight: 900;
+                    letter-spacing: -0.02em;
+                    color: #0f172a;
+                    margin-bottom: 2rem;
+                }
+                .section-p-prof {
+                    font-size: 1.15rem;
+                    line-height: 1.8;
+                    color: #475569;
+                }
+                .narrative-divider { width: 60px; height: 2px; background: #e2e8f0; margin: 3rem 0; }
 
-                .image-magazine-frame { position: relative; width: 100%; height: 600px; border-radius: 20px; overflow: hidden; box-shadow: 40px 40px 100px rgba(0,0,0,0.1); }
-                .magazine-img { width: 100%; height: 100%; background: #f1f5f9; background-image: url('/assets/hero-bg.png'); background-size: cover; background-position: center; transition: transform 0.1s linear; }
-                .magazine-overlay { position: absolute; inset: 0; background: linear-gradient(45deg, rgba(15,23,42,0.2) 0%, transparent 100%); }
-                .magazine-badge { position: absolute; bottom: 2rem; left: 2rem; background: #da291c; color: white; padding: 1.5rem; border-radius: 15px; display: flex; align-items: center; gap: 1rem; }
-                .magazine-badge span { font-weight: 900; letter-spacing: 2px; font-size: 0.8rem; }
-
-                /* BENTO INTRO */
-                .bento-intro { padding: 10rem 0; }
-                .bento-layout { display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: auto auto; gap: 2rem; }
-                .bento-item { border-radius: 40px; padding: 4rem; transition: transform 0.5s ease; }
-                .item-main { grid-row: span 2; background: white; border: 1px solid #f1f5f9; box-shadow: 0 40px 100px rgba(0,0,0,0.03); }
-                .item-accent-1 { background: #0f172a; color: white; display: flex; flex-direction: column; justify-content: center; }
-                .item-accent-2 { background: #da291c; color: white; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+                /* VISION CARD */
+                .vision-card {
+                    background: #fff;
+                    padding: 5rem;
+                    border-radius: 30px;
+                    box-shadow: 0 30px 80px rgba(0,0,0,0.03);
+                    border: 1px solid #f1f5f9;
+                }
+                .icon-main-red { color: #da291c; margin: 0 auto; }
+                .sub-title-prof { font-size: 1.25rem; font-weight: 800; color: #0f172a; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 0.1em; }
                 
-                .bento-meta { font-weight: 900; color: #da291c; margin-bottom: 2rem; }
-                .bento-title { font-size: clamp(2rem, 8vw, 3.5rem); font-weight: 900; margin-bottom: 2rem; letter-spacing: -2px; }
-                .year-highlight { font-size: clamp(3rem, 10vw, 4rem); font-weight: 900; margin-bottom: 0.5rem; }
+                .mission-item-prof { display: flex; gap: 1.5rem; align-items: flex-start; }
+                .num-dot { width: 32px; height: 32px; min-width: 32px; background: #da291c; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.8rem; }
+                .mission-item-prof p { font-size: 1.1rem; line-height: 1.5; color: #475569; }
 
-                /* EDITORIAL SPLIT */
-                .bg-editorial { padding: 8rem 0; background: #f8fafc; }
-                .editorial-split { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(3rem, 8vw, 8rem); align-items: center; }
-                .minimal-card { background: white; padding: 3rem; border-radius: 30px; box-shadow: 0 30px 60px rgba(0,0,0,0.05); text-align: center; width: 250px; }
-                .minimal-card h4 { margin-top: 1.5rem; font-weight: 900; }
-                .h2-editorial { font-size: clamp(2.2rem, 8vw, 3.5rem); font-weight: 900; letter-spacing: -2px; margin-bottom: 2rem; color: #0f172a; }
-                .h2-editorial.white { color: white; }
-                .p-editorial { font-size: clamp(1rem, 4vw, 1.25rem); line-height: 1.7; color: #475569; }
-                .accent-red-bold { font-weight: 900; color: #da291c; letter-spacing: 4px; display: block; margin-bottom: 1.5rem; font-size: 0.8rem; text-transform: uppercase; }
-
-                /* MISSION STACK */
-                .mission-parallax-section { padding: 10rem 0; background: #0f172a; position: relative; overflow: hidden; }
-                .stack-header { margin-bottom: 6rem; text-align: center; }
-                .white-opacity { color: rgba(255,255,255,0.6); font-size: clamp(1rem, 3vw, 1.2rem); }
-                .stack-row { display: flex; align-items: center; gap: clamp(1.5rem, 5vw, 4rem); padding: 3rem 0; border-top: 1px solid rgba(255,255,255,0.05); position: relative; }
-                .row-num { font-size: clamp(2rem, 6vw, 3rem); font-weight: 900; color: #da291c; opacity: 0.3; }
-                .row-text { font-size: clamp(1.2rem, 5vw, 1.8rem); font-weight: 600; color: white; }
-
-                /* IMPACT GRID */
-                .impact-grid-section { padding: 8rem 0; }
-                .grid-edito-4 { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
-                .edito-block { padding: 5rem; border-radius: 40px; }
-                .dark-block { background: #0f172a; color: white; }
-                .glass-block { background: white; border: 1px solid #f1f5f9; box-shadow: 0 40px 100px rgba(0,0,0,0.02); }
-
-                /* FINALE */
-                .finale-section { padding: 10rem 0; text-align: center; background: #fff; }
-                .finale-title { font-size: clamp(2.5rem, 10vw, 5rem); font-weight: 900; letter-spacing: -4px; margin-bottom: 2rem; }
-                .finale-desc { font-size: clamp(1.1rem, 4vw, 1.5rem); color: #64748b; max-width: 800px; margin: 0 auto 4rem; }
-                .btn-magazine { background: #0f172a; color: white; padding: 1.8rem 4rem; border-radius: 100px; font-weight: 900; display: inline-flex; align-items: center; gap: 1.5rem; cursor: pointer; border: none; transition: 0.3s; }
-                .btn-magazine:hover { background: #da291c; transform: scale(1.05); box-shadow: 0 30px 60px rgba(218, 41, 28, 0.3); }
+                /* CTA */
+                .prof-cta-title { font-size: clamp(2rem, 6vw, 3.5rem); font-weight: 900; color: #0f172a; }
+                .prof-cta-desc { font-size: 1.2rem; color: #64748b; max-width: 700px; margin: 0 auto; line-height: 1.6; }
+                .btn-prof-primary {
+                    background: #0f172a;
+                    color: #fff;
+                    padding: 1.2rem 3.5rem;
+                    border-radius: 100px;
+                    font-weight: 900;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 1.5rem;
+                    border: none;
+                    cursor: pointer;
+                    transition: 0.3s;
+                }
+                .btn-prof-primary:hover { background: #da291c; transform: translateY(-3px); box-shadow: 0 20px 40px rgba(218, 41, 28, 0.2); }
 
                 @media (max-width: 1024px) {
-                    .container-edito { padding: 0 8%; }
-                    .hero-grid-edito, .bento-layout, .editorial-split, .grid-edito-4 { grid-template-columns: 1fr; gap: 4rem; }
-                    .image-magazine-frame { height: 450px; }
-                    .bento-item { padding: 3rem; }
-                    .edito-block { padding: 3rem; }
-                }
-
-                @media (max-width: 640px) {
-                    .container-edito { padding: 0 5%; }
-                    .edito-hero { height: auto; padding-top: 15vh; padding-bottom: 10vh; }
-                    .hero-text-side { text-align: center; }
-                    .editorial-lead { margin: 2rem auto 0; }
-                    .image-magazine-frame { height: 350px; }
-                    .magazine-badge { padding: 1rem; bottom: 1rem; left: 1rem; }
-                    
-                    .bento-item { border-radius: 30px; }
-                    .editorial-split { gap: 3rem; }
-                    
-                    .stack-row { gap: 1.5rem; flex-direction: column; align-items: flex-start; text-align: left; }
+                    .grid-narrative { grid-template-columns: 1fr; gap: 4rem; }
+                    .vision-card { padding: 3rem 2rem; }
                 }
             `}</style>
         </div>

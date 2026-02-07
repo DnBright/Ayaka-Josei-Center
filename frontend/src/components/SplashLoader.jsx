@@ -32,11 +32,13 @@ const SplashLoader = ({ onComplete }) => {
 
             <div className="splash-content">
                 <div className="logo-container">
-                    <svg viewBox="0 0 100 100" className="animated-logo">
-                        <circle cx="50" cy="50" r="45" className="logo-circle" />
-                        <path d="M30 70 L50 30 L70 70" className="logo-path" />
-                        <path d="M40 55 L60 55" className="logo-line" />
-                    </svg>
+                    <div className="logo-container">
+                        <img
+                            src="/assets/logo ayakan.png"
+                            alt="Ayaka Josei Center"
+                            className="splash-logo-img"
+                        />
+                    </div>
                 </div>
                 <h1 className="splash-name">AYAKA <span>JOSEI</span> CENTER</h1>
                 <div className="loading-meta">
@@ -92,29 +94,19 @@ const SplashLoader = ({ onComplete }) => {
                     align-items: center;
                 }
 
-                .logo-container { width: 120px; height: 120px; margin-bottom: 2rem; }
-                .animated-logo { width: 100%; height: 100%; }
-                .logo-circle {
-                    fill: none;
-                    stroke: rgba(255,255,255,0.1);
-                    stroke-width: 2;
-                    stroke-dasharray: 283;
-                    stroke-dashoffset: 283;
-                    animation: circle-draw 2s forwards;
-                }
-                .logo-path, .logo-line {
-                    fill: none;
-                    stroke: #da291c;
-                    stroke-width: 3;
-                    stroke-linecap: round;
-                    stroke-linejoin: round;
-                    stroke-dasharray: 200;
-                    stroke-dashoffset: 200;
-                    animation: path-draw 1.5s forwards 0.5s;
+                .logo-container { width: 150px; height: 150px; margin-bottom: 2rem; }
+                .splash-logo-img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                    animation: logo-pulse 2s infinite alternate;
+                    filter: drop-shadow(0 0 20px rgba(255,255,255,0.2));
                 }
 
-                @keyframes circle-draw { to { stroke-dashoffset: 0; } }
-                @keyframes path-draw { to { stroke-dashoffset: 0; } }
+                @keyframes logo-pulse {
+                    0% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(255,255,255,0.2)); }
+                    100% { transform: scale(1.1); filter: drop-shadow(0 0 40px rgba(218, 41, 28, 0.6)); }
+                }
 
                 .splash-name {
                     font-family: 'Outfit', sans-serif;

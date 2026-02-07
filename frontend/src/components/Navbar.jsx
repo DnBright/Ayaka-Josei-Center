@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Globe, User } from 'lucide-react';
+import { Menu, X, Globe } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
@@ -26,36 +26,44 @@ const Navbar = () => {
     { name: 'KONTAK', href: '/kontak', isAnchor: false },
   ];
 
+  // Helper to check if link is active
+  const isActive = (path) => location.pathname === path;
+
   return (
     <nav className={`navbar ${scrolled ? 'nav-scrolled' : 'nav-hero'}`}>
       <div className="container nav-container">
-        {/* Logo Section */}
-        <Link to="/" className="logo-section">
-          <div className="logo-icon">
-            <Globe size={28} />
-          </div>
-          <div className="logo-text">
-            <span className="brand-primary">AYAKA</span>
-            <span className="brand-tagline">JOSEI CENTER</span>
-          </div>
+
+        {/* 1. LOGO SECTION (ISOLATED) */}
+        <Link to="/" className="logo-pill">
+          <img
+            src="/assets/logo ayakan.png"
+            alt="Ayaka Josei Center"
+            className="logo-img"
+          />
         </Link>
 
-        {/* Desktop Navigation - Astra Style Spacing */}
-        <div className="nav-menu desktop-only">
-          {navItems.map((item) => (
-            item.isAnchor && isLandingPage ? (
-              <a key={item.name} href={item.href.replace('/', '')} className="nav-link">
-                {item.name}
-              </a>
-            ) : (
-              <Link key={item.name} to={item.href} className="nav-link">
-                {item.name}
-              </Link>
-            )
-          ))}
+        {/* 2. NAVIGATION PILL (FLOATING ISLAND) */}
+        <div className="nav-pill-wrapper desktop-only">
+          <div className="nav-pill">
+            {navItems.map((item) => {
+              const active = isActive(item.href);
+              return (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={`pill-link ${active ? 'active' : ''}`}
+                >
+                  {item.name}
+                </Link>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Actions removed (Admin Button) */}
+        {/* 3. SOCIAL / EXTRA (Optional placeholder for balance) */}
+        <div className="nav-actions desktop-only">
+          {/* Can add Social Icons here later if needed, keeps layout balanced */}
+        </div>
 
         {/* Mobile Toggle */}
         <button
@@ -69,7 +77,7 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* Mobile Drawer (Astra Style) */}
+      {/* Mobile Drawer */}
       <div className={`mobile-overlay ${isOpen ? 'is-open' : ''}`} onClick={() => setIsOpen(false)}>
         <aside className="mobile-drawer" onClick={(e) => e.stopPropagation()}>
           <div className="drawer-header">
@@ -80,28 +88,16 @@ const Navbar = () => {
           </div>
           <div className="drawer-links">
             {navItems.map((item) => (
-              item.isAnchor && isLandingPage ? (
-                <a
-                  key={item.name}
-                  href={item.href.replace('/', '')}
-                  className="drawer-link"
-                  onClick={() => setIsOpen(false)}
-                >
-                  {item.name}
-                </a>
-              ) : (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className="drawer-link"
-                  onClick={() => setIsOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              )
+              <Link
+                key={item.name}
+                to={item.href}
+                className={`drawer-link ${isActive(item.href) ? 'active' : ''}`}
+                onClick={() => setIsOpen(false)}
+              >
+                {item.name}
+              </Link>
             ))}
           </div>
-          {/* Mobile Admin Login removed */}
         </aside>
       </div>
 
@@ -112,251 +108,127 @@ const Navbar = () => {
           left: 0;
           width: 100%;
           z-index: 1000;
-          padding: clamp(1rem, 3vw, 2rem) 0;
+          padding: 1.5rem 0;
           transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+          pointer-events: none; /* Let clicks pass through empty space */
         }
-
-        .nav-hero {
-          background: transparent;
-          color: white;
-        }
-
-        .nav-scrolled {
-          padding: 1rem 0;
-          background: rgba(255, 255, 255, 0.9);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-          color: #1a1a1a;
-          box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
-          border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        }
+        
+        .container { pointer-events: auto; } /* Re-enable clicks on content */
 
         .nav-container {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          max-width: 1300px; /* Spacious Astra feel */
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 0 5%;
         }
 
-        .logo-section {
+        /* LOGO PILL */
+        .logo-pill {
           display: flex;
           align-items: center;
-          gap: 0.75rem;
+          justify-content: center;
           text-decoration: none;
-          color: inherit;
+          background: #fff;
+          padding: 0.5rem 1rem;
+          border-radius: 100px;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+          transition: transform 0.3s ease;
+          height: 50px; /* Fixed height for consistency */
+        }
+        .logo-pill:hover { transform: scale(1.05); }
+
+        .logo-img {
+          height: 35px; /* Adjust based on logo aspect ratio */
+          width: auto;
+          object-fit: contain;
         }
 
-        .logo-icon {
-          color: var(--brand-red);
+        .brand-primary { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 1.4rem; letter-spacing: -1px; }
+
+        /* NAV PILL (THE FLOATING ISLAND) */
+        .nav-pill {
+          background: #ffffff;
+          padding: 0.5rem 0.5rem;
+          border-radius: 100px;
           display: flex;
-          align-items: center;
+          gap: 0.25rem;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+          pointer-events: auto;
+          border: 1px solid rgba(0,0,0,0.02);
         }
 
-        .logo-text {
-          display: flex;
-          flex-direction: column;
-          line-height: 1;
-        }
-
-        .brand-primary {
-          font-family: 'Outfit', sans-serif;
-          font-weight: 900;
-          font-size: 1.6rem;
-          letter-spacing: -1px;
-        }
-
-        .brand-tagline {
-          font-size: 0.65rem;
+        .pill-link {
+          font-family: 'Inter', sans-serif;
+          font-size: 0.85rem;
           font-weight: 700;
-          letter-spacing: 2px;
-          opacity: 0.7;
-        }
-
-        .nav-menu {
-          display: flex;
-          gap: 2.5rem; /* Astra-style item spacing */
-        }
-
-        .nav-link {
-          font-size: 0.9rem;
-          font-weight: 800;
-          letter-spacing: 0.5px;
+          color: #64748b;
           text-decoration: none;
-          color: inherit;
-          padding: 0.5rem 0;
-          position: relative;
-          transition: opacity 0.3s ease;
-        }
-
-        .nav-link::after {
-          content: '';
-          position: absolute;
-          bottom: -2px;
-          left: 50%;
-          width: 0;
-          height: 3px;
-          background: var(--brand-red);
+          padding: 0.75rem 1.5rem;
+          border-radius: 100px;
           transition: all 0.3s ease;
-          transform: translateX(-50%);
-          border-radius: 2px;
+          position: relative;
         }
 
-        .nav-link:hover {
-          opacity: 0.8;
+        .pill-link:hover {
+          color: #0f172a;
+          background: #f1f5f9;
         }
 
-        .nav-link:hover::after {
-          width: 100%;
+        /* ACTIVE STATE INDICATOR */
+        .pill-link.active {
+          background: #0f172a; /* Dark pill for active */
+          color: #ffffff;
+          box-shadow: 0 4px 15px rgba(15, 23, 42, 0.2);
         }
 
-        .btn-astra-pill {
-          display: flex;
-          align-items: center;
-          gap: 0.6rem;
-          padding: 0.75rem 1.75rem;
-          background: var(--brand-red);
-          color: white !important;
-          border-radius: 50px;
-          font-weight: 900;
-          font-size: 0.8rem;
-          text-decoration: none;
-          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-          box-shadow: 0 10px 20px -5px rgba(218, 41, 28, 0.4);
-        }
-
-        .btn-astra-pill:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 15px 25px -5px rgba(218, 41, 28, 0.5);
-          background: #ff3d2e;
-        }
-
-        .desktop-only { display: none; }
-        @media (min-width: 1024px) {
-          .desktop-only { display: flex !important; }
-        }
-
-        /* Hamburger Styles */
+        /* MOBILE STYLES */
         .mobile-toggle-btn {
+          pointer-events: auto;
+          background: #fff;
+          padding: 12px;
+          border-radius: 50%;
+          box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+          color: #0f172a;
+          border: none;
           display: flex;
           flex-direction: column;
           gap: 5px;
-          background: none;
-          border: none;
           cursor: pointer;
-          padding: 10px;
-          color: inherit;
-          z-index: 2001;
-          transition: opacity 0.3s ease;
         }
-
-        .mobile-toggle-btn.active {
-          opacity: 0;
-          pointer-events: none;
-        }
-
-        @media (min-width: 1024px) { 
-          .mobile-toggle-btn { display: none !important; } 
-          .mobile-overlay { display: none !important; }
-        }
-
-        .hamburger-line {
-          width: 25px;
-          height: 2px;
-          background: currentColor;
-          border-radius: 4px;
-          transition: all 0.3s ease;
-        }
-
+        
+        .hamburger-line { width: 24px; height: 2px; background: currentColor; transition: 0.3s; }
         .active .hamburger-line:nth-child(1) { transform: translateY(7px) rotate(45deg); }
         .active .hamburger-line:nth-child(2) { opacity: 0; }
         .active .hamburger-line:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-        /* Mobile Drawer */
-        .mobile-overlay {
-          position: fixed;
-          inset: 0;
-          background: rgba(15, 23, 42, 0.4); /* Dark muted overlay */
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-          z-index: 2000;
-          opacity: 0;
-          visibility: hidden;
-          transition: all 0.4s ease;
+        .desktop-only { display: none; }
+        @media (min-width: 1024px) {
+          .desktop-only { display: block; }
+          .mobile-toggle-btn { display: none !important; }
+          .mobile-overlay { display: none !important; }
         }
 
+        /* DRAWER */
+        .mobile-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; opacity: 0; visibility: hidden; transition: 0.3s; pointer-events: auto; }
         .mobile-overlay.is-open { opacity: 1; visibility: visible; }
-
+        
         .mobile-drawer {
-          position: fixed;
-          top: 0;
-          right: 0;
-          width: 85%;
-          max-width: 320px;
-          height: 100vh;
-          background-color: #ffffff !important;
-          padding: 2rem;
-          display: flex;
-          flex-direction: column;
-          transform: translateX(100%); /* Start hidden on the right */
-          transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-          box-shadow: -15px 0 50px rgba(0,0,0,0.1);
-          z-index: 2002;
+          position: fixed; top: 0; right: 0; width: 80%; max-width: 320px; height: 100vh;
+          background: white; padding: 2rem; transform: translateX(100%); transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
+        .is-open .mobile-drawer { transform: translateX(0); }
 
-        .is-open .mobile-drawer { transform: translateX(0); } /* Slide in to zero */
-
-        .drawer-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 2rem;
-          padding-bottom: 1rem;
-          border-bottom: 1px solid #f1f5f9;
-        }
-
-        .close-btn { 
-          background: #f8fafc; 
-          border: none; 
-          color: #64748b; 
-          cursor: pointer; 
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .close-btn:hover { background: #fee2e2; color: var(--brand-red); }
-
+        .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .close-btn { background: #f1f5f9; border: none; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        
         .drawer-links { display: flex; flex-direction: column; gap: 0.5rem; }
-
         .drawer-link {
-          font-size: 1.1rem;
-          font-weight: 800;
-          color: #0f172a;
-          text-decoration: none;
-          padding: 1.25rem 1rem;
-          border-radius: 12px;
-          transition: all 0.3s ease;
-          letter-spacing: 0.5px;
+          font-size: 1.1rem; font-weight: 700; color: #334155; text-decoration: none; padding: 1rem; border-radius: 12px;
         }
-
-        .drawer-link:hover {
-          background: #fdf2f2;
-          color: var(--brand-red);
-          transform: translateX(5px);
-        }
-
-        .mobile-admin-login {
-          margin-top: auto;
-          background: var(--brand-red);
-          color: white;
-          text-align: center;
-          padding: 1rem;
-          border-radius: 12px;
-          font-weight: 900;
-          text-decoration: none;
+        .drawer-link.active {
+          background: var(--brand-red); color: white;
         }
       `}</style>
     </nav>
