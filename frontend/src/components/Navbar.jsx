@@ -17,13 +17,13 @@ const Navbar = () => {
   }, []);
 
   const navItems = [
-    { name: 'HOME', href: '#home' },
-    { name: 'PROFIL', href: '#profil' },
-    { name: 'PROGRAM', href: '#program' },
-    { name: 'GALERI', href: '#galeri' },
-    { name: 'BLOG', href: '#blog' },
-    { name: 'ALUMNI', href: '#alumni' },
-    { name: 'KONTAK', href: '#kontak' },
+    { name: 'HOME', href: '/', isAnchor: false },
+    { name: 'PROFIL', href: '/profil', isAnchor: false },
+    { name: 'PROGRAM', href: '/program', isAnchor: false },
+    { name: 'GALERI', href: '/galeri', isAnchor: false },
+    { name: 'BLOG', href: '/blog', isAnchor: false },
+    { name: 'ALUMNI', href: '/alumni', isAnchor: false },
+    { name: 'KONTAK', href: '/kontak', isAnchor: false },
   ];
 
   return (
@@ -43,9 +43,15 @@ const Navbar = () => {
         {/* Desktop Navigation - Astra Style Spacing */}
         <div className="nav-menu desktop-only">
           {navItems.map((item) => (
-            <a key={item.name} href={item.href} className="nav-link">
-              {item.name}
-            </a>
+            item.isAnchor && isLandingPage ? (
+              <a key={item.name} href={item.href.replace('/', '')} className="nav-link">
+                {item.name}
+              </a>
+            ) : (
+              <Link key={item.name} to={item.href} className="nav-link">
+                {item.name}
+              </Link>
+            )
           ))}
         </div>
 
@@ -74,14 +80,25 @@ const Navbar = () => {
           </div>
           <div className="drawer-links">
             {navItems.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className="drawer-link"
-                onClick={() => setIsOpen(false)}
-              >
-                {item.name}
-              </a>
+              item.isAnchor && isLandingPage ? (
+                <a
+                  key={item.name}
+                  href={item.href.replace('/', '')}
+                  className="drawer-link"
+                  onClick={() => setIsOpen(false)}
+                >
+                  {item.name}
+                </a>
+              ) : (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className="drawer-link"
+                  onClick={() => setIsOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              )
             ))}
           </div>
           {/* Mobile Admin Login removed */}
@@ -95,7 +112,7 @@ const Navbar = () => {
           left: 0;
           width: 100%;
           z-index: 1000;
-          padding: 2rem 0;
+          padding: clamp(1rem, 3vw, 2rem) 0;
           transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -215,7 +232,7 @@ const Navbar = () => {
 
         .desktop-only { display: none; }
         @media (min-width: 1024px) {
-          .desktop-only { display: flex; }
+          .desktop-only { display: flex !important; }
         }
 
         /* Hamburger Styles */
@@ -237,7 +254,10 @@ const Navbar = () => {
           pointer-events: none;
         }
 
-        @media (min-width: 1024px) { .mobile-toggle-btn { display: none; } }
+        @media (min-width: 1024px) { 
+          .mobile-toggle-btn { display: none !important; } 
+          .mobile-overlay { display: none !important; }
+        }
 
         .hamburger-line {
           width: 25px;

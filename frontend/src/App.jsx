@@ -6,12 +6,20 @@ import Footer from './components/Footer';
 import LandingPage from './pages/LandingPage';
 import AdminDashboard from './pages/AdminDashboard';
 import Login from './pages/Login';
+import ProfilPage from './pages/ProfilPage';
+import ProgramPage from './pages/ProgramPage';
+import GaleriPage from './pages/GaleriPage';
+import BlogPage from './pages/BlogPage';
+import BlogDetailPage from './pages/BlogDetailPage';
+import AlumniPage from './pages/AlumniPage';
+import ContactPage from './pages/ContactPage';
+import SplashLoader from './components/SplashLoader';
 
 const API_URL = 'http://localhost:5001/api';
 
 function App() {
   const [content, setContent] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [splashFinished, setSplashFinished] = useState(false);
 
   useEffect(() => {
     fetchContent();
@@ -23,12 +31,12 @@ function App() {
       setContent(resp.data);
     } catch (err) {
       console.error('Error fetching content:', err);
-    } finally {
-      setLoading(false);
     }
   };
 
-  if (loading) return <div className="loading">Loading Ayaka Josei Center...</div>;
+  if (!splashFinished) {
+    return <SplashLoader onComplete={() => setSplashFinished(true)} />;
+  }
 
   return (
     <Router>
@@ -37,6 +45,13 @@ function App() {
         <main>
           <Routes>
             <Route path="/" element={<LandingPage content={content} />} />
+            <Route path="/profil" element={<ProfilPage content={content} />} />
+            <Route path="/program" element={<ProgramPage content={content} />} />
+            <Route path="/galeri" element={<GaleriPage content={content} />} />
+            <Route path="/blog" element={<BlogPage content={content} />} />
+            <Route path="/blog/:slug" element={<BlogDetailPage content={content} />} />
+            <Route path="/alumni" element={<AlumniPage content={content} />} />
+            <Route path="/kontak" element={<ContactPage content={content} />} />
             <Route path="/admin" element={<AdminDashboard content={content} refreshContent={fetchContent} />} />
             <Route path="/login" element={<Login />} />
           </Routes>

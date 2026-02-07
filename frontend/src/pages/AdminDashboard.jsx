@@ -40,7 +40,6 @@ const AdminDashboard = ({ content, refreshContent }) => {
         navigate('/login');
     };
 
-    if (!content) return <div>Loading...</div>;
 
     return (
         <div className="admin-container">

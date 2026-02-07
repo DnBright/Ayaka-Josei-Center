@@ -3,13 +3,9 @@ import Hero from '../components/Hero';
 import FloatingBadge from '../components/FloatingBadge';
 
 const LandingPage = ({ content }) => {
-    const [loading, setLoading] = useState(true);
     const observerRef = useRef(null);
 
     useEffect(() => {
-        const timer = setTimeout(() => {
-            setLoading(false);
-        }, 1200);
 
         const observerOptions = {
             threshold: 0.1,
@@ -28,24 +24,14 @@ const LandingPage = ({ content }) => {
         revealElements.forEach((el) => observerRef.current.observe(el));
 
         return () => {
-            clearTimeout(timer);
             if (observerRef.current) observerRef.current.disconnect();
         };
     }, [content]);
 
-    if (!content) return <div className="loading-state">Syncing with server...</div>;
+    if (!content) return null;
 
     return (
-        <div className={`landing-wrapper ${loading ? 'is-loading' : 'is-ready'}`}>
-            {/* Preloader */}
-            <div className={`preloader ${!loading ? 'fade-out' : ''}`}>
-                <div className="preloader-content">
-                    <div className="preloader-logo">AJC</div>
-                    <div className="preloader-bar">
-                        <div className="bar-progress"></div>
-                    </div>
-                </div>
-            </div>
+        <div className="landing-wrapper is-ready">
 
             {/* 1. Hero Section (Identitas Utama) */}
             <Hero content={content} />
@@ -215,27 +201,11 @@ const LandingPage = ({ content }) => {
             )}
 
             <style jsx="true">{`
-        .section-padding { padding: 8rem 0; }
+        .section-padding { padding: clamp(4rem, 10vw, 8rem) 0; }
         .bg-surface { background: #f8fafc; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
 
-        /* Astra-style Preloader */
-        .preloader {
-          position: fixed;
-          inset: 0;
-          background: #020617;
-          z-index: 9999;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .preloader.fade-out {
-          opacity: 0;
-          visibility: hidden;
-          transform: translateY(-100%);
-        }
+        /* Preloader Removed */
 
         .preloader-logo {
           font-size: 3rem;
@@ -253,7 +223,14 @@ const LandingPage = ({ content }) => {
 
         /* Section Typography */
         .section-badge { color: var(--brand-red); font-weight: 900; letter-spacing: 4px; font-size: 0.7rem; display: block; margin-bottom: 1.5rem; }
-        .section-title { font-size: 3.5rem; font-weight: 900; color: #0f172a; line-height: 1.1; letter-spacing: -2px; margin-bottom: 2rem; }
+        .section-title { 
+            font-size: clamp(2.2rem, 8vw, 3.5rem); 
+            font-weight: 900; 
+            color: #0f172a; 
+            line-height: 1.1; 
+            letter-spacing: -2px; 
+            margin-bottom: 2rem; 
+        }
         .section-tagline { font-size: 1.5rem; font-weight: 700; color: var(--brand-red); margin-bottom: 1rem; }
         .section-desc { font-size: 1.15rem; color: #64748b; line-height: 1.7; margin-bottom: 2.5rem; }
 
@@ -285,8 +262,8 @@ const LandingPage = ({ content }) => {
 
         /* Alur Timeline */
         .alur-timeline { position: relative; display: flex; flex-direction: column; gap: 4rem; max-width: 800px; margin: 0 auto; }
-        .alur-step { position: relative; display: flex; gap: 3rem; align-items: center; }
-        .step-num { min-width: 64px; height: 64px; background: var(--brand-red); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 900; z-index: 2; box-shadow: 0 10px 20px rgba(218, 41, 28, 0.3); }
+        .alur-step { position: relative; display: flex; gap: clamp(1rem, 5vw, 3rem); align-items: center; }
+        .step-num { min-width: clamp(48px, 10vw, 64px); height: clamp(48px, 10vw, 64px); background: var(--brand-red); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 900; z-index: 2; box-shadow: 0 10px 20px rgba(218, 41, 28, 0.3); }
         .step-content h4 { font-size: 1.6rem; font-weight: 900; margin-bottom: 0.5rem; color: #0f172a; }
         .step-content p { color: #64748b; font-size: 1.1rem; }
         .step-connector { position: absolute; left: 31px; top: 64px; width: 2px; height: calc(100% + 4rem - 64px); background: #e2e8f0; z-index: 1; }
@@ -313,7 +290,7 @@ const LandingPage = ({ content }) => {
         /* CTA Section */
         .cta-box { background: #020617; padding: 6rem 4rem; border-radius: 4rem; text-align: center; color: white; position: relative; overflow: hidden; }
         .cta-box::before { content: ''; position: absolute; top: -50%; left: -20%; width: 60%; height: 200%; background: radial-gradient(circle, rgba(218, 41, 28, 0.15) 0%, transparent 70%); }
-        .cta-title { font-size: 4rem; font-weight: 900; margin-bottom: 1.5rem; position: relative; z-index: 1; letter-spacing: -2px; }
+        .cta-title { font-size: clamp(2rem, 10vw, 4rem); font-weight: 900; margin-bottom: 1.5rem; position: relative; z-index: 1; letter-spacing: -2px; }
         .cta-subtitle { font-size: 1.4rem; color: #94a3b8; max-width: 700px; margin: 0 auto 4rem; position: relative; z-index: 1; }
         .cta-actions { display: flex; justify-content: center; gap: 2rem; position: relative; z-index: 1; }
 
