@@ -39,37 +39,84 @@ const initDb = () => {
             )`, (err) => {
                 if (err) return reject(err);
 
-                // Default Sections to match Navbar labels
+                // Default Sections to match the 9-section structure
                 const sections = [
-                    ['home', JSON.stringify({ title: 'AYAKA JOSEI CENTER', subtitle: 'Lembaga Pelatihan Kerja Jepang Spesialis Putri', buttonText: 'Pelajari Selengkapnya', isVisible: true })],
-                    ['profil', JSON.stringify({ title: 'Profil Perusahaan', text: 'Ayaka Josei Center adalah LPK Jepang yang berdedikasi membantu putri Indonesia berkarir profesional di Jepang dengan sistem pelatihan terpadu dan penempatan kerja yang aman.', isVisible: true })],
+                    ['home', JSON.stringify({
+                        title: 'AYAKA JOSEI CENTER',
+                        subtitle: 'Lembaga Pelatihan Kerja Jepang Spesialis Putri',
+                        description: 'Memberdayakan perempuan Indonesia melalui pelatihan profesional dan penempatan kerja aman di Jepang.',
+                        buttonText: 'Pelajari Selengkapnya',
+                        isVisible: true
+                    })],
+                    ['profil', JSON.stringify({
+                        title: 'Profil Perusahaan',
+                        tagline: 'Membangun Karir, Meraih Masa Depan',
+                        text: 'Ayaka Josei Center hadir sebagai jembatan bagi putri Indonesia untuk meraih impian berkarir di Jepang. Fokus kami adalah pendampingan intensif mulai dari bahasa, budaya, hingga kesiapan fisik dan mental.',
+                        objective: 'Menjadi partner terpercaya dalam penempatan tenaga kerja perempuan yang kompeten dan bermartabat.',
+                        isVisible: true
+                    })],
                     ['program', JSON.stringify({
-                        title: 'Program SO Ayaka Josei Center',
+                        title: 'Program & Peluang Kerja',
                         items: [
-                            { name: 'Food Service', desc: 'Persiapan kerja untuk industri restoran dan pengolahan makanan.' },
-                            { name: 'Nursing Care', desc: 'Pelatihan khusus untuk perawat lansia (Kaigo) dengan standar Jepang.' },
-                            { name: 'Agriculture', desc: 'Penempatan kerja di sektor pertanian modern di berbagai prefektur.' }
+                            { name: 'Nursing Care (Kaigo)', desc: 'Pendampingan lansia di fasilitas modern Jepang. Bidang paling stabil dengan prospek karir panjang.' },
+                            { name: 'Food & Beverage', desc: 'Pengolahan makanan dan pelayanan restoran dengan standar kebersihan dan keramahan Jepang.' },
+                            { name: 'Industri Manufaktur', desc: 'Kesempatan bekerja di lini produksi industri terkemuka dengan teknologi mutakhir.' },
+                            { name: 'Hospitality', desc: 'Layanan perhotelan dan pariwisata untuk Anda yang senang berinteraksi secara internasional.' }
                         ],
                         isVisible: true
                     })],
-                    ['galeri', JSON.stringify({ title: 'Galeri Kegiatan', items: ['G-1', 'G-2', 'G-3', 'G-4'], isVisible: true })],
-                    ['blog', JSON.stringify({
-                        title: 'Berita & Blog',
-                        posts: [
-                            { title: 'Pentingnya Sertifikat JLPT', date: '2026-02-07' },
-                            { title: 'Tips Wawancara dengan User Jepang', date: '2026-02-06' }
+                    ['manfaat', JSON.stringify({
+                        title: 'Manfaat Mengikuti Program',
+                        items: [
+                            { title: 'Penghasilan Standar Jepang', desc: 'Gaji kompetitif yang memungkinkan Anda untuk menabung dan membantu keluarga.' },
+                            { title: 'Fasilitas & Asuransi', desc: 'Jaminan kesehatan, asuransi kecelakaan kerja, dan tempat tinggal yang layak.' },
+                            { title: 'Pengalaman Global', desc: 'Membangun etos kerja dan kemandirian di salah satu negara termahal di dunia.' },
+                            { title: 'Cuti & Waktu Istirahat', desc: 'Sistem kerja yang teratur dengan hak cuti tahunan sesuai regulasi Jepang.' }
+                        ],
+                        isVisible: true
+                    })],
+                    ['alur', JSON.stringify({
+                        title: 'Alur Program Kami',
+                        steps: [
+                            { title: 'Pendaftaran', desc: 'Seleksi berkas dan administrasi awal.' },
+                            { title: 'Pelatihan', desc: 'Belajar bahasa Jepang (N4/N3) dan skill teknis.' },
+                            { title: 'Seleksi User', desc: 'Wawancara langsung dengan perusahaan dari Jepang.' },
+                            { title: 'Pemberangkatan', desc: 'Pengurusan visa dan keberangkatan ke Jepang.' },
+                            { title: 'Pendampingan', desc: 'Kami tetap memantau kondisi Anda selama di Jepang.' }
                         ],
                         isVisible: true
                     })],
                     ['alumni', JSON.stringify({
-                        title: 'Alumni & Testimoni',
+                        title: 'Alumni & Cerita Sukses',
                         items: [
-                            { name: 'Siti Aminah', quote: 'Sangat terbantu sejak pendaftaran hingga terbang ke Tokyo.' },
-                            { name: 'Lani Wijaya', quote: 'Materi pelatihannya sangat relevan dengan pekerjaan di Jepang.' }
+                            { name: 'Siti Aminah', quote: 'Sangat terbantu sejak pendaftaran hingga terbang ke Tokyo. Sekarang saya bekerja di fasilitas lansia Prefektur Chiba.' },
+                            { name: 'Lani Wijaya', quote: 'Materi pelatihannya sangat relevan. Saya merasa lebih siap menghadapi budaya kerja Jepang yang disiplin.' }
                         ],
                         isVisible: true
                     })],
-                    ['kontak', JSON.stringify({ email: 'info@ayakajoseicenter.com', phone: '+628123456789', address: 'Jakarta, Indonesia', isVisible: true })]
+                    ['blog', JSON.stringify({
+                        title: 'Informasi & Edukasi',
+                        posts: [
+                            { title: 'Pentingnya Sertifikat JLPT untuk Karir', date: '2026-02-07' },
+                            { title: 'Mengenal Budaya Omotenashi di Jepang', date: '2026-02-06' },
+                            { title: 'Langkah Awal Menabung untuk Kerja ke Jepang', date: '2026-02-05' }
+                        ],
+                        isVisible: true
+                    })],
+                    ['cta', JSON.stringify({
+                        title: 'Siap Memulai Langkah Anda?',
+                        subtitle: 'Dapatkan konsultasi gratis dan bimbingan langsung dari tim ahli kami.',
+                        buttonPrimary: 'Daftar Sekarang',
+                        buttonSecondary: 'Konsultasi WhatsApp',
+                        isVisible: true
+                    })],
+                    ['kontak', JSON.stringify({
+                        email: 'admin@ayakajoseicenter.com',
+                        phone: '+62 812 3456 789',
+                        address: 'Jl. Pemuda No. 123, Jakarta Timur',
+                        legal: 'PT Ayaka Global Indonesia • Izin SO No. 123/2026',
+                        isVisible: true
+                    })]
                 ];
 
                 const stmt = db.prepare("INSERT OR IGNORE INTO content (section_name, content_data) VALUES (?, ?)");

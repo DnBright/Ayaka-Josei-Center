@@ -12,7 +12,7 @@ const Navbar = () => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -26,24 +26,21 @@ const Navbar = () => {
     { name: 'KONTAK', href: '#kontak' },
   ];
 
-  // Dynamic classes for contrast
-  const navClass = `navbar ${scrolled ? 'nav-scrolled' : ''} ${!isLandingPage ? 'nav-solid' : ''}`;
-
   return (
-    <nav className={navClass}>
+    <nav className={`navbar ${scrolled ? 'nav-scrolled' : 'nav-hero'}`}>
       <div className="container nav-container">
         {/* Logo Section */}
         <Link to="/" className="logo-section">
-          <div className="logo-placeholder">
-            <Globe size={24} />
+          <div className="logo-icon">
+            <Globe size={28} />
           </div>
           <div className="logo-text">
             <span className="brand-primary">AYAKA</span>
-            <span className="brand-secondary">JOSEI CENTER</span>
+            <span className="brand-tagline">JOSEI CENTER</span>
           </div>
         </Link>
 
-        {/* Desktop Navigation */}
+        {/* Desktop Navigation - Astra Style Spacing */}
         <div className="nav-menu desktop-only">
           {navItems.map((item) => (
             <a key={item.name} href={item.href} className="nav-link">
@@ -52,13 +49,7 @@ const Navbar = () => {
           ))}
         </div>
 
-        {/* Action Buttons */}
-        <div className="nav-actions desktop-only">
-          <Link to="/login" className="btn-login-pill">
-            <User size={18} />
-            <span>Admin</span>
-          </Link>
-        </div>
+        {/* Actions removed (Admin Button) */}
 
         {/* Mobile Toggle */}
         <button
@@ -72,16 +63,13 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* Mobile Drawer Overlay */}
+      {/* Mobile Drawer (Astra Style) */}
       <div className={`mobile-overlay ${isOpen ? 'is-open' : ''}`} onClick={() => setIsOpen(false)}>
         <aside className="mobile-drawer" onClick={(e) => e.stopPropagation()}>
           <div className="drawer-header">
-            <div className="logo-section" style={{ color: 'var(--brand-red)' }}>
-              <Globe size={24} />
-              <span className="brand-primary">AYAKA</span>
-            </div>
+            <span className="brand-primary" style={{ color: 'var(--brand-red)' }}>AYAKA</span>
             <button className="close-btn" onClick={() => setIsOpen(false)}>
-              <X size={32} />
+              <X size={28} />
             </button>
           </div>
           <div className="drawer-links">
@@ -96,11 +84,7 @@ const Navbar = () => {
               </a>
             ))}
           </div>
-          <div className="drawer-footer">
-            <Link to="/login" className="mobile-admin-btn" onClick={() => setIsOpen(false)}>
-              Access Admin Panel
-            </Link>
-          </div>
+          {/* Mobile Admin Login removed */}
         </aside>
       </div>
 
@@ -111,24 +95,30 @@ const Navbar = () => {
           left: 0;
           width: 100%;
           z-index: 1000;
-          padding: 1.5rem 0;
-          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-          color: var(--foreground); /* Dark text by default for visibility on light Hero */
+          padding: 2rem 0;
+          transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .nav-scrolled, .nav-solid {
-          padding: 0.75rem 0;
-          background: rgba(255, 255, 255, 0.85);
-          backdrop-filter: blur(15px);
-          -webkit-backdrop-filter: blur(15px);
-          border-bottom: 1px solid rgba(218, 41, 28, 0.1);
-          box-shadow: var(--shadow-md);
+        .nav-hero {
+          background: transparent;
+          color: white;
+        }
+
+        .nav-scrolled {
+          padding: 1rem 0;
+          background: rgba(255, 255, 255, 0.9);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          color: #1a1a1a;
+          box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+          border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
 
         .nav-container {
           display: flex;
           justify-content: space-between;
           align-items: center;
+          max-width: 1300px; /* Spacious Astra feel */
         }
 
         .logo-section {
@@ -139,16 +129,10 @@ const Navbar = () => {
           color: inherit;
         }
 
-        .logo-placeholder {
-          width: 40px;
-          height: 40px;
-          background: var(--brand-red);
-          color: white;
-          border-radius: 12px;
+        .logo-icon {
+          color: var(--brand-red);
           display: flex;
           align-items: center;
-          justify-content: center;
-          box-shadow: var(--shadow-sm);
         }
 
         .logo-text {
@@ -160,26 +144,24 @@ const Navbar = () => {
         .brand-primary {
           font-family: 'Outfit', sans-serif;
           font-weight: 900;
-          font-size: 1.5rem;
-          letter-spacing: -0.5px;
-          color: var(--brand-red);
+          font-size: 1.6rem;
+          letter-spacing: -1px;
         }
 
-        .brand-secondary {
-          font-size: 0.7rem;
-          font-weight: 600;
+        .brand-tagline {
+          font-size: 0.65rem;
+          font-weight: 700;
           letter-spacing: 2px;
-          opacity: 0.8;
-          color: var(--foreground);
+          opacity: 0.7;
         }
 
         .nav-menu {
           display: flex;
-          gap: 2rem;
+          gap: 2.5rem; /* Astra-style item spacing */
         }
 
         .nav-link {
-          font-size: 0.85rem;
+          font-size: 0.9rem;
           font-weight: 800;
           letter-spacing: 0.5px;
           text-decoration: none;
@@ -192,36 +174,43 @@ const Navbar = () => {
         .nav-link::after {
           content: '';
           position: absolute;
-          bottom: 0;
-          left: 0;
+          bottom: -2px;
+          left: 50%;
           width: 0;
-          height: 2px;
+          height: 3px;
           background: var(--brand-red);
-          transition: width 0.3s ease;
+          transition: all 0.3s ease;
+          transform: translateX(-50%);
+          border-radius: 2px;
+        }
+
+        .nav-link:hover {
+          opacity: 0.8;
         }
 
         .nav-link:hover::after {
           width: 100%;
         }
 
-        .btn-login-pill {
+        .btn-astra-pill {
           display: flex;
           align-items: center;
-          gap: 0.5rem;
-          padding: 0.6rem 1.25rem;
+          gap: 0.6rem;
+          padding: 0.75rem 1.75rem;
           background: var(--brand-red);
-          color: white;
+          color: white !important;
           border-radius: 50px;
-          font-weight: 800;
-          font-size: 0.85rem;
+          font-weight: 900;
+          font-size: 0.8rem;
           text-decoration: none;
-          box-shadow: var(--shadow-sm);
-          transition: all 0.3s ease;
+          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+          box-shadow: 0 10px 20px -5px rgba(218, 41, 28, 0.4);
         }
 
-        .btn-login-pill:hover {
+        .btn-astra-pill:hover {
           transform: translateY(-2px);
-          box-shadow: var(--shadow-md);
+          box-shadow: 0 15px 25px -5px rgba(218, 41, 28, 0.5);
+          background: #ff3d2e;
         }
 
         .desktop-only { display: none; }
@@ -229,22 +218,26 @@ const Navbar = () => {
           .desktop-only { display: flex; }
         }
 
-        /* Mobile Hamburger */
+        /* Hamburger Styles */
         .mobile-toggle-btn {
           display: flex;
           flex-direction: column;
-          gap: 6px;
+          gap: 5px;
           background: none;
           border: none;
           cursor: pointer;
-          padding: 8px;
-          color: var(--foreground);
+          padding: 10px;
+          color: inherit;
           z-index: 2001;
+          transition: opacity 0.3s ease;
         }
 
-        @media (min-width: 1024px) {
-          .mobile-toggle-btn { display: none; }
+        .mobile-toggle-btn.active {
+          opacity: 0;
+          pointer-events: none;
         }
+
+        @media (min-width: 1024px) { .mobile-toggle-btn { display: none; } }
 
         .hamburger-line {
           width: 25px;
@@ -254,93 +247,96 @@ const Navbar = () => {
           transition: all 0.3s ease;
         }
 
-        .active .hamburger-line:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+        .active .hamburger-line:nth-child(1) { transform: translateY(7px) rotate(45deg); }
         .active .hamburger-line:nth-child(2) { opacity: 0; }
-        .active .hamburger-line:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+        .active .hamburger-line:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
         /* Mobile Drawer */
         .mobile-overlay {
           position: fixed;
           inset: 0;
-          background: rgba(0,0,0,0.5);
-          backdrop-filter: blur(5px);
+          background: rgba(15, 23, 42, 0.4); /* Dark muted overlay */
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
           z-index: 2000;
           opacity: 0;
           visibility: hidden;
           transition: all 0.4s ease;
         }
 
-        .mobile-overlay.is-open {
-          opacity: 1;
-          visibility: visible;
-        }
+        .mobile-overlay.is-open { opacity: 1; visibility: visible; }
 
         .mobile-drawer {
-          position: absolute;
+          position: fixed;
           top: 0;
-          right: -300px;
-          width: 300px;
-          height: 100%;
-          background: white;
-          padding: 3rem 2rem;
+          right: 0;
+          width: 85%;
+          max-width: 320px;
+          height: 100vh;
+          background-color: #ffffff !important;
+          padding: 2rem;
           display: flex;
           flex-direction: column;
-          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-          box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+          transform: translateX(100%); /* Start hidden on the right */
+          transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+          box-shadow: -15px 0 50px rgba(0,0,0,0.1);
+          z-index: 2002;
         }
 
-        .is-open .mobile-drawer {
-          right: 0;
-        }
+        .is-open .mobile-drawer { transform: translateX(0); } /* Slide in to zero */
 
         .drawer-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: 3rem;
+          margin-bottom: 2rem;
+          padding-bottom: 1rem;
+          border-bottom: 1px solid #f1f5f9;
         }
 
-        .close-btn {
-          background: none;
-          border: none;
-          color: var(--secondary);
-          cursor: pointer;
-        }
-
-        .drawer-links {
+        .close-btn { 
+          background: #f8fafc; 
+          border: none; 
+          color: #64748b; 
+          cursor: pointer; 
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
           display: flex;
-          flex-direction: column;
-          gap: 1.25rem;
+          align-items: center;
+          justify-content: center;
         }
+
+        .close-btn:hover { background: #fee2e2; color: var(--brand-red); }
+
+        .drawer-links { display: flex; flex-direction: column; gap: 0.5rem; }
 
         .drawer-link {
-          font-size: 1.25rem;
+          font-size: 1.1rem;
           font-weight: 800;
-          color: var(--foreground);
+          color: #0f172a;
           text-decoration: none;
-          padding: 0.75rem 0;
-          border-bottom: 1px solid #f1f5f9;
-          transition: color 0.3s ease;
+          padding: 1.25rem 1rem;
+          border-radius: 12px;
+          transition: all 0.3s ease;
+          letter-spacing: 0.5px;
         }
 
         .drawer-link:hover {
+          background: #fdf2f2;
           color: var(--brand-red);
+          transform: translateX(5px);
         }
 
-        .drawer-footer {
+        .mobile-admin-login {
           margin-top: auto;
-        }
-
-        .mobile-admin-btn {
-          display: block;
-          padding: 1rem;
           background: var(--brand-red);
           color: white;
           text-align: center;
+          padding: 1rem;
           border-radius: 12px;
-          font-weight: 700;
+          font-weight: 900;
           text-decoration: none;
-          box-shadow: 0 10px 20px -5px rgba(218, 41, 28, 0.3);
         }
       `}</style>
     </nav>

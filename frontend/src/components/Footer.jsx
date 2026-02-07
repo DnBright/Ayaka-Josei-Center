@@ -6,8 +6,9 @@ const Footer = ({ content }) => {
     <footer className="footer">
       <div className="container footer-grid">
         <div className="footer-brand">
+          <div className="footer-logo">AJC</div>
           <h3>Ayaka Josei Center</h3>
-          <p>Membantu mewujudkan karir profesional Anda di Jepang dengan aman dan terpercaya.</p>
+          <p>Membantu mewujudkan karir profesional putri Indonesia di Jepang dengan aman, bermartabat, dan terpercaya.</p>
         </div>
         <div className="footer-links">
           <h4>Navigasi</h4>
@@ -20,19 +21,20 @@ const Footer = ({ content }) => {
           </ul>
         </div>
         <div className="footer-contact">
-          <h4>Kontak Kami</h4>
+          <h4>Kontak & Legal</h4>
           <div className="contact-item">
             <Mail size={18} />
-            <span>{content?.email || 'admin@ayaka.com'}</span>
+            <span>{content?.email || 'admin@ayakajoseicenter.com'}</span>
           </div>
           <div className="contact-item">
             <Phone size={18} />
-            <span>{content?.phone || '+62 812 3456 7890'}</span>
+            <span>{content?.phone || '+62 812 3456 789'}</span>
           </div>
           <div className="contact-item">
             <MapPin size={18} />
-            <span>Jakarta, Indonesia</span>
+            <span>{content?.address || 'Jakarta, Indonesia'}</span>
           </div>
+          <p className="legal-text">{content?.legal || 'PT Ayaka Global Indonesia • Izin SO No. 123/2026'}</p>
         </div>
       </div>
       <div className="footer-bottom text-center">
@@ -58,8 +60,10 @@ const Footer = ({ content }) => {
         p { color: #94a3b8; line-height: 1.6; }
         ul { list-style: none; }
         ul li { margin-bottom: 0.75rem; }
-        ul li a { color: #94a3b8; text-decoration: none; transition: color 0.3s ease; }
+        ul li a { color: #94a3b8; text-decoration: none; transition: color 0.3s ease; font-weight: 500; }
         ul li a:hover { color: var(--brand-red); }
+        .footer-logo { font-size: 1.5rem; font-weight: 900; color: var(--brand-red); margin-bottom: 1rem; }
+        .legal-text { font-size: 0.75rem; color: #64748b; margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem; font-weight: 600; }
         .contact-item {
           display: flex;
           align-items: center;
