@@ -1,0 +1,2 @@
+[dotenv@17.2.4] injecting env (6) from backend/.env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+Server running on http://localhost:5001 (MySQL Mode)

@@ -20,7 +20,7 @@ const AdminDashboard = ({ content, refreshContent }) => {
     const handleUpdate = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:5001/api/content/${activeSection}`, {
+            await axios.put(`http://localhost:5002/api/content/${activeSection}`, {
                 content_data: formData,
                 is_visible: formData.isVisible,
                 sort_order: 0 // Default for now

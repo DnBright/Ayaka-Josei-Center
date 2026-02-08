@@ -23,7 +23,7 @@ const BlogDetailPage = ({ content }) => {
             // Check if we already have it in content prop (legacy fallback)
             const legacyArticle = data?.artikel?.find(a => a.slug === slug);
 
-            const resp = await axios.get('http://localhost:5001/api/posts');
+            const resp = await axios.get('http://localhost:5002/api/posts');
             const found = resp.data.find(a => a.slug === slug);
 
             if (found) {

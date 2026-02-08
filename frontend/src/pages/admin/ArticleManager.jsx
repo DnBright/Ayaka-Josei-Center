@@ -17,7 +17,7 @@ const ArticleManager = () => {
     const fetchArticles = async () => {
         try {
             const token = localStorage.getItem('token');
-            const resp = await axios.get('http://localhost:5001/api/admin/posts', {
+            const resp = await axios.get('http://localhost:5002/api/admin/posts', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setArticles(resp.data);

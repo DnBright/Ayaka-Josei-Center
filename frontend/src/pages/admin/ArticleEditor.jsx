@@ -29,7 +29,7 @@ const ArticleEditor = () => {
         // For now we get all and filter
         try {
             const token = localStorage.getItem('token');
-            const resp = await axios.get('http://localhost:5001/api/admin/posts', {
+            const resp = await axios.get('http://localhost:5002/api/admin/posts', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const post = resp.data.find(p => p.id === parseInt(id));
@@ -49,11 +49,11 @@ const ArticleEditor = () => {
         try {
             const token = localStorage.getItem('token');
             if (id) {
-                await axios.put(`http://localhost:5001/api/admin/posts/${id}`, dataToSave, {
+                await axios.put(`http://localhost:5002/api/admin/posts/${id}`, dataToSave, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             } else {
-                await axios.post('http://localhost:5001/api/admin/posts', dataToSave, {
+                await axios.post('http://localhost:5002/api/admin/posts', dataToSave, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             }

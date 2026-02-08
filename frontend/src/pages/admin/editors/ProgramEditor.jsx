@@ -66,7 +66,7 @@ const ProgramEditor = ({ content, refreshContent }) => {
                 items: updatedPrograms
             };
 
-            await axios.put('http://localhost:5001/api/content/program', {
+            await axios.put('http://localhost:5002/api/content/program', {
                 content_data: submissionData
             }, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -101,7 +101,7 @@ const ProgramEditor = ({ content, refreshContent }) => {
                 items: updatedPrograms
             };
 
-            await axios.put('http://localhost:5001/api/content/program', {
+            await axios.put('http://localhost:5002/api/content/program', {
                 content_data: submissionData
             }, {
                 headers: { Authorization: `Bearer ${token}` }

@@ -72,7 +72,7 @@ const AlumniEditor = ({ content, refreshContent }) => {
                 items: updatedList
             };
 
-            await axios.put('http://localhost:5001/api/content/alumni', {
+            await axios.put('http://localhost:5002/api/content/alumni', {
                 content_data: submissionData
             }, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -104,7 +104,7 @@ const AlumniEditor = ({ content, refreshContent }) => {
                 items: updatedList
             };
 
-            await axios.put('http://localhost:5001/api/content/alumni', {
+            await axios.put('http://localhost:5002/api/content/alumni', {
                 content_data: submissionData
             }, {
                 headers: { Authorization: `Bearer ${token}` }

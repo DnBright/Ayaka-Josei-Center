@@ -15,7 +15,7 @@ const PenulisLogin = () => {
         setLoading(true);
         setError('');
         try {
-            const resp = await axios.post('http://localhost:5001/api/auth/login', { username, password });
+            const resp = await axios.post('http://localhost:5002/api/auth/login', { username, password });
 
             // Check role for Author
             if (resp.data.role !== 'Penulis') {
@@ -30,7 +30,14 @@ const PenulisLogin = () => {
 
             navigate('/penulis');
         } catch (err) {
-            setError('Log masuk gagal. Periksa username dan sandi Anda.');
+            console.error('Login error:', err);
+            if (!err.response) {
+                setError('Tidak dapat menghubungi server. Pastikan backend sudah dijalankan (node server.js).');
+            } else if (err.response.status === 401) {
+                setError('Username atau password salah. Silakan periksa kembali.');
+            } else {
+                setError(`Gagal log masuk: ${err.response.data.error || 'Terjadi kesalahan sistem.'}`);
+            }
             setLoading(false);
         }
     };

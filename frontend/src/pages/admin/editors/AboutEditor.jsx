@@ -44,7 +44,7 @@ const AboutEditor = ({ content, refreshContent }) => {
 
         try {
             const token = localStorage.getItem('token');
-            await axios.put('http://localhost:5001/api/content/tentang', {
+            await axios.put('http://localhost:5002/api/content/tentang', {
                 content_data: submissionData
             }, {
                 headers: { Authorization: `Bearer ${token}` }

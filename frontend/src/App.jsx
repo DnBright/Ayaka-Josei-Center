@@ -40,7 +40,7 @@ import ArticleEditor from './pages/admin/ArticleEditor';
 import EBookManager from './pages/admin/EBookManager';
 import AuthorProfile from './pages/admin/AuthorProfile';
 
-const API_URL = 'http://localhost:5001/api';
+const API_URL = 'http://localhost:5002/api';
 
 // ROLE GUARD COMPONENT
 const RoleGuard = ({ children, allowedRoles }) => {

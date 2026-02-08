@@ -22,7 +22,7 @@ const EBookPage = () => {
 
     const fetchEbooks = async () => {
         try {
-            const resp = await axios.get('http://localhost:5001/api/ebooks');
+            const resp = await axios.get('http://localhost:5002/api/ebooks');
             setEbooks(resp.data);
         } catch (err) {
             console.error('Error fetching ebooks:', err);

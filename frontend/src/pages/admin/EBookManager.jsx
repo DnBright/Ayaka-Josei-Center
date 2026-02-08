@@ -22,7 +22,7 @@ const EBookManager = () => {
     const fetchEbooks = async () => {
         try {
             const token = localStorage.getItem('token');
-            const resp = await axios.get('http://localhost:5001/api/admin/ebooks', {
+            const resp = await axios.get('http://localhost:5002/api/admin/ebooks', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             // Since there's no specific admin route to list all yet (except public), 
@@ -39,7 +39,7 @@ const EBookManager = () => {
         e.preventDefault();
         try {
             const token = localStorage.getItem('token');
-            await axios.post('http://localhost:5001/api/admin/ebooks', formData, {
+            await axios.post('http://localhost:5002/api/admin/ebooks', formData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setShowForm(false);
