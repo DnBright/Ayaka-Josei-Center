@@ -15,10 +15,13 @@ const Sidebar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('role');
     navigate('/login');
   };
 
-  const navItems = [
+  const role = localStorage.getItem('role') || 'Viewer';
+
+  const adminItems = [
     { path: '/admin', icon: <LayoutDashboard size={20} />, label: 'Dashboard', end: true },
     { path: '/admin/pages', icon: <FileText size={20} />, label: 'Halaman & Konten' },
     { path: '/admin/media', icon: <Image size={20} />, label: 'Media & Galeri' },
@@ -26,6 +29,16 @@ const Sidebar = () => {
     { path: '/admin/users', icon: <Users size={20} />, label: 'User & Role' },
     { path: '/admin/settings', icon: <Settings size={20} />, label: 'Pengaturan' },
   ];
+
+  const authorItems = [
+    { path: '/admin', icon: <LayoutDashboard size={20} />, label: 'Dashboard', end: true },
+    { path: '/admin/articles', icon: <FileText size={20} />, label: 'Artikel' },
+    { path: '/admin/ebooks', icon: <FileText size={20} />, label: 'E-Book' },
+    { path: '/admin/media', icon: <Image size={20} />, label: 'Media' },
+    { path: '/admin/profile', icon: <Users size={20} />, label: 'Profil Saya' },
+  ];
+
+  const navItems = (role === 'Super Admin' || role === 'Editor') ? adminItems : authorItems;
 
   return (
     <aside className="admin-sidebar glass">

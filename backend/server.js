@@ -36,6 +36,49 @@ const initDb = () => {
                 content_data TEXT,
                 is_visible INTEGER DEFAULT 1,
                 sort_order INTEGER DEFAULT 0
+            )`);
+
+            // CMS: Posts
+            db.run(`CREATE TABLE IF NOT EXISTS posts (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                title TEXT,
+                slug TEXT UNIQUE,
+                excerpt TEXT,
+                content TEXT,
+                category TEXT,
+                author_id INTEGER,
+                status TEXT DEFAULT 'draft', -- draft, pending, publish
+                access_status TEXT DEFAULT 'public', -- public, member
+                image TEXT,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (author_id) REFERENCES users(id)
+            )`);
+
+            // CMS: E-books
+            db.run(`CREATE TABLE IF NOT EXISTS ebooks (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                title TEXT,
+                description TEXT,
+                file_url TEXT,
+                category TEXT,
+                version TEXT,
+                author_id INTEGER,
+                status TEXT DEFAULT 'draft',
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (author_id) REFERENCES users(id)
+            )`);
+
+            // CMS: Media
+            db.run(`CREATE TABLE IF NOT EXISTS media (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                filename TEXT,
+                url TEXT,
+                type TEXT,
+                uploaded_by INTEGER,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (uploaded_by) REFERENCES users(id)
             )`, (err) => {
                 if (err) return reject(err);
 
@@ -449,30 +492,119 @@ const authenticateToken = (req, res, next) => {
     });
 };
 
-// Routes
-app.get('/api/content', (req, res) => {
-    db.all("SELECT * FROM content ORDER BY sort_order ASC", [], (err, rows) => {
+const authorizeRoles = (...allowedRoles) => {
+    return (req, res, next) => {
+        if (!req.user || !allowedRoles.includes(req.user.role)) {
+            return res.status(403).json({ error: 'Access denied: insufficient permissions' });
+        }
+        next();
+    };
+};
+
+// --- BLOG / POSTS API ---
+app.get('/api/posts', (req, res) => {
+    db.all("SELECT * FROM posts WHERE status = 'publish' ORDER BY created_at DESC", [], (err, rows) => {
         if (err) return res.status(500).json({ error: err.message });
-        const data = {};
-        rows.forEach(row => {
-            data[row.section_name] = JSON.parse(row.content_data);
-            data[row.section_name].isVisible = row.is_visible;
-        });
-        res.json(data);
+        res.json(rows);
     });
 });
 
-app.put('/api/content/:section', authenticateToken, (req, res) => {
-    const { section } = req.params;
-    const { content_data, is_visible, sort_order } = req.body;
+app.get('/api/admin/posts', authenticateToken, authorizeRoles('Super Admin', 'Editor', 'Penulis'), (req, res) => {
+    let query = "SELECT p.*, u.username as author_name FROM posts p JOIN users u ON p.author_id = u.id";
+    let params = [];
 
-    db.run(`UPDATE content SET content_data = ?, is_visible = ?, sort_order = ? WHERE section_name = ?`,
-        [JSON.stringify(content_data), is_visible, sort_order, section],
-        function (err) {
-            if (err) return res.status(500).json({ error: err.message });
-            res.json({ message: 'Content updated successfully' });
+    // Non-admin can only see their own posts unless they are published? 
+    // Usually authors see their own.
+    if (req.user.role === 'Penulis') {
+        query += " WHERE p.author_id = ?";
+        params.push(req.user.id);
+    }
+
+    query += " ORDER BY p.created_at DESC";
+
+    db.all(query, params, (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
+app.post('/api/admin/posts', authenticateToken, authorizeRoles('Super Admin', 'Editor', 'Penulis'), (req, res) => {
+    const { title, slug, excerpt, content, category, status, access_status, image } = req.body;
+    const author_id = req.user.id;
+
+    const query = `INSERT INTO posts (title, slug, excerpt, content, category, author_id, status, access_status, image) 
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+    db.run(query, [title, slug, excerpt, content, category, author_id, status, access_status, image], function (err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ id: this.lastID, message: 'Post created successfully' });
+    });
+});
+
+app.put('/api/admin/posts/:id', authenticateToken, authorizeRoles('Super Admin', 'Editor', 'Penulis'), (req, res) => {
+    const { id } = req.params;
+    const { title, slug, excerpt, content, category, status, access_status, image } = req.body;
+
+    // If Penulis, check ownership
+    const checkOwnership = (cb) => {
+        if (req.user.role === 'Penulis') {
+            db.get("SELECT author_id FROM posts WHERE id = ?", [id], (err, post) => {
+                if (err || !post || post.author_id !== req.user.id) {
+                    return res.status(403).json({ error: 'Not authorized' });
+                }
+                cb();
+            });
+        } else {
+            cb();
         }
-    );
+    };
+
+    checkOwnership(() => {
+        const query = `UPDATE posts SET title = ?, slug = ?, excerpt = ?, content = ?, category = ?, status = ?, access_status = ?, image = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`;
+        db.run(query, [title, slug, excerpt, content, category, status, access_status, image, id], function (err) {
+            if (err) return res.status(500).json({ error: err.message });
+            res.json({ message: 'Post updated successfully' });
+        });
+    });
+});
+
+// --- EBOOKS API ---
+app.get('/api/ebooks', (req, res) => {
+    // Public/Member ebooks
+    db.all("SELECT * FROM ebooks WHERE status = 'publish' ORDER BY created_at DESC", [], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
+app.post('/api/admin/ebooks', authenticateToken, authorizeRoles('Super Admin', 'Editor', 'Penulis'), (req, res) => {
+    const { title, description, file_url, category, version, status } = req.body;
+    const author_id = req.user.id;
+
+    db.run(`INSERT INTO ebooks (title, description, file_url, category, version, author_id, status) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [title, description, file_url, category, version, author_id, status], function (err) {
+            if (err) return res.status(500).json({ error: err.message });
+            res.json({ id: this.lastID, message: 'E-book created successfully' });
+        });
+});
+
+// --- MEDIA API ---
+app.get('/api/admin/media', authenticateToken, authorizeRoles('Super Admin', 'Editor', 'Penulis'), (req, res) => {
+    db.all("SELECT m.*, u.username as uploader_name FROM media m JOIN users u ON m.uploaded_by = u.id ORDER BY m.created_at DESC", [], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
+app.post('/api/admin/media', authenticateToken, authorizeRoles('Super Admin', 'Editor', 'Penulis'), (req, res) => {
+    const { filename, url, type } = req.body;
+    const uploaded_by = req.user.id;
+
+    db.run(`INSERT INTO media (filename, url, type, uploaded_by) VALUES (?, ?, ?, ?)`,
+        [filename, url, type, uploaded_by], function (err) {
+            if (err) return res.status(500).json({ error: err.message });
+            res.json({ id: this.lastID, message: 'Media added successfully' });
+        });
 });
 
 app.post('/api/auth/login', (req, res) => {

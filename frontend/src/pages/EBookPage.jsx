@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { Book, Lock, AlertCircle, ChevronRight, Download, PlayCircle, FileText } from 'lucide-react';
 
 const EBookPage = () => {
     const navigate = useNavigate();
     const [member, setMember] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [ebooks, setEbooks] = useState([]);
 
     useEffect(() => {
         // Check for member session
@@ -14,42 +16,22 @@ const EBookPage = () => {
             navigate('/member/login');
         } else {
             setMember(JSON.parse(storedMember));
-            setLoading(false);
+            fetchEbooks();
         }
     }, [navigate]);
 
-    if (loading) return null;
-
-    // Mock Data for E-Books
-    const ebooks = [
-        {
-            id: 1,
-            title: "Panduan Dasar Program Ayaka",
-            description: "Memahami struktur, tujuan, ve dan budaya kerja dalam program Ayaka Josei Center.",
-            category: "Program Guide",
-            version: "v2.1",
-            date: "Feb 2026",
-            icon: <Book size={40} />
-        },
-        {
-            id: 2,
-            title: "Etika & Budaya Kerja Jepang",
-            description: "Persiapan mental dan adaptasi terhadap budaya kerja profesional Jepang (Horenso, dll).",
-            category: "Culture",
-            version: "v1.0",
-            date: "Jan 2026",
-            icon: <PlayCircle size={40} />
-        },
-        {
-            id: 3,
-            title: "Kamus Saku Istilah Teknis",
-            description: "Daftar istilah teknis yang sering digunakan di lapangan kerja Caregiver dan Hospitality.",
-            category: "Language",
-            version: "v3.5",
-            date: "Feb 2026",
-            icon: <FileText size={40} />
+    const fetchEbooks = async () => {
+        try {
+            const resp = await axios.get('http://localhost:5001/api/ebooks');
+            setEbooks(resp.data);
+        } catch (err) {
+            console.error('Error fetching ebooks:', err);
+        } finally {
+            setLoading(false);
         }
-    ];
+    };
+
+    if (loading) return <div className="ebook-loader">Syncing Resources...</div>;
 
     return (
         <div className="ebook-wrapper">
@@ -79,7 +61,7 @@ const EBookPage = () => {
                         {ebooks.map((book, idx) => (
                             <div className="ebook-card reveal-up" style={{ transitionDelay: `${idx * 0.1}s` }} key={book.id}>
                                 <div className="card-icon-box">
-                                    {book.icon}
+                                    <Book size={40} />
                                 </div>
                                 <div className="card-content">
                                     <div className="card-meta">

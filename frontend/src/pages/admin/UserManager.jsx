@@ -61,6 +61,7 @@ const UserManager = () => {
         switch (role) {
             case 'Super Admin': return <span className="flex items-center gap-1 text-xs font-bold bg-purple-100 text-purple-700 px-2 py-1 rounded"><Shield size={12} /> Super Admin</span>;
             case 'Editor': return <span className="flex items-center gap-1 text-xs font-bold bg-blue-100 text-blue-700 px-2 py-1 rounded"><Edit2 size={12} /> Editor</span>;
+            case 'Penulis': return <span className="flex items-center gap-1 text-xs font-bold bg-orange-100 text-orange-700 px-2 py-1 rounded"><FileText size={12} /> Penulis</span>;
             case 'Member': return <span className="flex items-center gap-1 text-xs font-bold bg-green-100 text-green-700 px-2 py-1 rounded"><User size={12} /> Member</span>;
             default: return <span className="flex items-center gap-1 text-xs font-bold bg-slate-100 text-slate-600 px-2 py-1 rounded"><User size={12} /> Viewer</span>;
         }

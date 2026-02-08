@@ -6,9 +6,12 @@ const BlogPage = ({ content }) => {
     const data = content?.blog_halaman;
     const [activeCategory, setActiveCategory] = useState('all');
     const [searchTerm, setSearchTerm] = useState('');
+    const [articles, setArticles] = useState([]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
+        fetchArticles();
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) entry.target.classList.add('is-revealed');
@@ -19,12 +22,23 @@ const BlogPage = ({ content }) => {
         return () => observer.disconnect();
     }, [content]);
 
+    const fetchArticles = async () => {
+        try {
+            const resp = await axios.get('http://localhost:5001/api/posts');
+            setArticles(resp.data);
+        } catch (err) {
+            console.error('Error fetching articles:', err);
+            // Fallback to legacy content if API fails
+            if (data && data.artikel) setArticles(data.artikel);
+        }
+    };
+
     if (!data) return <div className="journal-loader">Assembling Journal...</div>;
 
-    const filteredArticles = (data.artikel || []).filter(art => {
+    const filteredArticles = (articles || []).filter(art => {
         const matchesCat = activeCategory === 'all' || art.category === activeCategory;
         const matchesSearch = art.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            art.summary.toLowerCase().includes(searchTerm.toLowerCase());
+            (art.excerpt || art.summary || '').toLowerCase().includes(searchTerm.toLowerCase());
         return matchesCat && matchesSearch;
     });
 
@@ -107,7 +121,7 @@ const BlogPage = ({ content }) => {
                                                     {isLocked && <span className="meta-lock">MEMBER ONLY</span>}
                                                 </div>
                                                 <h2 className="card-title-lux">{art.title}</h2>
-                                                <p className="card-excerpt-lux">{art.summary}</p>
+                                                <p className="card-excerpt-lux">{art.excerpt || art.summary}</p>
                                                 <div className="card-footer-lux">
                                                     <span className="read-more-lux">
                                                         {isLocked ? 'AKSES MEMBER' : 'BACA ARTIKEL'} <ChevronRight size={16} />

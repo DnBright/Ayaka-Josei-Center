@@ -2,22 +2,32 @@ import React from 'react';
 import { Users, FileText, Image, MessageSquare } from 'lucide-react';
 
 const DashboardOverview = ({ content }) => {
-    // Helper to count items safely
-    const countItems = (section) => {
-        if (!content || !content[section]) return 0;
-        // Adjust logic based on actual data structure
-        return content[section].items ? content[section].items.length : 0;
-    };
+    const role = localStorage.getItem('role');
+    const username = localStorage.getItem('username') || 'User';
 
-    const stats = [
+    const adminStats = [
         { label: 'Total Pesan', value: '12', icon: <MessageSquare size={24} />, color: 'blue' },
         { label: 'Halaman Aktif', value: '7', icon: <FileText size={24} />, color: 'green' },
         { label: 'Total Galeri', value: '45', icon: <Image size={24} />, color: 'purple' },
         { label: 'Total Alumni', value: '128', icon: <Users size={24} />, color: 'orange' },
     ];
 
+    const authorStats = [
+        { label: 'Artikel Saya', value: '0', icon: <FileText size={24} />, color: 'blue' },
+        { label: 'Pending Review', value: '0', icon: <MessageSquare size={24} />, color: 'orange' },
+        { label: 'Media Upload', value: '0', icon: <Image size={24} />, color: 'purple' },
+        { label: 'E-Book Materi', value: '3', icon: <Users size={24} />, color: 'green' },
+    ];
+
+    const stats = (role === 'Super Admin' || role === 'Editor') ? adminStats : authorStats;
+
     return (
         <div className="dashboard-overview">
+            <div className="welcome-section mb-8">
+                <h2 className="text-2xl font-bold text-slate-800">Selamat Datang, {username}!</h2>
+                <p className="text-secondary">Akses panel {role} Anda di Ayaka Josei Center.</p>
+            </div>
+
             <div className="grid grid-4">
                 {stats.map((stat, index) => (
                     <div key={index} className="stat-card glass-card">

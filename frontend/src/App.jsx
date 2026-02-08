@@ -30,6 +30,12 @@ import AlumniPage from './pages/AlumniPage';
 import ContactPage from './pages/ContactPage';
 import SplashLoader from './components/SplashLoader';
 
+// AUTHOR / CMS PAGES
+import ArticleManager from './pages/admin/ArticleManager';
+import ArticleEditor from './pages/admin/ArticleEditor';
+import EBookManager from './pages/admin/EBookManager';
+import AuthorProfile from './pages/admin/AuthorProfile';
+
 // MEMBER PAGES
 import MemberLogin from './pages/MemberLogin';
 import MemberRegister from './pages/MemberRegister';
@@ -91,6 +97,14 @@ function App() {
             <Route path="pages/blog" element={<BlogEditor content={content} refreshContent={fetchContent} />} />
             <Route path="pages/alumni" element={<AlumniEditor content={content} refreshContent={fetchContent} />} />
             <Route path="pages/contact" element={<ContactEditor content={content} refreshContent={fetchContent} />} />
+
+            {/* Author / Specific Management Routes */}
+            <Route path="articles" element={<ArticleManager />} />
+            <Route path="articles/new" element={<ArticleEditor />} />
+            <Route path="articles/edit/:id" element={<ArticleEditor />} />
+            <Route path="ebooks" element={<EBookManager />} />
+            <Route path="profile" element={<AuthorProfile />} />
+
             <Route path="media" element={<MediaManager />} />
             <Route path="communications" element={<Communication />} />
             <Route path="users" element={<UserManager />} />

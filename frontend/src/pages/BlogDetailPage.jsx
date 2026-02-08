@@ -1,21 +1,47 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import axios from 'axios';
 import { ArrowLeft, Calendar, Tag, Info, User, Share2, Facebook, Twitter, Link as LinkIcon, Lock } from 'lucide-react';
 
 const BlogDetailPage = ({ content }) => {
     const { slug } = useParams();
     const data = content?.blog_halaman;
-    const article = data?.artikel?.find(a => a.slug === slug);
+    const [article, setArticle] = useState(null);
     const [member, setMember] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        // Check member session
         const stored = localStorage.getItem('member_user');
         if (stored) setMember(JSON.parse(stored));
+
+        fetchArticle();
     }, [slug]);
 
-    if (!article) return <div className="read-loader">Retrieving Records...</div>;
+    const fetchArticle = async () => {
+        try {
+            // Check if we already have it in content prop (legacy fallback)
+            const legacyArticle = data?.artikel?.find(a => a.slug === slug);
+
+            const resp = await axios.get('http://localhost:5001/api/posts');
+            const found = resp.data.find(a => a.slug === slug);
+
+            if (found) {
+                setArticle(found);
+            } else if (legacyArticle) {
+                setArticle(legacyArticle);
+            }
+        } catch (err) {
+            console.error('Error fetching article detail:', err);
+            // Final fallback
+            const legacyArticle = data?.artikel?.find(a => a.slug === slug);
+            if (legacyArticle) setArticle(legacyArticle);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (loading || !article) return <div className="read-loader">Retrieving Records...</div>;
 
     const isMemberContent = (cat) => {
         const c = cat?.toLowerCase() || '';
