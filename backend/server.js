@@ -77,11 +77,16 @@ app.get('/api/posts', async (req, res) => {
 });
 
 app.get('/api/admin/posts', authenticateToken, authorizeRoles('Super Admin', 'Editor', 'Penulis'), async (req, res) => {
-    let query = "SELECT p.*, u.username as author_name FROM posts p JOIN users u ON p.author_id = u.id";
+    let query = `
+        SELECT p.*, COALESCE(u.username, a.username) as author_name 
+        FROM posts p 
+        LEFT JOIN users u ON p.author_id = u.id AND p.author_source = 'users'
+        LEFT JOIN admins a ON p.author_id = a.id AND p.author_source = 'admins'
+    `;
     let params = [];
 
     if (req.user.role === 'Penulis') {
-        query += " WHERE p.author_id = ?";
+        query += " WHERE p.author_id = ? AND p.author_source = 'users'";
         params.push(req.user.id);
     }
 
@@ -98,12 +103,13 @@ app.get('/api/admin/posts', authenticateToken, authorizeRoles('Super Admin', 'Ed
 app.post('/api/admin/posts', authenticateToken, authorizeRoles('Super Admin', 'Editor', 'Penulis'), async (req, res) => {
     const { title, slug, excerpt, content, category, status, access_status, image } = req.body;
     const author_id = req.user.id;
+    const author_source = req.user.source;
 
-    const query = `INSERT INTO posts (title, slug, excerpt, content, category, author_id, status, access_status, image) 
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const query = `INSERT INTO posts (title, slug, excerpt, content, category, author_id, author_source, status, access_status, image) 
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     try {
-        const [result] = await pool.execute(query, [title, slug, excerpt, content, category, author_id, status, access_status, image]);
+        const [result] = await pool.execute(query, [title, slug, excerpt, content, category, author_id, author_source, status, access_status, image]);
         res.json({ id: result.insertId, message: 'Post created successfully' });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -116,8 +122,8 @@ app.put('/api/admin/posts/:id', authenticateToken, authorizeRoles('Super Admin',
 
     try {
         if (req.user.role === 'Penulis') {
-            const [posts] = await pool.query("SELECT author_id FROM posts WHERE id = ?", [id]);
-            if (posts.length === 0 || posts[0].author_id !== req.user.id) {
+            const [posts] = await pool.query("SELECT author_id, author_source FROM posts WHERE id = ?", [id]);
+            if (posts.length === 0 || posts[0].author_id !== req.user.id || posts[0].author_source !== 'users') {
                 return res.status(403).json({ error: 'Not authorized' });
             }
         }
@@ -140,13 +146,40 @@ app.get('/api/ebooks', async (req, res) => {
     }
 });
 
+app.get('/api/admin/ebooks', authenticateToken, authorizeRoles('Super Admin', 'Editor', 'Penulis'), async (req, res) => {
+    let query = `
+        SELECT e.*, COALESCE(u.username, a.username) as author_name 
+        FROM ebooks e 
+        LEFT JOIN users u ON e.author_id = u.id AND e.author_source = 'users'
+        LEFT JOIN admins a ON e.author_id = a.id AND e.author_source = 'admins'
+    `;
+    let params = [];
+
+    if (req.user.role === 'Penulis') {
+        query += " WHERE e.author_id = ? AND e.author_source = 'users'";
+        params.push(req.user.id);
+    }
+
+    query += " ORDER BY e.created_at DESC";
+
+    try {
+        const [rows] = await pool.query(query, params);
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 app.post('/api/admin/ebooks', authenticateToken, authorizeRoles('Super Admin', 'Editor', 'Penulis'), async (req, res) => {
     const { title, description, file_url, category, version, status } = req.body;
     const author_id = req.user.id;
+    const author_source = req.user.source;
 
     try {
-        const [result] = await pool.execute(`INSERT INTO ebooks (title, description, file_url, category, version, author_id, status) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-            [title, description, file_url, category, version, author_id, status]);
+        const [result] = await pool.execute(
+            `INSERT INTO ebooks (title, description, file_url, category, version, author_id, author_source, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            [title, description, file_url, category, version, author_id, author_source, status]
+        );
         res.json({ id: result.insertId, message: 'E-book created successfully' });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -179,7 +212,18 @@ app.post('/api/admin/media', authenticateToken, authorizeRoles('Super Admin', 'E
 app.get('/api/content', async (req, res) => {
     try {
         const [rows] = await pool.query("SELECT * FROM content WHERE is_visible = 1 ORDER BY sort_order ASC");
-        res.json(rows);
+
+        // Convert array of rows into a keyed object for frontend
+        const keyedContent = rows.reduce((acc, row) => {
+            try {
+                acc[row.section_name] = JSON.parse(row.content_data);
+            } catch (e) {
+                acc[row.section_name] = row.content_data;
+            }
+            return acc;
+        }, {});
+
+        res.json(keyedContent);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -285,18 +329,92 @@ app.put('/api/admin/users/:source/:id/role', authenticateToken, authorizeRoles('
 });
 
 
-app.post('/api/auth/login', async (req, res) => {
-    const { username, password } = req.body;
-
-    log(`Login attempt: "${username}"`);
+// --- ANALYTICS API ---
+app.post('/api/analytics/track', async (req, res) => {
+    const { type, id } = req.body; // type: 'visit', 'post', 'ebook'
     try {
-        // Search in both tables
-        const query = `
-            SELECT id, username, password, role, 'users' as source FROM users WHERE username = ?
-            UNION ALL
-            SELECT id, username, password, role, 'admins' as source FROM admins WHERE username = ?
-        `;
-        const [results] = await pool.query(query, [username, username]);
+        if (type === 'visit') {
+            await pool.execute("UPDATE site_stats SET metric_value = metric_value + 1 WHERE metric_name = 'total_visits'");
+        } else if (type === 'post' && id) {
+            await pool.execute("UPDATE posts SET views = views + 1 WHERE id = ?", [id]);
+        } else if (type === 'ebook' && id) {
+            await pool.execute("UPDATE ebooks SET views = views + 1 WHERE id = ?", [id]);
+        }
+        res.json({ message: 'Tracking updated' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.get('/api/admin/stats', authenticateToken, async (req, res) => {
+    try {
+        const { role, id } = req.user;
+        let stats = {};
+
+        if (role === 'Super Admin' || role === 'Editor') {
+            // Global Stats
+            const [visits] = await pool.query("SELECT metric_value FROM site_stats WHERE metric_name = 'total_visits'");
+            const [postViews] = await pool.query("SELECT SUM(views) as total FROM posts");
+            const [ebookViews] = await pool.query("SELECT SUM(views) as total FROM ebooks");
+            const [totalPosts] = await pool.query("SELECT COUNT(*) as count FROM posts");
+            let totalMessages = 0;
+            try {
+                const [msgRows] = await pool.query("SELECT COUNT(*) as count FROM communications");
+                totalMessages = msgRows[0]?.count || 0;
+            } catch (e) { /* ignore if table missing */ }
+
+            stats = {
+                totalVisits: visits[0]?.metric_value || 0,
+                totalPostViews: postViews[0]?.total || 0,
+                totalEbookViews: ebookViews[0]?.total || 0,
+                totalPosts: totalPosts[0]?.count || 0,
+                totalMessages: totalMessages
+            };
+        } else if (role === 'Penulis') {
+            // Specific Author Stats
+            const [myPostViews] = await pool.query("SELECT SUM(views) as total FROM posts WHERE author_id = ?", [id]);
+            const [myPosts] = await pool.query("SELECT COUNT(*) as count FROM posts WHERE author_id = ?", [id]);
+            const [myEbooks] = await pool.query("SELECT COUNT(*) as count FROM ebooks WHERE author_id = ?", [id]);
+            const [myEbookViews] = await pool.query("SELECT SUM(views) as total FROM ebooks WHERE author_id = ?", [id]);
+
+            stats = {
+                myPostViews: myPostViews[0]?.total || 0,
+                myPosts: myPosts[0]?.count || 0,
+                myEbooks: myEbooks[0]?.count || 0,
+                myEbookViews: myEbookViews[0]?.total || 0
+            };
+        }
+
+        res.json(stats);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.post('/api/auth/login', async (req, res) => {
+    const { username, password, source } = req.body;
+
+    log(`Login attempt: "${username}" (Source: ${source || 'Any'})`);
+    try {
+        let query, params;
+
+        if (source === 'admins') {
+            query = "SELECT id, username, password, role, 'admins' as source FROM admins WHERE username = ?";
+            params = [username];
+        } else if (source === 'users') {
+            query = "SELECT id, username, password, role, 'users' as source FROM users WHERE username = ?";
+            params = [username];
+        } else {
+            // Priority: Admins first, then Users
+            query = `
+                SELECT id, username, password, role, 'admins' as source FROM admins WHERE username = ?
+                UNION ALL
+                SELECT id, username, password, role, 'users' as source FROM users WHERE username = ?
+            `;
+            params = [username, username];
+        }
+
+        const [results] = await pool.query(query, params);
         log(`Matches found: ${results.length}`);
 
         if (results.length === 0) return res.status(401).json({ error: 'User not found' });
@@ -332,8 +450,8 @@ app.post('/api/auth/login', async (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
-    log(`Server running on http://localhost:${PORT} (MySQL Mode)`);
+app.listen(PORT, '0.0.0.0', () => {
+    log(`Server running on http://0.0.0.0:${PORT} (MySQL Mode)`);
 });
 
 process.on('unhandledRejection', (reason, promise) => {

@@ -24,7 +24,7 @@ const BlogPage = ({ content }) => {
 
     const fetchArticles = async () => {
         try {
-            const resp = await axios.get('http://localhost:5002/api/posts');
+            const resp = await axios.get('http://127.0.0.1:5005/api/posts');
             setArticles(resp.data);
         } catch (err) {
             console.error('Error fetching articles:', err);

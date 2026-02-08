@@ -7,7 +7,12 @@ const ArticleManager = () => {
     const [articles, setArticles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
-    const role = localStorage.getItem('role');
+
+    const path = window.location.pathname;
+    const isPenulisPath = path.startsWith('/penulis');
+    const keyPrefix = isPenulisPath ? 'penulis_' : 'admin_';
+
+    const role = localStorage.getItem(`${keyPrefix}role`);
     const prefix = (role === 'Super Admin' || role === 'Editor') ? '/admin' : '/penulis';
 
     useEffect(() => {
@@ -16,8 +21,8 @@ const ArticleManager = () => {
 
     const fetchArticles = async () => {
         try {
-            const token = localStorage.getItem('token');
-            const resp = await axios.get('http://localhost:5002/api/admin/posts', {
+            const token = localStorage.getItem(`${keyPrefix}token`);
+            const resp = await axios.get('http://127.0.0.1:5005/api/admin/posts', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setArticles(resp.data);
@@ -70,6 +75,7 @@ const ArticleManager = () => {
                             <th className="p-4">Judul</th>
                             <th className="p-4">Kategori</th>
                             <th className="p-4">Status</th>
+                            <th className="p-4">Views</th>
                             <th className="p-4">Tanggal</th>
                             <th className="p-4 text-right">Aksi</th>
                         </tr>
@@ -83,6 +89,7 @@ const ArticleManager = () => {
                                 </td>
                                 <td className="p-4 text-sm text-slate-600">{art.category}</td>
                                 <td className="p-4">{getStatusBadge(art.status)}</td>
+                                <td className="p-4 text-sm font-bold text-blue-600">{art.views || 0}</td>
                                 <td className="p-4 text-sm text-slate-500">{new Date(art.created_at).toLocaleDateString()}</td>
                                 <td className="p-4 text-right">
                                     <div className="flex justify-end gap-2">

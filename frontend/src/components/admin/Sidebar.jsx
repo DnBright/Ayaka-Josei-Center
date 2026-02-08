@@ -14,20 +14,26 @@ const Sidebar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    const currentRole = localStorage.getItem('role');
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
+    const path = window.location.pathname;
+    const isPenulisPath = path.startsWith('/penulis');
+    const keyPrefix = isPenulisPath ? 'penulis_' : 'admin_';
 
-    if (currentRole === 'Super Admin' || currentRole === 'Editor') {
-      navigate('/admin/login');
-    } else if (currentRole === 'Penulis') {
+    const currentRole = localStorage.getItem(`${keyPrefix}role`);
+    localStorage.removeItem(`${keyPrefix}token`);
+    localStorage.removeItem(`${keyPrefix}role`);
+    localStorage.removeItem(`${keyPrefix}username`);
+
+    if (isPenulisPath) {
       navigate('/penulis/login');
     } else {
-      navigate('/login');
+      navigate('/admin/login');
     }
   };
 
-  const role = localStorage.getItem('role') || 'Viewer';
+  const path = window.location.pathname;
+  const isPenulisPath = path.startsWith('/penulis');
+  const keyPrefix = isPenulisPath ? 'penulis_' : 'admin_';
+  const role = localStorage.getItem(`${keyPrefix}role`) || 'Viewer';
   const prefix = (role === 'Super Admin' || role === 'Editor') ? '/admin' : '/penulis';
 
   const adminItems = [

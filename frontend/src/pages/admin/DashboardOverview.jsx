@@ -1,25 +1,49 @@
 import React from 'react';
 import { Users, FileText, Image, MessageSquare } from 'lucide-react';
+import axios from 'axios';
 
 const DashboardOverview = ({ content }) => {
-    const role = localStorage.getItem('role');
-    const username = localStorage.getItem('username') || 'User';
+    const path = window.location.pathname;
+    const isPenulisPath = path.startsWith('/penulis');
+    const keyPrefix = isPenulisPath ? 'penulis_' : 'admin_';
+
+    const role = localStorage.getItem(`${keyPrefix}role`);
+    const username = localStorage.getItem(`${keyPrefix}username`) || 'User';
+    const [stats, setStats] = React.useState(null);
+    const [loading, setLoading] = React.useState(true);
+
+    React.useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const token = localStorage.getItem(`${keyPrefix}token`);
+                const resp = await axios.get('http://127.0.0.1:5005/api/admin/stats', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setStats(resp.data);
+            } catch (err) {
+                console.error('Failed to fetch dashboard stats:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchStats();
+    }, []);
 
     const adminStats = [
-        { label: 'Total Pesan', value: '12', icon: <MessageSquare size={24} />, color: 'blue' },
-        { label: 'Halaman Aktif', value: '7', icon: <FileText size={24} />, color: 'green' },
-        { label: 'Total Galeri', value: '45', icon: <Image size={24} />, color: 'purple' },
-        { label: 'Total Alumni', value: '128', icon: <Users size={24} />, color: 'orange' },
+        { label: 'Total Pesan', value: stats?.totalMessages ?? '...', icon: <MessageSquare size={24} />, color: 'blue' },
+        { label: 'Pengunjung Web', value: stats?.totalVisits ?? '...', icon: <Users size={24} />, color: 'orange' },
+        { label: 'View Artikel', value: stats?.totalPostViews ?? '...', icon: <FileText size={24} />, color: 'green' },
+        { label: 'View E-Book', value: stats?.totalEbookViews ?? '...', icon: <Image size={24} />, color: 'purple' },
     ];
 
     const authorStats = [
-        { label: 'Artikel Saya', value: '0', icon: <FileText size={24} />, color: 'blue' },
-        { label: 'Pending Review', value: '0', icon: <MessageSquare size={24} />, color: 'orange' },
-        { label: 'Media Upload', value: '0', icon: <Image size={24} />, color: 'purple' },
-        { label: 'E-Book Materi', value: '3', icon: <Users size={24} />, color: 'green' },
+        { label: 'Artikel Saya', value: stats?.myPosts ?? '...', icon: <FileText size={24} />, color: 'blue' },
+        { label: 'View Artikel', value: stats?.myPostViews ?? '...', icon: <Users size={24} />, color: 'green' },
+        { label: 'E-Book Materi', value: stats?.myEbooks ?? '...', icon: <Image size={24} />, color: 'purple' },
+        { label: 'View E-Book', value: stats?.myEbookViews ?? '...', icon: <MessageSquare size={24} />, color: 'orange' },
     ];
 
-    const stats = (role === 'Super Admin' || role === 'Editor') ? adminStats : authorStats;
+    const displayStats = (role === 'Super Admin' || role === 'Editor') ? adminStats : authorStats;
 
     return (
         <div className="dashboard-overview">
@@ -29,7 +53,7 @@ const DashboardOverview = ({ content }) => {
             </div>
 
             <div className="grid grid-4">
-                {stats.map((stat, index) => (
+                {displayStats.map((stat, index) => (
                     <div key={index} className="stat-card glass-card">
                         <div className={`stat-icon ${stat.color}`}>
                             {stat.icon}

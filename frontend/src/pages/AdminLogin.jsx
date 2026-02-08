@@ -16,7 +16,7 @@ const AdminLogin = () => {
         setLoading(true);
         setError('');
         try {
-            const resp = await axios.post('http://localhost:5002/api/auth/login', { username, password });
+            const resp = await axios.post('http://127.0.0.1:5005/api/auth/login', { username, password, source: 'admins' });
 
             // Validate if role is Admin or Editor
             if (resp.data.role !== 'Super Admin' && resp.data.role !== 'Editor') {
@@ -25,9 +25,9 @@ const AdminLogin = () => {
                 return;
             }
 
-            localStorage.setItem('token', resp.data.token);
-            localStorage.setItem('role', resp.data.role);
-            localStorage.setItem('username', username);
+            localStorage.setItem('admin_token', resp.data.token);
+            localStorage.setItem('admin_role', resp.data.role);
+            localStorage.setItem('admin_username', username);
 
             navigate('/admin');
         } catch (err) {

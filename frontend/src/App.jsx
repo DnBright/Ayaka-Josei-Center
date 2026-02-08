@@ -40,21 +40,26 @@ import ArticleEditor from './pages/admin/ArticleEditor';
 import EBookManager from './pages/admin/EBookManager';
 import AuthorProfile from './pages/admin/AuthorProfile';
 
-const API_URL = 'http://localhost:5002/api';
+const API_URL = 'http://127.0.0.1:5005/api';
 
 // ROLE GUARD COMPONENT
 const RoleGuard = ({ children, allowedRoles }) => {
-  const role = localStorage.getItem('role');
-  const token = localStorage.getItem('token');
+  const path = window.location.pathname;
+  const isPenulisPath = path.startsWith('/penulis');
+  const keyPrefix = isPenulisPath ? 'penulis_' : 'admin_';
+
+  const role = localStorage.getItem(`${keyPrefix}role`);
+  const token = localStorage.getItem(`${keyPrefix}token`);
 
   if (!token) {
-    const path = window.location.pathname;
+    if (isPenulisPath) return <Navigate to="/penulis/login" replace />;
     if (path.startsWith('/admin')) return <Navigate to="/admin/login" replace />;
-    if (path.startsWith('/penulis')) return <Navigate to="/penulis/login" replace />;
     return <Navigate to="/login" replace />;
   }
 
   if (allowedRoles && !allowedRoles.includes(role)) {
+    // If they have the role for the OTHER portal, maybe they are just in the wrong place
+    // but for now let's just redirect to their own portal or login
     if (role === 'Penulis') return <Navigate to="/penulis" replace />;
     if (role === 'Super Admin' || role === 'Editor') return <Navigate to="/admin" replace />;
     return <Navigate to="/login" replace />;

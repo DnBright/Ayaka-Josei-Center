@@ -23,11 +23,14 @@ const BlogDetailPage = ({ content }) => {
             // Check if we already have it in content prop (legacy fallback)
             const legacyArticle = data?.artikel?.find(a => a.slug === slug);
 
-            const resp = await axios.get('http://localhost:5002/api/posts');
+            const resp = await axios.get('http://127.0.0.1:5005/api/posts');
             const found = resp.data.find(a => a.slug === slug);
 
             if (found) {
                 setArticle(found);
+                // Track post view
+                axios.post('http://127.0.0.1:5005/api/analytics/track', { type: 'post', id: found.id })
+                    .catch(e => console.error('Failed to track post view:', e));
             } else if (legacyArticle) {
                 setArticle(legacyArticle);
             }

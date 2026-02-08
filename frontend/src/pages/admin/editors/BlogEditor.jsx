@@ -82,7 +82,7 @@ const BlogEditor = ({ content, refreshContent }) => {
                 posts: updatedPosts
             };
 
-            await axios.put('http://localhost:5002/api/content/blog', {
+            await axios.put('http://127.0.0.1:5005/api/content/blog', {
                 content_data: submissionData
             }, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -115,7 +115,7 @@ const BlogEditor = ({ content, refreshContent }) => {
                 posts: updatedPosts
             };
 
-            await axios.put('http://localhost:5002/api/content/blog', {
+            await axios.put('http://127.0.0.1:5005/api/content/blog', {
                 content_data: submissionData
             }, {
                 headers: { Authorization: `Bearer ${token}` }

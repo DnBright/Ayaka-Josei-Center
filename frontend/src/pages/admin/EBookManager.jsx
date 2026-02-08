@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Book, Trash2, Download, Search } from 'lucide-react';
+import { Plus, Book, Trash2, Download, Search, Eye } from 'lucide-react';
 import axios from 'axios';
 
 const EBookManager = () => {
     const [ebooks, setEbooks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
+
+    const path = window.location.pathname;
+    const isPenulisPath = path.startsWith('/penulis');
+    const keyPrefix = isPenulisPath ? 'penulis_' : 'admin_';
+
     const [formData, setFormData] = useState({
         title: '',
         description: '',
@@ -21,8 +26,8 @@ const EBookManager = () => {
 
     const fetchEbooks = async () => {
         try {
-            const token = localStorage.getItem('token');
-            const resp = await axios.get('http://localhost:5002/api/admin/ebooks', {
+            const token = localStorage.getItem(`${keyPrefix}token`);
+            const resp = await axios.get('http://127.0.0.1:5005/api/admin/ebooks', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             // Since there's no specific admin route to list all yet (except public), 
@@ -38,8 +43,8 @@ const EBookManager = () => {
     const handleSave = async (e) => {
         e.preventDefault();
         try {
-            const token = localStorage.getItem('token');
-            await axios.post('http://localhost:5002/api/admin/ebooks', formData, {
+            const token = localStorage.getItem(`${keyPrefix}token`);
+            await axios.post('http://127.0.0.1:5005/api/admin/ebooks', formData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setShowForm(false);
@@ -107,6 +112,9 @@ const EBookManager = () => {
                         <div className="flex-1 min-w-0">
                             <h4 className="font-bold truncate text-slate-800">{book.title}</h4>
                             <p className="text-xs text-slate-500 truncate">{book.category} • {book.version || 'v1.0'}</p>
+                            <div className="flex items-center gap-1 mt-1 text-xs text-blue-600 font-bold">
+                                <Eye size={12} /> {book.views || 0} Views
+                            </div>
                             <div className="flex gap-2 mt-3">
                                 <button className="text-xs font-bold text-blue-600">Edit</button>
                                 <button className="text-xs font-bold text-red-600">Hapus</button>

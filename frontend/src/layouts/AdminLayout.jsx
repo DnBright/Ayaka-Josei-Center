@@ -4,11 +4,14 @@ import Sidebar from '../components/admin/Sidebar';
 import AdminHeader from '../components/admin/AdminHeader';
 
 const AdminLayout = () => {
-    const token = localStorage.getItem('token');
+    const path = window.location.pathname;
+    const isPenulisPath = path.startsWith('/penulis');
+    const keyPrefix = isPenulisPath ? 'penulis_' : 'admin_';
 
-    // Simple auth check - in a real app this might verify the token with backend
+    const token = localStorage.getItem(`${keyPrefix}token`);
+
     if (!token) {
-        return <Navigate to="/login" replace />;
+        return <Navigate to={isPenulisPath ? "/penulis/login" : "/admin/login"} replace />;
     }
 
     return (

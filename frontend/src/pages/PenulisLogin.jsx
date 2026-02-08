@@ -15,7 +15,7 @@ const PenulisLogin = () => {
         setLoading(true);
         setError('');
         try {
-            const resp = await axios.post('http://localhost:5002/api/auth/login', { username, password });
+            const resp = await axios.post('http://127.0.0.1:5005/api/auth/login', { username, password, source: 'users' });
 
             // Check role for Author
             if (resp.data.role !== 'Penulis') {
@@ -24,9 +24,9 @@ const PenulisLogin = () => {
                 return;
             }
 
-            localStorage.setItem('token', resp.data.token);
-            localStorage.setItem('role', resp.data.role);
-            localStorage.setItem('username', username);
+            localStorage.setItem('penulis_token', resp.data.token);
+            localStorage.setItem('penulis_role', resp.data.role);
+            localStorage.setItem('penulis_username', username);
 
             navigate('/penulis');
         } catch (err) {

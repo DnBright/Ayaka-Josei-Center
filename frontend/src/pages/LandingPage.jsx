@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 import Hero from '../components/Hero';
 import FloatingBadge from '../components/FloatingBadge';
 
@@ -6,6 +7,15 @@ const LandingPage = ({ content }) => {
     const observerRef = useRef(null);
 
     useEffect(() => {
+        // Track Website Visit
+        const trackVisit = async () => {
+            try {
+                await axios.post('http://127.0.0.1:5005/api/analytics/track', { type: 'visit' });
+            } catch (err) {
+                console.error('Failed to track visit:', err);
+            }
+        };
+        trackVisit();
 
         const observerOptions = {
             threshold: 0.1,

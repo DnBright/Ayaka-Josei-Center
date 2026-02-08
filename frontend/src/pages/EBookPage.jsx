@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Book, Lock, AlertCircle, ChevronRight, Download, PlayCircle, FileText } from 'lucide-react';
+import { Book, AlertCircle, Download } from 'lucide-react';
 
 const EBookPage = () => {
     const navigate = useNavigate();
@@ -22,12 +22,22 @@ const EBookPage = () => {
 
     const fetchEbooks = async () => {
         try {
-            const resp = await axios.get('http://localhost:5002/api/ebooks');
+            const resp = await axios.get('http://127.0.0.1:5005/api/ebooks');
             setEbooks(resp.data);
         } catch (err) {
             console.error('Error fetching ebooks:', err);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const trackEbookClick = async (id, url) => {
+        try {
+            await axios.post('http://127.0.0.1:5005/api/analytics/track', { type: 'ebook', id });
+            window.open(url, '_blank');
+        } catch (err) {
+            console.error('Failed to track ebook click:', err);
+            window.open(url, '_blank');
         }
     };
 
@@ -70,7 +80,10 @@ const EBookPage = () => {
                                     </div>
                                     <h3>{book.title}</h3>
                                     <p>{book.description}</p>
-                                    <button className="btn-download">
+                                    <button
+                                        className="btn-download"
+                                        onClick={() => trackEbookClick(book.id, book.file_url)}
+                                    >
                                         <Download size={18} /> UNDUH MATERI
                                     </button>
                                 </div>

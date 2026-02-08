@@ -7,6 +7,10 @@ const ArticleEditor = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+
+    const path = window.location.pathname;
+    const isPenulisPath = path.startsWith('/penulis');
+    const keyPrefix = isPenulisPath ? 'penulis_' : 'admin_';
     const [formData, setFormData] = useState({
         title: '',
         slug: '',
@@ -28,8 +32,8 @@ const ArticleEditor = () => {
         // In a real app we'd fetch specific ID
         // For now we get all and filter
         try {
-            const token = localStorage.getItem('token');
-            const resp = await axios.get('http://localhost:5002/api/admin/posts', {
+            const token = localStorage.getItem(`${keyPrefix}token`);
+            const resp = await axios.get('http://127.0.0.1:5005/api/admin/posts', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const post = resp.data.find(p => p.id === parseInt(id));
@@ -47,17 +51,17 @@ const ArticleEditor = () => {
         const dataToSave = { ...formData, slug };
 
         try {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem(`${keyPrefix}token`);
             if (id) {
-                await axios.put(`http://localhost:5002/api/admin/posts/${id}`, dataToSave, {
+                await axios.put(`http://127.0.0.1:5005/api/admin/posts/${id}`, dataToSave, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             } else {
-                await axios.post('http://localhost:5002/api/admin/posts', dataToSave, {
+                await axios.post('http://127.0.0.1:5005/api/admin/posts', dataToSave, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             }
-            const prefix = (localStorage.getItem('role') === 'Penulis') ? '/penulis' : '/admin';
+            const prefix = (localStorage.getItem(`${keyPrefix}role`) === 'Penulis') ? '/penulis' : '/admin';
             navigate(`${prefix}/articles`);
         } catch (err) {
             console.error(err);
@@ -152,7 +156,7 @@ const ArticleEditor = () => {
                                 >
                                     <option value="draft">Draft</option>
                                     <option value="pending">Ajukan Publish</option>
-                                    {localStorage.getItem('role') !== 'Penulis' && <option value="publish">Publikasikan Langsung</option>}
+                                    {localStorage.getItem(`${keyPrefix}role`) !== 'Penulis' && <option value="publish">Publikasikan Langsung</option>}
                                 </select>
                             </div>
                         </div>
