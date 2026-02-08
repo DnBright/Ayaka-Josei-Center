@@ -4,56 +4,58 @@ import { useNavigate } from 'react-router-dom';
 import { Lock } from 'lucide-react';
 
 const Login = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const navigate = useNavigate();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-    const handleLogin = async (e) => {
-        e.preventDefault();
-        try {
-            const resp = await axios.post('http://localhost:5001/api/auth/login', { username, password });
-            localStorage.setItem('token', resp.data.token);
-            localStorage.setItem('role', resp.data.role);
-            navigate('/admin');
-        } catch (err) {
-            setError('Username atau password salah');
-        }
-    };
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const resp = await axios.post('http://localhost:5001/api/auth/login', { username, password });
+      localStorage.setItem('token', resp.data.token);
+      localStorage.setItem('role', resp.data.role);
 
-    return (
-        <div className="login-page">
-            <div className="login-card glass-card fade-in">
-                <div className="login-header">
-                    <div className="lock-icon"><Lock size={32} /></div>
-                    <h2>Admin Login</h2>
-                    <p>Akses Panel Kelola Ayaka Josei Center</p>
-                </div>
-                <form onSubmit={handleLogin}>
-                    <div className="form-group">
-                        <label>Username</label>
-                        <input
-                            type="text"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Password</label>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
-                    </div>
-                    {error && <p className="error-msg">{error}</p>}
-                    <button type="submit" className="btn-login">Login Sekarang</button>
-                </form>
-            </div>
+      const prefix = (resp.data.role === 'Super Admin' || resp.data.role === 'Editor') ? '/admin' : '/penulis';
+      navigate(prefix);
+    } catch (err) {
+      setError('Username atau password salah');
+    }
+  };
 
-            <style jsx="true">{`
+  return (
+    <div className="login-page">
+      <div className="login-card glass-card fade-in">
+        <div className="login-header">
+          <div className="lock-icon"><Lock size={32} /></div>
+          <h2>Login Panel</h2>
+          <p>Akses Management Ayaka Josei Center</p>
+        </div>
+        <form onSubmit={handleLogin}>
+          <div className="form-group">
+            <label>Username</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          {error && <p className="error-msg">{error}</p>}
+          <button type="submit" className="btn-login">Login Sekarang</button>
+        </form>
+      </div>
+
+      <style jsx="true">{`
         .login-page {
           height: 100vh;
           display: flex;
@@ -118,8 +120,8 @@ const Login = () => {
           text-align: center;
         }
       `}</style>
-        </div>
-    );
+    </div>
+  );
 };
 
 export default Login;

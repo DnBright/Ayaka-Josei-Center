@@ -7,6 +7,8 @@ const ArticleManager = () => {
     const [articles, setArticles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
+    const role = localStorage.getItem('role');
+    const prefix = (role === 'Super Admin' || role === 'Editor') ? '/admin' : '/penulis';
 
     useEffect(() => {
         fetchArticles();
@@ -45,7 +47,7 @@ const ArticleManager = () => {
                     <h2 className="text-xl font-bold text-slate-800">Semua Artikel</h2>
                     <p className="text-secondary text-sm">Kelola tulisan Anda di sini.</p>
                 </div>
-                <Link to="/admin/articles/new" className="bg-brand-red text-white px-4 py-2 rounded-lg flex items-center gap-2 font-semibold">
+                <Link to={`${prefix}/articles/new`} className="bg-brand-red text-white px-4 py-2 rounded-lg flex items-center gap-2 font-semibold">
                     <Plus size={18} /> Tambah Baru
                 </Link>
             </div>
@@ -84,7 +86,7 @@ const ArticleManager = () => {
                                 <td className="p-4 text-sm text-slate-500">{new Date(art.created_at).toLocaleDateString()}</td>
                                 <td className="p-4 text-right">
                                     <div className="flex justify-end gap-2">
-                                        <Link to={`/admin/articles/edit/${art.id}`} className="p-2 text-blue-600 hover:bg-blue-50 rounded">
+                                        <Link to={`${prefix}/articles/edit/${art.id}`} className="p-2 text-blue-600 hover:bg-blue-50 rounded">
                                             <Edit2 size={16} />
                                         </Link>
                                         <button className="p-2 text-red-600 hover:bg-red-50 rounded">

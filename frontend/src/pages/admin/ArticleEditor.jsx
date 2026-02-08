@@ -57,7 +57,8 @@ const ArticleEditor = () => {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             }
-            navigate('/admin/articles');
+            const prefix = (localStorage.getItem('role') === 'Penulis') ? '/penulis' : '/admin';
+            navigate(`${prefix}/articles`);
         } catch (err) {
             console.error(err);
         } finally {

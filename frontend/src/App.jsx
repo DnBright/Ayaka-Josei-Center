@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from './components/Navbar'; // Kept for now if PublicLayout needs it, but App.jsx might not
 import Footer from './components/Footer'; // Kept for now
@@ -20,7 +20,11 @@ import MediaManager from './pages/admin/MediaManager';
 import Communication from './pages/admin/Communication';
 import UserManager from './pages/admin/UserManager';
 import Settings from './pages/admin/Settings';
-import Login from './pages/Login';
+import AdminLogin from './pages/AdminLogin';
+import PenulisLogin from './pages/PenulisLogin';
+import MemberLogin from './pages/MemberLogin';
+import MemberRegister from './pages/MemberRegister';
+import EBookPage from './pages/EBookPage';
 import ProfilPage from './pages/ProfilPage';
 import ProgramPage from './pages/ProgramPage';
 import GaleriPage from './pages/GaleriPage';
@@ -36,12 +40,28 @@ import ArticleEditor from './pages/admin/ArticleEditor';
 import EBookManager from './pages/admin/EBookManager';
 import AuthorProfile from './pages/admin/AuthorProfile';
 
-// MEMBER PAGES
-import MemberLogin from './pages/MemberLogin';
-import MemberRegister from './pages/MemberRegister';
-import EBookPage from './pages/EBookPage';
-
 const API_URL = 'http://localhost:5001/api';
+
+// ROLE GUARD COMPONENT
+const RoleGuard = ({ children, allowedRoles }) => {
+  const role = localStorage.getItem('role');
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    const path = window.location.pathname;
+    if (path.startsWith('/admin')) return <Navigate to="/admin/login" replace />;
+    if (path.startsWith('/penulis')) return <Navigate to="/penulis/login" replace />;
+    return <Navigate to="/login" replace />;
+  }
+
+  if (allowedRoles && !allowedRoles.includes(role)) {
+    if (role === 'Penulis') return <Navigate to="/penulis" replace />;
+    if (role === 'Super Admin' || role === 'Editor') return <Navigate to="/admin" replace />;
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+};
 
 function App() {
   const [content, setContent] = useState(null);
@@ -78,7 +98,7 @@ function App() {
             <Route path="/blog/:slug" element={<BlogDetailPage content={content} />} />
             <Route path="/alumni" element={<AlumniPage content={content} />} />
             <Route path="/kontak" element={<ContactPage content={content} />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<MemberLogin />} />
             <Route path="/ebook" element={<EBookPage />} />
           </Route>
 
@@ -86,8 +106,16 @@ function App() {
           <Route path="/member/login" element={<MemberLogin />} />
           <Route path="/member/register" element={<MemberRegister />} />
 
-          {/* Admin Routes */}
-          <Route path="/admin" element={<AdminLayout />}>
+          {/* ADMIN ROUTES (Super Admin & Editor) */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route
+            path="/admin"
+            element={
+              <RoleGuard allowedRoles={['Super Admin', 'Editor']}>
+                <AdminLayout />
+              </RoleGuard>
+            }
+          >
             <Route index element={<DashboardOverview content={content} />} />
             <Route path="pages" element={<PageManager />} />
             <Route path="pages/home" element={<HomeEditor content={content} refreshContent={fetchContent} />} />
@@ -98,17 +126,33 @@ function App() {
             <Route path="pages/alumni" element={<AlumniEditor content={content} refreshContent={fetchContent} />} />
             <Route path="pages/contact" element={<ContactEditor content={content} refreshContent={fetchContent} />} />
 
-            {/* Author / Specific Management Routes */}
             <Route path="articles" element={<ArticleManager />} />
             <Route path="articles/new" element={<ArticleEditor />} />
             <Route path="articles/edit/:id" element={<ArticleEditor />} />
             <Route path="ebooks" element={<EBookManager />} />
-            <Route path="profile" element={<AuthorProfile />} />
-
             <Route path="media" element={<MediaManager />} />
             <Route path="communications" element={<Communication />} />
             <Route path="users" element={<UserManager />} />
             <Route path="settings" element={<Settings />} />
+          </Route>
+
+          {/* PENULIS ROUTES (Author) */}
+          <Route path="/penulis/login" element={<PenulisLogin />} />
+          <Route
+            path="/penulis"
+            element={
+              <RoleGuard allowedRoles={['Penulis']}>
+                <AdminLayout />
+              </RoleGuard>
+            }
+          >
+            <Route index element={<DashboardOverview content={content} />} />
+            <Route path="articles" element={<ArticleManager />} />
+            <Route path="articles/new" element={<ArticleEditor />} />
+            <Route path="articles/edit/:id" element={<ArticleEditor />} />
+            <Route path="ebooks" element={<EBookManager />} />
+            <Route path="media" element={<MediaManager />} />
+            <Route path="profile" element={<AuthorProfile />} />
           </Route>
         </Routes>
       </div>

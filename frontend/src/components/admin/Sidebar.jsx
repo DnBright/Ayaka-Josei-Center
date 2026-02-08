@@ -14,12 +14,21 @@ const Sidebar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    const currentRole = localStorage.getItem('role');
     localStorage.removeItem('token');
     localStorage.removeItem('role');
-    navigate('/login');
+
+    if (currentRole === 'Super Admin' || currentRole === 'Editor') {
+      navigate('/admin/login');
+    } else if (currentRole === 'Penulis') {
+      navigate('/penulis/login');
+    } else {
+      navigate('/login');
+    }
   };
 
   const role = localStorage.getItem('role') || 'Viewer';
+  const prefix = (role === 'Super Admin' || role === 'Editor') ? '/admin' : '/penulis';
 
   const adminItems = [
     { path: '/admin', icon: <LayoutDashboard size={20} />, label: 'Dashboard', end: true },
@@ -31,11 +40,11 @@ const Sidebar = () => {
   ];
 
   const authorItems = [
-    { path: '/admin', icon: <LayoutDashboard size={20} />, label: 'Dashboard', end: true },
-    { path: '/admin/articles', icon: <FileText size={20} />, label: 'Artikel' },
-    { path: '/admin/ebooks', icon: <FileText size={20} />, label: 'E-Book' },
-    { path: '/admin/media', icon: <Image size={20} />, label: 'Media' },
-    { path: '/admin/profile', icon: <Users size={20} />, label: 'Profil Saya' },
+    { path: '/penulis', icon: <LayoutDashboard size={20} />, label: 'Dashboard', end: true },
+    { path: '/penulis/articles', icon: <FileText size={20} />, label: 'Artikel' },
+    { path: '/penulis/ebooks', icon: <FileText size={20} />, label: 'E-Book' },
+    { path: '/penulis/media', icon: <Image size={20} />, label: 'Media' },
+    { path: '/penulis/profile', icon: <Users size={20} />, label: 'Profil Saya' },
   ];
 
   const navItems = (role === 'Super Admin' || role === 'Editor') ? adminItems : authorItems;
