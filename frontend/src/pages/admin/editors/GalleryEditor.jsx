@@ -199,20 +199,10 @@ const GalleryEditor = ({ content, refreshContent }) => {
             </div>
 
             <style>{`
-                .back-link {
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 0.5rem;
-                    color: var(--secondary);
-                    font-weight: 500;
-                    margin-bottom: 0.5rem;
-                }
-                .back-link:hover { color: var(--brand-red); }
-                .text-brand-red { color: var(--brand-red); }
-                .bg-brand-red { background-color: var(--brand-red); }
-                input:focus, textarea:focus { outline: 2px solid var(--brand-red); border-color: transparent; }
                 .sticky { position: sticky; }
                 .top-24 { top: 6rem; }
+                .aspect-ratio-box { position: relative; }
+                .group:hover .group-hover\:opacity-100 { opacity: 1; }
             `}</style>
         </div>
     );

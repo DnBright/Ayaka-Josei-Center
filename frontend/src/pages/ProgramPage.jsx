@@ -266,7 +266,7 @@ const ProgramPage = ({ content }) => {
                     color: var(--bg-dark) !important;
                 }
 
-                .container { max-width: 1400px; margin: 0 auto; padding: 0 4rem; }
+                .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
                 .container-full { max-width: 1800px; margin: 0 auto; padding: 0 4rem; }
 
                 /* REVEAL LOGIC */

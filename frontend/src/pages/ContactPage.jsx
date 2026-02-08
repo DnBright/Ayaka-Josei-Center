@@ -225,7 +225,7 @@ const ContactPage = ({ content }) => {
                     color: var(--co-dark);
                 }
 
-                .contact-container { max-width: 1300px; margin: 0 auto; padding: 0 4rem; }
+                .contact-container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
 
                 /* REVEAL SYSTEM */
                 .contact-reveal { opacity: 0; transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1); }

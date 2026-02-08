@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Calendar, Tag, ChevronRight, Search, Filter, Book, PenTool, Info } from 'lucide-react';
+import { BookOpen, Calendar, Tag, ChevronRight, Search, Filter, Book, PenTool, Info, Lock } from 'lucide-react';
 
 const BlogPage = ({ content }) => {
     const data = content?.blog_halaman;
@@ -27,6 +27,12 @@ const BlogPage = ({ content }) => {
             art.summary.toLowerCase().includes(searchTerm.toLowerCase());
         return matchesCat && matchesSearch;
     });
+
+    // Helper to identify member content
+    const isMemberContent = (cat) => {
+        const c = cat?.toLowerCase() || '';
+        return c.includes('internal') || c.includes('member') || c.includes('journal');
+    };
 
     return (
         <div className="journal-wrapper">
@@ -79,30 +85,39 @@ const BlogPage = ({ content }) => {
                 <div className="journal-container">
                     <div className="articles-grid-lux">
                         {filteredArticles.length > 0 ? (
-                            filteredArticles.map((art, idx) => (
-                                <article
-                                    key={art.id}
-                                    className={`journal-card-lux ${idx === 0 ? 'feature-card' : ''} journal-reveal reveal-up`}
-                                    style={{ transitionDelay: `${idx * 0.1}s` }}
-                                >
-                                    <Link to={`/blog/${art.slug}`} className="card-link-lux">
-                                        <div className="card-image-box">
-                                            <img src={art.image} alt={art.title} />
-                                            <span className="card-cat-tag">{art.category}</span>
-                                        </div>
-                                        <div className="card-content-lux">
-                                            <div className="card-meta">
-                                                <span className="meta-date"><Calendar size={14} /> {art.date}</span>
+                            filteredArticles.map((art, idx) => {
+                                const isLocked = isMemberContent(art.category);
+                                return (
+                                    <article
+                                        key={art.id}
+                                        className={`journal-card-lux ${idx === 0 ? 'feature-card' : ''} journal-reveal reveal-up`}
+                                        style={{ transitionDelay: `${idx * 0.1}s` }}
+                                    >
+                                        <Link to={`/blog/${art.slug}`} className="card-link-lux">
+                                            <div className="card-image-box">
+                                                <img src={art.image} alt={art.title} />
+                                                <span className={`card-cat-tag ${isLocked ? 'tag-locked' : ''}`}>
+                                                    {isLocked && <Lock size={12} style={{ marginRight: 5 }} />}
+                                                    {art.category}
+                                                </span>
                                             </div>
-                                            <h2 className="card-title-lux">{art.title}</h2>
-                                            <p className="card-excerpt-lux">{art.summary}</p>
-                                            <div className="card-footer-lux">
-                                                <span className="read-more-lux">BACA ARTIKEL <ChevronRight size={16} /></span>
+                                            <div className="card-content-lux">
+                                                <div className="card-meta">
+                                                    <span className="meta-date"><Calendar size={14} /> {art.date}</span>
+                                                    {isLocked && <span className="meta-lock">MEMBER ONLY</span>}
+                                                </div>
+                                                <h2 className="card-title-lux">{art.title}</h2>
+                                                <p className="card-excerpt-lux">{art.summary}</p>
+                                                <div className="card-footer-lux">
+                                                    <span className="read-more-lux">
+                                                        {isLocked ? 'AKSES MEMBER' : 'BACA ARTIKEL'} <ChevronRight size={16} />
+                                                    </span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </Link>
-                                </article>
-                            ))
+                                        </Link>
+                                    </article>
+                                );
+                            })
                         ) : (
                             <div className="empty-state-journal">Tidak ada artikel yang ditemukan.</div>
                         )}
@@ -139,7 +154,7 @@ const BlogPage = ({ content }) => {
                     padding-bottom: 5rem;
                 }
 
-                .journal-container { max-width: 1300px; margin: 0 auto; padding: 0 4rem; }
+                .journal-container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
 
                 /* REVEAL */
                 .journal-reveal { opacity: 0; transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); }
@@ -206,6 +221,8 @@ const BlogPage = ({ content }) => {
 
                 .card-meta { display: flex; gap: 1.5rem; margin-bottom: 1.5rem; opacity: 0.6; font-size: 0.8rem; font-weight: 800; }
                 .meta-date { display: flex; align-items: center; gap: 0.5rem; }
+                .meta-lock { color: var(--jr-red); font-weight: 900; letter-spacing: 1px; font-size: 0.7rem; border: 1px solid var(--jr-red); padding: 2px 6px; border-radius: 4px; }
+                .tag-locked { background: #0f172a !important; display: flex; align-items: center; }
 
                 .card-title-lux { font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 900; color: var(--jr-dark); line-height: 1.2; margin-bottom: 1.5rem; transition: 0.3s; }
                 .feature-card .card-title-lux { font-size: 3rem; }

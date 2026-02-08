@@ -30,6 +30,11 @@ import AlumniPage from './pages/AlumniPage';
 import ContactPage from './pages/ContactPage';
 import SplashLoader from './components/SplashLoader';
 
+// MEMBER PAGES
+import MemberLogin from './pages/MemberLogin';
+import MemberRegister from './pages/MemberRegister';
+import EBookPage from './pages/EBookPage';
+
 const API_URL = 'http://localhost:5001/api';
 
 function App() {
@@ -68,7 +73,12 @@ function App() {
             <Route path="/alumni" element={<AlumniPage content={content} />} />
             <Route path="/kontak" element={<ContactPage content={content} />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/ebook" element={<EBookPage />} />
           </Route>
+
+          {/* Member Auth Routes */}
+          <Route path="/member/login" element={<MemberLogin />} />
+          <Route path="/member/register" element={<MemberRegister />} />
 
           {/* Admin Routes */}
           <Route path="/admin" element={<AdminLayout />}>

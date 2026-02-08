@@ -79,27 +79,26 @@ const DashboardOverview = ({ content }) => {
                 .rounded { border-radius: 0.375rem; }
 
                 .stat-card {
-                    padding: 1.5rem;
-                    border-radius: 16px;
                     display: flex;
                     align-items: center;
                     gap: 1.5rem;
                 }
 
                 .stat-icon {
-                    width: 56px;
-                    height: 56px;
-                    border-radius: 12px;
+                    width: 64px;
+                    height: 64px;
+                    border-radius: 16px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     color: white;
+                    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
                 }
 
-                .stat-icon.blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
-                .stat-icon.green { background: linear-gradient(135deg, #22c55e, #16a34a); }
-                .stat-icon.purple { background: linear-gradient(135deg, #a855f7, #9333ea); }
-                .stat-icon.orange { background: linear-gradient(135deg, #f97316, #ea580c); }
+                .stat-icon.blue { background: linear-gradient(135deg, #60a5fa 0%, #2563eb 100%); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+                .stat-icon.green { background: linear-gradient(135deg, #4ade80 0%, #16a34a 100%); box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3); }
+                .stat-icon.purple { background: linear-gradient(135deg, #c084fc 0%, #9333ea 100%); box-shadow: 0 4px 12px rgba(147, 51, 234, 0.3); }
+                .stat-icon.orange { background: linear-gradient(135deg, #fb923c 0%, #ea580c 100%); box-shadow: 0 4px 12px rgba(234, 88, 12, 0.3); }
 
                 .stat-info {
                     display: flex;

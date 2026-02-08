@@ -166,7 +166,7 @@ const ProfilPage = ({ content }) => {
                 .container-prof {
                     max-width: 1200px;
                     margin: 0 auto;
-                    padding: 0 5%;
+                    padding: 0 2rem;
                 }
 
                 .professional-reveal {

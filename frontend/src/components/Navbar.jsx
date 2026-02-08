@@ -1,29 +1,57 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Globe } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Menu, X, LogIn, LogOut, User } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const Navbar = () => {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [member, setMember] = useState(null);
   const location = useLocation();
+  const navigate = useNavigate();
   const isLandingPage = location.pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
     };
+
+    // Check member session
+    const checkMember = () => {
+      const stored = localStorage.getItem('member_user');
+      if (stored) setMember(JSON.parse(stored));
+      else setMember(null);
+    };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    window.addEventListener('storage', checkMember); // Listen for storage changes
+
+    // Initial check
+    checkMember();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('storage', checkMember);
+    };
+  }, [location]); // Re-check on location change (login/logout)
+
+  const handleLogout = () => {
+    localStorage.removeItem('member_user');
+    localStorage.removeItem('member_token');
+    setMember(null);
+    navigate('/');
+  };
 
   const navItems = [
-    { name: 'HOME', href: '/', isAnchor: false },
-    { name: 'PROFIL', href: '/profil', isAnchor: false },
-    { name: 'PROGRAM', href: '/program', isAnchor: false },
-    { name: 'GALERI', href: '/galeri', isAnchor: false },
-    { name: 'BLOG', href: '/blog', isAnchor: false },
-    { name: 'ALUMNI', href: '/alumni', isAnchor: false },
-    { name: 'KONTAK', href: '/kontak', isAnchor: false },
+    { name: t('nav.home'), href: '/', isAnchor: false },
+    { name: t('nav.profil'), href: '/profil', isAnchor: false },
+    { name: t('nav.program'), href: '/program', isAnchor: false },
+    { name: t('nav.galeri'), href: '/galeri', isAnchor: false },
+    { name: t('nav.blog'), href: '/blog', isAnchor: false },
+    { name: t('nav.ebook'), href: '/ebook', isAnchor: false },
+    { name: t('nav.alumni'), href: '/alumni', isAnchor: false },
+    { name: t('nav.kontak'), href: '/kontak', isAnchor: false },
   ];
 
   // Helper to check if link is active
@@ -60,9 +88,25 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* 3. SOCIAL / EXTRA (Optional placeholder for balance) */}
+        {/* 3. MEMBER ACTION (Desktop) */}
         <div className="nav-actions desktop-only">
-          {/* Can add Social Icons here later if needed, keeps layout balanced */}
+          {member ? (
+            <div className="member-menu">
+              <span className="member-name">Hi, {member.name.split(' ')[0]}</span>
+              <button onClick={handleLogout} className="btn-member-action" title="Logout">
+                <LogOut size={18} />
+              </button>
+            </div>
+          ) : (
+            <div className="auth-buttons">
+              <Link to="/member/login" className="btn-auth-login">
+                {t('nav.masuk')}
+              </Link>
+              <Link to="/member/register" className="btn-auth-register">
+                {t('nav.daftar')}
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* Mobile Toggle */}
@@ -97,6 +141,18 @@ const Navbar = () => {
                 {item.name}
               </Link>
             ))}
+
+            <div className="drawer-divider"></div>
+
+            {member ? (
+              <button onClick={() => { handleLogout(); setIsOpen(false); }} className="drawer-link logout-link">
+                <LogOut size={18} /> LOGOUT
+              </button>
+            ) : (
+              <Link to="/member/login" className="drawer-link login-link" onClick={() => setIsOpen(false)}>
+                <LogIn size={18} /> LOGIN MEMBER
+              </Link>
+            )}
           </div>
         </aside>
       </div>
@@ -108,9 +164,20 @@ const Navbar = () => {
           left: 0;
           width: 100%;
           z-index: 1000;
-          padding: 1.5rem 0;
+          padding: 1rem 0;
           transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
           pointer-events: none; /* Let clicks pass through empty space */
+        }
+
+        .nav-hero {
+          background: transparent;
+        }
+
+        .nav-scrolled {
+          background: rgba(255, 255, 255, 0.9);
+          backdrop-filter: blur(10px);
+          box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+          padding: 0.75rem 0;
         }
         
         .container { pointer-events: auto; } /* Re-enable clicks on content */
@@ -119,9 +186,10 @@ const Navbar = () => {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          max-width: 1400px;
+          max-width: 1200px;
           margin: 0 auto;
-          padding: 0 5%;
+          padding: 0 2rem;
+          gap: 2.5rem;
         }
 
         /* LOGO PILL */
@@ -169,6 +237,7 @@ const Navbar = () => {
           border-radius: 100px;
           transition: all 0.3s ease;
           position: relative;
+          white-space: nowrap;
         }
 
         .pill-link:hover {
@@ -182,6 +251,75 @@ const Navbar = () => {
           color: #ffffff;
           box-shadow: 0 4px 15px rgba(15, 23, 42, 0.2);
         }
+
+        /* AUTH ACTIONS */
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            pointer-events: auto;
+        }
+
+        .btn-auth-login {
+            color: #334155;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: 0.3s;
+            padding: 0.6rem 1.2rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 100px;
+        }
+        .btn-auth-login:hover { 
+            color: #da291c; 
+            border-color: #da291c; 
+            background: #fff0f0; 
+        }
+
+        .btn-auth-register {
+            background: linear-gradient(135deg, #da291c 0%, #b91c1c 100%);
+            color: white;
+            padding: 0.7rem 1.8rem;
+            border-radius: 100px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 700;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(218, 41, 28, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-auth-register:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 25px rgba(218, 41, 28, 0.4); 
+        }
+
+        .member-menu {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          background: white;
+          padding: 0.4rem 0.4rem 0.4rem 1rem;
+          border-radius: 100px;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+          pointer-events: auto;
+        }
+        .member-name { font-size: 0.85rem; font-weight: 700; color: #0f172a; }
+        .btn-member-action {
+          background: #f1f5f9;
+          border: none;
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          color: #64748b;
+          transition: 0.2s;
+        }
+        .btn-member-action:hover { background: #fee2e2; color: #da291c; }
 
         /* MOBILE STYLES */
         .mobile-toggle-btn {
@@ -226,10 +364,15 @@ const Navbar = () => {
         .drawer-links { display: flex; flex-direction: column; gap: 0.5rem; }
         .drawer-link {
           font-size: 1.1rem; font-weight: 700; color: #334155; text-decoration: none; padding: 1rem; border-radius: 12px;
+          display: flex; align-items: center; gap: 0.8rem;
         }
         .drawer-link.active {
           background: var(--brand-red); color: white;
         }
+
+        .drawer-divider { height: 1px; background: #e2e8f0; margin: 1rem 0; }
+        .login-link { color: #da291c; background: #fef2f2; }
+        .logout-link { color: #64748b; }
       `}</style>
     </nav>
   );

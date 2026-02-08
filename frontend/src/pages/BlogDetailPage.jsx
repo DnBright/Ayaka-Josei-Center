@@ -1,17 +1,28 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Calendar, Tag, Info, User, Share2, Facebook, Twitter, Link as LinkIcon } from 'lucide-react';
+import { ArrowLeft, Calendar, Tag, Info, User, Share2, Facebook, Twitter, Link as LinkIcon, Lock } from 'lucide-react';
 
 const BlogDetailPage = ({ content }) => {
     const { slug } = useParams();
     const data = content?.blog_halaman;
     const article = data?.artikel?.find(a => a.slug === slug);
+    const [member, setMember] = useState(null);
 
     useEffect(() => {
         window.scrollTo(0, 0);
+        // Check member session
+        const stored = localStorage.getItem('member_user');
+        if (stored) setMember(JSON.parse(stored));
     }, [slug]);
 
     if (!article) return <div className="read-loader">Retrieving Records...</div>;
+
+    const isMemberContent = (cat) => {
+        const c = cat?.toLowerCase() || '';
+        return c.includes('internal') || c.includes('member') || c.includes('journal');
+    };
+
+    const isLocked = isMemberContent(article.category) && !member;
 
     const relatedArticles = data.artikel.filter(a => a.id !== article.id).slice(0, 3);
 
@@ -37,6 +48,12 @@ const BlogDetailPage = ({ content }) => {
                                     <User size={16} />
                                     <span>OFFICIAL AYAKA</span>
                                 </div>
+                                {isMemberContent(article.category) && (
+                                    <div className="meta-item-lux" style={{ color: '#da291c' }}>
+                                        <Lock size={16} />
+                                        <span>MEMBER ONLY</span>
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <div className="header-img-side">
@@ -49,16 +66,27 @@ const BlogDetailPage = ({ content }) => {
             {/* 2. MAIN BODY - TYPOGRAPHY FOCUSED */}
             <main className="read-body">
                 <div className="read-container-narrow">
-                    <div className="read-content-main" dangerouslySetInnerHTML={{ __html: article.content }}></div>
-
-                    <div className="read-share-lux">
-                        <span>BAGIKAN ARTIKEL:</span>
-                        <div className="share-icons-lux">
-                            <button><Facebook size={20} /></button>
-                            <button><Twitter size={20} /></button>
-                            <button><LinkIcon size={20} /></button>
+                    {isLocked ? (
+                        <div className="content-locked-box">
+                            <Lock size={48} className="lock-icon-lg" />
+                            <h2>Konten Terbatas</h2>
+                            <p>Artikel ini khusus untuk Member Active Ayaka Josei Center. Silakan login untuk membaca konten lengkap.</p>
+                            <Link to="/member/login" className="btn-login-content">LOGIN MEMBER</Link>
                         </div>
-                    </div>
+                    ) : (
+                        <>
+                            <div className="read-content-main" dangerouslySetInnerHTML={{ __html: article.content }}></div>
+
+                            <div className="read-share-lux">
+                                <span>BAGIKAN ARTIKEL:</span>
+                                <div className="share-icons-lux">
+                                    <button><Facebook size={20} /></button>
+                                    <button><Twitter size={20} /></button>
+                                    <button><LinkIcon size={20} /></button>
+                                </div>
+                            </div>
+                        </>
+                    )}
                 </div>
             </main>
 
@@ -146,6 +174,27 @@ const BlogDetailPage = ({ content }) => {
                     background: transparent; color: var(--rd-dark); cursor: pointer; transition: 0.3s;
                 }
                 .share-icons-lux button:hover { background: var(--rd-dark); color: white; border-color: var(--jr-dark); }
+
+                /* LOCKED CONTENT */
+                .content-locked-box {
+                    text-align: center;
+                    padding: 4rem 2rem;
+                    background: #f8fafc;
+                    border: 1px dashed #da291c;
+                    border-radius: 12px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 1.5rem;
+                }
+                .lock-icon-lg { color: #da291c; margin-bottom: 0.5rem; }
+                .content-locked-box h2 { font-family: 'Outfit', sans-serif; font-size: 1.8rem; color: #0f172a; }
+                .content-locked-box p { color: #64748b; max-width: 500px; margin-bottom: 1rem; }
+                .btn-login-content {
+                    background: #da291c; color: white; padding: 1rem 2rem; border-radius: 100px;
+                    text-decoration: none; font-weight: 700; transition: 0.3s;
+                }
+                .btn-login-content:hover { background: #b91c1c; transform: translateY(-2px); }
 
                 /* RELATED */
                 .read-related { padding: 8rem 0; background: #0f172a; color: white; }

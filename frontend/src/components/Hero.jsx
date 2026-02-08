@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowRight, Globe, Play } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Hero = ({ content }) => {
+  const { t } = useTranslation();
   const [isLoaded, setIsLoaded] = useState(false);
   const [scrollY, setScrollY] = useState(0);
 
@@ -46,28 +48,28 @@ const Hero = ({ content }) => {
       <div className="container hero-container" style={{ transform: contentTransform }}>
         <div className="hero-content">
           <div className={`hero-badge ${isLoaded ? 'animate-up' : ''}`}>
-            <span>SOLUSI KARIR JEPANG TERPERCAYA</span>
+            <span>{t('hero.tagline')}</span>
           </div>
 
           <h1 className={`hero-title ${isLoaded ? 'animate-up delay-1' : ''}`}>
-            <span className="text-white">{data.title.split(' ')[0]}</span>
-            <span className="text-gradient"> {data.title.split(' ').slice(1).join(' ')}</span>
+            <span className="text-white">{t('hero.title').split(' ')[0]}</span>
+            <span className="text-gradient"> {t('hero.title').split(' ').slice(1).join(' ')}</span>
           </h1>
 
           <p className={`hero-subtitle ${isLoaded ? 'animate-up delay-2' : ''}`}>
-            {data.subtitle}
+            {t('hero.subtitle')}
           </p>
 
           <div className={`hero-actions ${isLoaded ? 'animate-up delay-3' : ''}`}>
             <button className="btn-astra-main">
-              <span>{data.buttonText}</span>
+              <span>{t('hero.cta')}</span>
               <ArrowRight size={20} />
             </button>
             <button className="btn-astra-outline">
               <div className="play-btn-circle">
                 <Play size={14} fill="white" />
               </div>
-              <span>PLAY VIDEO</span>
+              <span>{t('hero.playVideo')}</span>
             </button>
           </div>
         </div>

@@ -1,63 +1,63 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
-    LayoutDashboard,
-    FileText,
-    Image,
-    MessageSquare,
-    Users,
-    Settings,
-    LogOut
+  LayoutDashboard,
+  FileText,
+  Image,
+  MessageSquare,
+  Users,
+  Settings,
+  LogOut
 } from 'lucide-react';
 
 const Sidebar = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        navigate('/login');
-    };
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
+  };
 
-    const navItems = [
-        { path: '/admin', icon: <LayoutDashboard size={20} />, label: 'Dashboard', end: true },
-        { path: '/admin/pages', icon: <FileText size={20} />, label: 'Halaman & Konten' },
-        { path: '/admin/media', icon: <Image size={20} />, label: 'Media & Galeri' },
-        { path: '/admin/communications', icon: <MessageSquare size={20} />, label: 'Komunikasi' },
-        { path: '/admin/users', icon: <Users size={20} />, label: 'User & Role' },
-        { path: '/admin/settings', icon: <Settings size={20} />, label: 'Pengaturan' },
-    ];
+  const navItems = [
+    { path: '/admin', icon: <LayoutDashboard size={20} />, label: 'Dashboard', end: true },
+    { path: '/admin/pages', icon: <FileText size={20} />, label: 'Halaman & Konten' },
+    { path: '/admin/media', icon: <Image size={20} />, label: 'Media & Galeri' },
+    { path: '/admin/communications', icon: <MessageSquare size={20} />, label: 'Komunikasi' },
+    { path: '/admin/users', icon: <Users size={20} />, label: 'User & Role' },
+    { path: '/admin/settings', icon: <Settings size={20} />, label: 'Pengaturan' },
+  ];
 
-    return (
-        <aside className="admin-sidebar glass">
-            <div className="sidebar-header">
-                <div className="logo-section">
-                    <span className="brand-red">Ayaka</span> Josei Center
-                </div>
-            </div>
+  return (
+    <aside className="admin-sidebar glass">
+      <div className="sidebar-header">
+        <div className="logo-section">
+          <span className="brand-red">Ayaka</span> Josei Center
+        </div>
+      </div>
 
-            <nav className="sidebar-nav">
-                {navItems.map((item) => (
-                    <NavLink
-                        key={item.path}
-                        to={item.path}
-                        end={item.end}
-                        className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-                    >
-                        {item.icon}
-                        <span>{item.label}</span>
-                    </NavLink>
-                ))}
-            </nav>
+      <nav className="sidebar-nav">
+        {navItems.map((item) => (
+          <NavLink
+            key={item.path}
+            to={item.path}
+            end={item.end}
+            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+          >
+            {item.icon}
+            <span>{item.label}</span>
+          </NavLink>
+        ))}
+      </nav>
 
-            <div className="sidebar-footer">
-                <button className="btn-logout" onClick={handleLogout}>
-                    <LogOut size={18} /> Logout
-                </button>
-            </div>
+      <div className="sidebar-footer">
+        <button className="btn-logout" onClick={handleLogout}>
+          <LogOut size={18} /> Logout
+        </button>
+      </div>
 
-            <style>{`
+      <style>{`
         .admin-sidebar {
-          width: 260px;
+          width: var(--admin-sidebar-width);
           height: 100vh;
           position: fixed;
           left: 0;
@@ -65,25 +65,25 @@ const Sidebar = () => {
           display: flex;
           flex-direction: column;
           background: white;
-          border-right: 1px solid var(--glass-border);
+          border-right: 1px solid #e2e8f0;
           z-index: 50;
+          box-shadow: 4px 0 24px rgba(0,0,0,0.02);
         }
 
         .sidebar-header {
-          padding: 1.5rem;
-          border-bottom: 1px solid rgba(0,0,0,0.05);
+          padding: 2rem 1.5rem;
+          border-bottom: 1px solid #f1f5f9;
         }
 
         .logo-section {
             font-family: 'Outfit', sans-serif;
-            font-weight: 700;
-            font-size: 1.2rem;
-            color: var(--foreground);
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: var(--brand-dark);
+            letter-spacing: -0.5px;
         }
         
-        .brand-red {
-            color: var(--brand-red);
-        }
+        .brand-red { color: var(--brand-red); }
 
         .sidebar-nav {
           flex: 1;
@@ -97,29 +97,33 @@ const Sidebar = () => {
         .nav-item {
           display: flex;
           align-items: center;
-          gap: 0.75rem;
-          padding: 0.75rem 1rem;
-          border-radius: 8px;
-          color: var(--secondary);
+          gap: 1rem;
+          padding: 0.85rem 1rem;
+          border-radius: 12px;
+          color: #64748b;
           text-decoration: none;
-          font-weight: 500;
-          transition: all 0.2s;
+          font-weight: 600;
+          font-size: 0.95rem;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          border: 1px solid transparent;
         }
 
         .nav-item:hover {
-          background: #fdf2f2;
-          color: var(--brand-red);
+          background: #f8fafc;
+          color: var(--brand-dark);
         }
 
         .nav-item.active {
-          background: var(--brand-red);
+          background: linear-gradient(135deg, var(--brand-red) 0%, #b91c1c 100%);
           color: white;
-          box-shadow: 0 4px 12px rgba(218, 41, 28, 0.15);
+          box-shadow: 0 4px 12px rgba(218, 41, 28, 0.25);
+          border: 1px solid rgba(255,255,255,0.1);
         }
 
         .sidebar-footer {
           padding: 1.5rem;
-          border-top: 1px solid rgba(0,0,0,0.05);
+          border-top: 1px solid #f1f5f9;
+          background: #fcfcfc;
         }
 
         .btn-logout {
@@ -127,21 +131,25 @@ const Sidebar = () => {
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 0.5rem;
-          padding: 0.75rem;
-          border-radius: 8px;
-          background: #fee2e2;
-          color: #d32f2f;
-          font-weight: 600;
+          gap: 0.75rem;
+          padding: 0.85rem;
+          border-radius: 12px;
+          background: white;
+          border: 1px solid #fee2e2;
+          color: #ef4444;
+          font-weight: 700;
           transition: all 0.2s;
         }
 
         .btn-logout:hover {
-          background: #fecaca;
+          background: #fef2f2;
+          border-color: #fca5a5;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(239, 68, 68, 0.1);
         }
       `}</style>
-        </aside>
-    );
+    </aside>
+  );
 };
 
 export default Sidebar;
