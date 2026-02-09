@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Mail, Phone, MapPin, Clock, Send, Shield, Info, Instagram, Facebook, MessageCircle, ChevronRight, CheckCircle2 } from 'lucide-react';
+import { Mail, Phone, MapPin, Clock, Send, Shield, Info, Instagram, Facebook, MessageCircle, CheckCircle2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const ContactPage = ({ content }) => {
@@ -52,59 +52,50 @@ const ContactPage = ({ content }) => {
 
     return (
         <div className="contact-wrapper">
-            {/* 1. CONCIERGE HERO */}
-            <header className="contact-hero">
-                <div className="hero-bg-accent"></div>
+            {/* 1. HERO - CLEAN & PROFESSIONAL */}
+            <header className="contact-header">
                 <div className="contact-container">
-                    <div className="hero-flex-lux">
-                        <div className="hero-text-lux contact-reveal reveal-left">
-                            <span className="contact-tag">{t('contact.channel')}</span>
-                            <h1 className="contact-title-lux">
-                                {(t('contact.partnership') || '').split(' & ')[0]} <br />
-                                <span>& {(t('contact.partnership') || '').split(' & ')[1] || ''}</span>
-                            </h1>
-                            <div className="luxury-line"></div>
-                            <p className="contact-p-lux">{data.pengantar?.content}</p>
-                        </div>
+                    <div className="header-content contact-reveal reveal-up">
+                        <span className="brand-tag">CONTACT US</span>
+                        <h1>{t('contact.partnership') || 'Partnership & Collaboration'}</h1>
+                        <p>{data.pengantar?.content}</p>
                     </div>
                 </div>
             </header>
 
-            <section className="contact-main-grid">
+            {/* 2. MAIN SPLIT LAYOUT */}
+            <section className="contact-body">
                 <div className="contact-container">
-                    <div className="split-grid-lux">
+                    <div className="contact-grid">
 
-                        {/* 2. OFFICIAL INFO SIDE */}
-                        <div className="info-side-lux contact-reveal reveal-left">
-                            <div className="info-card-lux">
-                                <div className="info-header-vangu">
-                                    <div className="vangu-dot"></div>
-                                    <h2>{t('contact.info_lembaga')}</h2>
-                                </div>
-                                <div className="info-body-lux">
-                                    <div className="info-item-lux">
-                                        <div className="icon-box-min"><MapPin size={20} /></div>
+                        {/* LEFT: INFO & MAP */}
+                        <div className="contact-info-col contact-reveal reveal-left">
+                            <div className="info-block">
+                                <h2>{t('contact.info_lembaga')}</h2>
+                                <div className="info-list">
+                                    <div className="info-item">
+                                        <div className="info-icon"><MapPin size={24} /></div>
                                         <div>
                                             <label>{t('contact.alamat')}</label>
                                             <p>{data.infoUtama?.alamat}</p>
                                         </div>
                                     </div>
-                                    <div className="info-item-lux">
-                                        <div className="icon-box-min"><MessageCircle size={20} /></div>
+                                    <div className="info-item">
+                                        <div className="info-icon"><MessageCircle size={24} /></div>
                                         <div>
                                             <label>{t('contact.wa')}</label>
                                             <p>{data.infoUtama?.whatsapp}</p>
                                         </div>
                                     </div>
-                                    <div className="info-item-lux">
-                                        <div className="icon-box-min"><Mail size={20} /></div>
+                                    <div className="info-item">
+                                        <div className="info-icon"><Mail size={24} /></div>
                                         <div>
                                             <label>{t('contact.email')}</label>
                                             <p>{data.infoUtama?.email}</p>
                                         </div>
                                     </div>
-                                    <div className="info-item-lux">
-                                        <div className="icon-box-min"><Clock size={20} /></div>
+                                    <div className="info-item">
+                                        <div className="info-icon"><Clock size={24} /></div>
                                         <div>
                                             <label>{t('contact.jam')}</label>
                                             <p>{data.infoUtama?.jamOperasional}</p>
@@ -112,45 +103,40 @@ const ContactPage = ({ content }) => {
                                     </div>
                                 </div>
 
-                                <div className="social-mini-grid">
+                                <div className="social-row">
                                     {(data.sosialMedia || []).map((social, idx) => (
-                                        <a href={social.link} key={idx} className="social-link-lux" target="_blank" rel="noopener noreferrer">
-                                            {social.platform === 'Instagram' ? <Instagram size={18} /> : <Facebook size={18} />}
-                                            <span>{social.handle}</span>
+                                        <a href={social.link} key={idx} className="social-btn" target="_blank" rel="noopener noreferrer">
+                                            {social.platform === 'Instagram' ? <Instagram size={20} /> : <Facebook size={20} />}
                                         </a>
                                     ))}
                                 </div>
                             </div>
 
-                            {/* 4. PURPOSE & 5. PRIVACY BLOCKS */}
-                            <div className="transparency-stack">
-                                <div className="trust-card-min">
-                                    <div className="trust-icon"><Info size={20} /></div>
-                                    <div className="trust-text">
-                                        <h4>{data.tujuanPesan?.title}</h4>
-                                        <p>{data.tujuanPesan?.content}</p>
-                                    </div>
-                                </div>
-                                <div className="trust-card-min alt">
-                                    <div className="trust-icon"><Shield size={20} /></div>
-                                    <div className="trust-text">
-                                        <h4>{data.privasi?.title}</h4>
-                                        <p>{data.privasi?.content}</p>
-                                    </div>
-                                </div>
+                            {/* GOOGLE MAPS EMBED */}
+                            <div className="map-embed-box">
+                                <iframe
+                                    title="Office Location"
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126438.2854809817!2d112.56174164670278!3d-7.978639498263722!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd62822063dc2db%3A0x2177f1899178550!2sMalang%2C%20Malang%20City%2C%20East%20Java!5e0!3m2!1sen!2sid!4v1707530000000!5m2!1sen!2sid"
+                                    width="100%"
+                                    height="300"
+                                    style={{ border: 0 }}
+                                    allowFullScreen=""
+                                    loading="lazy"
+                                    referrerPolicy="no-referrer-when-downgrade"
+                                ></iframe>
                             </div>
                         </div>
 
-                        {/* 3. INTERACTIVE FORM SIDE */}
-                        <div className="form-side-lux contact-reveal reveal-right">
-                            <div className="form-box-lux">
-                                <div className="form-header-lux">
+                        {/* RIGHT: FORM */}
+                        <div className="contact-form-col contact-reveal reveal-right">
+                            <div className="form-card">
+                                <div className="form-head">
                                     <h3>{t('contact.kirim_pesan')}</h3>
                                     <p>{t('contact.respon_time')}</p>
                                 </div>
 
-                                <form onSubmit={handleSubmit} className="vangu-form">
-                                    <div className="input-group-lux">
+                                <form onSubmit={handleSubmit} className="professional-form">
+                                    <div className="form-group">
                                         <label>{t('contact.nama_lengkap')}</label>
                                         <input
                                             type="text"
@@ -161,11 +147,11 @@ const ContactPage = ({ content }) => {
                                             required
                                         />
                                     </div>
-                                    <div className="input-grid-min">
-                                        <div className="input-group-lux">
+                                    <div className="form-row">
+                                        <div className="form-group">
                                             <label>{t('contact.email_kontak')}</label>
                                             <input
-                                                type="text"
+                                                type="email"
                                                 name="email"
                                                 placeholder={t('contact.placeholder_email')}
                                                 value={formData.email}
@@ -173,7 +159,7 @@ const ContactPage = ({ content }) => {
                                                 required
                                             />
                                         </div>
-                                        <div className="input-group-lux">
+                                        <div className="form-group">
                                             <label>{t('contact.subjek')}</label>
                                             <select
                                                 name="subject"
@@ -188,7 +174,7 @@ const ContactPage = ({ content }) => {
                                             </select>
                                         </div>
                                     </div>
-                                    <div className="input-group-lux">
+                                    <div className="form-group">
                                         <label>{t('contact.pesan')}</label>
                                         <textarea
                                             name="message"
@@ -200,8 +186,8 @@ const ContactPage = ({ content }) => {
                                         ></textarea>
                                     </div>
 
-                                    <button type="submit" className={`submit-btn-lux ${isSubmitted ? 'is-success' : ''}`}>
-                                        {isSubmitted ? (
+                                    <button type="submit" className={`submit-btn ${isSubmitted ? 'success' : ''}`} disabled={loading}>
+                                        {loading ? 'Sending...' : isSubmitted ? (
                                             <><CheckCircle2 size={20} /> {t('btn.terkirim')}</>
                                         ) : (
                                             <><Send size={18} /> {t('btn.kirim')}</>
@@ -209,147 +195,146 @@ const ContactPage = ({ content }) => {
                                     </button>
                                 </form>
                             </div>
+
+                            <div className="privacy-note">
+                                <Shield size={16} className="icon-shield" />
+                                <p>{data.privasi?.content || 'Data Anda aman bersama kami.'}</p>
+                            </div>
                         </div>
+
                     </div>
                 </div>
             </section>
 
-            {/* 7. PENUTUP */}
+            {/* 3. FOOTER QUOTE */}
             <footer className="contact-footer contact-reveal reveal-up">
                 <div className="contact-container">
-                    <div className="footer-vangu-inner">
-                        <div className="footer-line-v"></div>
-                        <h2 className="footer-h2-lux">{data.penutup?.content}</h2>
-                        <div className="footer-meta-vangu">
-                            <span>OFFICIAL COORDINATION HUB</span>
-                            <span className="v-dot"></span>
-                            <span>VERSION 2026.1</span>
-                        </div>
+                    <div className="footer-quote">
+                        <h2>{data.penutup?.content}</h2>
+                        <div className="quote-line"></div>
                     </div>
                 </div>
             </footer>
 
             <style jsx="true">{`
-                @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=Playfair+Display:ital,wght@1,900&display=swap');
-
                 .contact-wrapper {
-                    --co-red: #da291c;
-                    --co-dark: #0f172a;
-                    --co-grey: #64748b;
-                    --co-soft: #f8fafc;
+                    --c-red: #da291c;
+                    --c-dark: #0f172a;
+                    --c-gray: #64748b;
+                    --c-light: #f8fafc;
                     background: #fff;
-                    color: var(--co-dark);
+                    padding-top: 100px;
+                    font-family: 'Inter', sans-serif;
                 }
 
-                .contact-container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+                .contact-container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
 
-                /* REVEAL SYSTEM */
-                .contact-reveal { opacity: 0; transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
-                .reveal-up { transform: translateY(60px); }
-                .reveal-left { transform: translateX(-60px); }
-                .reveal-right { transform: translateX(60px); }
+                /* ANIMATION */
+                .contact-reveal { opacity: 0; transition: all 1s cubic-bezier(0.2, 1, 0.3, 1); }
+                .reveal-up { transform: translateY(40px); }
+                .reveal-left { transform: translateX(-40px); }
+                .reveal-right { transform: translateX(40px); }
                 .is-revealed { opacity: 1; transform: translate(0, 0); }
 
-                /* HERO */
-                .contact-hero { min-height: 50vh; display: flex; align-items: center; background: #fff; position: relative; padding-top: 120px; }
-                .hero-bg-accent { position: absolute; top: 0; right: 0; width: 40%; height: 100%; background: var(--co-soft); z-index: 1; }
-                .hero-flex-lux { position: relative; z-index: 10; }
-                
-                .contact-tag { font-weight: 900; letter-spacing: 4px; color: var(--co-red); font-size: 0.8rem; margin-bottom: 2rem; display: block; }
-                .contact-title-lux {
-                    font-family: 'Outfit', sans-serif;
-                    font-size: clamp(2.5rem, 8vw, 6rem);
-                    font-weight: 900;
-                    line-height: 0.9;
-                    letter-spacing: -4px;
-                    margin-bottom: 2.5rem;
-                    word-break: break-word;
-                    max-width: 100%;
+                /* HEADER */
+                .contact-header { padding: 5rem 0 4rem; text-align: center; }
+                .header-content { max-width: 800px; margin: 0 auto; }
+                .brand-tag { font-weight: 800; font-size: 0.85rem; color: var(--c-red); letter-spacing: 3px; margin-bottom: 1.5rem; display: block; }
+                .contact-header h1 {
+                    font-family: 'Outfit', sans-serif; font-size: 3.5rem; font-weight: 900; color: var(--c-dark);
+                    margin-bottom: 1.5rem; line-height: 1.1;
                 }
-                .contact-title-lux span { font-family: 'Playfair Display', serif; font-style: italic; color: transparent; -webkit-text-stroke: 1.5px var(--co-dark); }
+                .contact-header p { font-size: 1.2rem; color: var(--c-gray); line-height: 1.6; }
+
+                /* BODY GRID */
+                .contact-body { padding-bottom: 8rem; }
+                .contact-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 1.2fr;
+                    gap: 5rem;
+                    align-items: start;
+                }
+
+                /* LEFT COLUMN */
+                .info-block { margin-bottom: 3rem; }
+                .info-block h2 { font-family: 'Outfit', sans-serif; font-size: 2rem; color: var(--c-dark); margin-bottom: 2.5rem; }
                 
-                .luxury-line { width: 80px; height: 6px; background: var(--co-red); margin-bottom: 3rem; }
-                .contact-p-lux { font-size: 1.4rem; color: var(--co-grey); line-height: 1.5; max-width: 600px; }
+                .info-list { display: flex; flex-direction: column; gap: 2.5rem; }
+                .info-item { display: flex; gap: 1.5rem; align-items: flex-start; }
+                .info-icon { 
+                    width: 50px; height: 50px; background: #fff0f0; color: var(--c-red); 
+                    border-radius: 12px; display: flex; align-items: center; justify-content: center;
+                    flex-shrink: 0;
+                }
+                .info-item label { font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 0.3rem; }
+                .info-item p { font-size: 1.1rem; font-weight: 600; color: var(--c-dark); line-height: 1.4; }
 
-                /* MAIN GRID */
-                .contact-main-grid { border-top: 1px solid #f1f5f9; padding: clamp(4rem, 8vw, 8rem) 0; }
-                .split-grid-lux { display: grid; grid-template-columns: 1fr 1.2fr; gap: 6rem; align-items: start; }
-
-                /* INFO SIDE */
-                .info-card-lux { background: var(--co-dark); color: white; padding: 5rem; border-radius: 40px; margin-bottom: 4rem; position: relative; overflow: hidden; }
-                .vangu-dot { width: 12px; height: 12px; background: var(--co-red); border-radius: 50%; margin-bottom: 1.5rem; }
-                .info-header-vangu h2 { font-size: 2rem; font-weight: 900; margin-bottom: 4rem; letter-spacing: -1px; }
-
-                .info-body-lux { display: flex; flex-direction: column; gap: 3rem; margin-bottom: 5rem; }
-                .info-item-lux { display: flex; gap: 2rem; align-items: flex-start; }
-                .icon-box-min { width: 50px; height: 50px; background: rgba(255,255,255,0.05); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--co-red); border: 1px solid rgba(255,255,255,0.1); }
-                
-                .info-item-lux label { display: block; font-size: 0.75rem; font-weight: 900; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem; }
-                .info-item-lux p { font-size: 1.1rem; font-weight: 700; line-height: 1.4; color: white; }
-
-                .social-mini-grid { display: flex; gap: 1rem; flex-wrap: wrap; }
-                .social-link-lux { 
-                    padding: 1rem 1.5rem; background: white; color: var(--co-dark); border-radius: 100px;
-                    display: flex; align-items: center; gap: 1rem; font-weight: 900; font-size: 0.8rem; text-decoration: none;
+                .social-row { display: flex; gap: 1rem; margin-top: 3rem; }
+                .social-btn {
+                    width: 45px; height: 45px; border-radius: 50%; border: 1px solid #e2e8f0;
+                    display: flex; align-items: center; justify-content: center; color: var(--c-dark);
                     transition: 0.3s;
                 }
-                .social-link-lux:hover { background: var(--co-red); color: white; transform: translateY(-5px); }
+                .social-btn:hover { background: var(--c-red); color: white; border-color: var(--c-red); transform: translateY(-3px); }
 
-                .transparency-stack { display: flex; flex-direction: column; gap: 2rem; }
-                .trust-card-min { 
-                    display: grid; grid-template-columns: 50px 1fr; gap: 2rem; 
-                    padding: 2.5rem; background: var(--co-soft); border-radius: 24px; border: 1px solid #e2e8f0; 
+                .map-embed-box {
+                    border-radius: 20px; overflow: hidden; border: 1px solid #e2e8f0;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.05); height: 300px;
                 }
-                .trust-icon { color: var(--co-red); }
-                .trust-text h4 { font-size: 1.1rem; font-weight: 900; margin-bottom: 0.5rem; }
-                .trust-text p { font-size: 0.9rem; color: var(--co-grey); line-height: 1.6; }
+                .map-embed-box iframe { width: 100%; height: 100%; border: 0; }
 
-                /* FORM SIDE */
-                .form-box-lux { background: #fff; border: 1px solid #f1f5f9; padding: clamp(2rem, 6vw, 6rem); border-radius: 40px; box-shadow: 0 40px 100px rgba(0,0,0,0.03); }
-                .form-header-lux { margin-bottom: 4rem; }
-                .form-header-lux h3 { font-size: 2.5rem; font-weight: 900; margin-bottom: 1rem; letter-spacing: -1px; }
-                .form-header-lux p { color: var(--co-grey); font-weight: 500; font-size: 1.1rem; }
+                /* RIGHT COLUMN */
+                .form-card {
+                    background: #fff; padding: 3.5rem; border-radius: 30px;
+                    border: 1px solid #f1f5f9; box-shadow: 0 20px 60px rgba(0,0,0,0.04);
+                }
+                .form-head { margin-bottom: 3rem; }
+                .form-head h3 { font-family: 'Outfit', sans-serif; font-size: 2rem; color: var(--c-dark); margin-bottom: 0.5rem; }
+                .form-head p { color: var(--c-gray); font-size: 1rem; }
 
-                .vangu-form { display: flex; flex-direction: column; gap: 2.5rem; }
-                .input-group-lux { display: flex; flex-direction: column; gap: 1rem; }
-                .input-group-lux label { font-size: 0.8rem; font-weight: 900; color: var(--co-dark); letter-spacing: 1px; text-transform: uppercase; }
+                .professional-form { display: flex; flex-direction: column; gap: 1.5rem; }
+                .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
                 
-                .input-group-lux input, .input-group-lux select, .input-group-lux textarea {
-                    padding: 1.2rem 1.5rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px;
-                    font-size: 1rem; font-family: inherit; font-weight: 600; outline: none; transition: 0.3s;
+                .form-group { display: flex; flex-direction: column; gap: 0.6rem; }
+                .form-group label { font-size: 0.85rem; font-weight: 700; color: var(--c-dark); }
+                .form-group input, .form-group select, .form-group textarea {
+                    padding: 1rem 1.2rem; border-radius: 12px; border: 1px solid #e2e8f0;
+                    font-size: 1rem; font-family: inherit; color: var(--c-dark); background: #f8fafc;
+                    transition: 0.3s; width: 100%;
                 }
-                .input-group-lux input:focus, .input-group-lux select:focus, .input-group-lux textarea:focus {
-                    background: #fff; border-color: var(--co-red); box-shadow: 0 0 0 4px rgba(218,41,28,0.05);
+                .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+                    background: #fff; border-color: var(--c-red); outline: none; box-shadow: 0 0 0 3px rgba(218, 41, 28, 0.1);
                 }
 
-                .input-grid-min { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-
-                .submit-btn-lux {
-                    padding: 1.8rem; background: var(--co-dark); color: white; border: none; border-radius: 12px;
-                    font-weight: 900; font-size: 0.9rem; letter-spacing: 3px; cursor: pointer;
-                    display: flex; align-items: center; justify-content: center; gap: 1.5rem; transition: 0.4s;
+                .submit-btn {
+                    margin-top: 1rem; padding: 1.2rem; background: var(--c-dark); color: white;
+                    border: none; border-radius: 12px; font-weight: 700; font-size: 1rem;
+                    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.8rem;
+                    transition: 0.3s;
                 }
-                .submit-btn-lux:hover { background: var(--co-red); transform: translateY(-3px); }
-                .submit-btn-lux.is-success { background: #166534; }
+                .submit-btn:hover { background: var(--c-red); transform: translateY(-2px); }
+                .submit-btn.success { background: #166534; pointer-events: none; }
+                .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+                .privacy-note {
+                    margin-top: 2rem; display: flex; align-items: center; gap: 0.8rem;
+                    padding: 1rem; background: #f0fdf4; border-radius: 12px; border: 1px dashed #bbf7d0;
+                }
+                .icon-shield { color: #166534; }
+                .privacy-note p { font-size: 0.85rem; color: #14532d; font-weight: 500; }
 
                 /* FOOTER */
-                .contact-footer { padding: 10rem 0; text-align: center; }
-                .footer-line-v { width: 1px; height: 100px; background: #e2e8f0; margin: 0 auto 4rem; }
-                .footer-h2-lux { font-size: 3rem; font-weight: 900; letter-spacing: -2px; line-height: 1.1; margin-bottom: 4rem; max-width: 800px; margin-left: auto; margin-right: auto; }
-                .footer-meta-vangu { display: flex; align-items: center; justify-content: center; gap: 2rem; opacity: 0.3; font-weight: 900; font-size: 0.7rem; letter-spacing: 5px; }
-                .v-dot { width: 4px; height: 4px; background: var(--co-dark); border-radius: 50%; }
+                .contact-footer { padding: 6rem 0; text-align: center; border-top: 1px solid #f1f5f9; }
+                .footer-quote h2 { font-family: 'Outfit', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--c-dark); margin-bottom: 2rem; max-width: 800px; margin: 0 auto 2rem;line-height: 1.2; }
+                .quote-line { width: 60px; height: 4px; background: var(--c-red); margin: 0 auto; border-radius: 10px; }
 
                 @media (max-width: 1024px) {
-                    .contact-container { padding: 0 2rem; }
-                    .split-grid-lux { grid-template-columns: 1fr; gap: 4rem; }
-                    .info-card-lux { padding: 3rem 2rem; }
-                    .form-box-lux { padding: 4rem 2rem; }
-                    .input-grid-min { grid-template-columns: 1fr; }
-                    .contact-title-lux { font-size: 4rem; letter-spacing: -2px; }
-                    .hero-bg-accent { display: none; }
+                    .contact-grid { grid-template-columns: 1fr; gap: 4rem; }
+                    .form-card { padding: 2.5rem; }
+                    .contact-header h1 { font-size: 2.8rem; }
                 }
 
-                .contact-loader { height: 100vh; display: flex; align-items: center; justify-content: center; font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 2rem; letter-spacing: 5px; color: var(--co-dark); }
+                .contact-loader { height: 100vh; display: flex; align-items: center; justify-content: center; font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 2rem; letter-spacing: 5px; color: var(--c-dark); }
             `}</style>
         </div>
     );

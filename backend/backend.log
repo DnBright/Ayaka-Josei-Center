@@ -1,6 +1,0 @@
-
-> backend@1.0.0 start
-> node server.js
-
-[dotenv@17.2.4] injecting env (6) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
-[2026-02-09T13:07:23.649Z] Server running on http://0.0.0.0:5005 (MySQL Mode)

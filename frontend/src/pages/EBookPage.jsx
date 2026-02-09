@@ -1,8 +1,66 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
-import { Book, AlertCircle, Download } from 'lucide-react';
+import { Book, AlertCircle, Download, X, Lock } from 'lucide-react';
+
+const AuthModal = ({ isOpen, onClose }) => {
+    if (!isOpen) return null;
+    return (
+        <div className="auth-modal-overlay">
+            <div className="auth-modal-content">
+                <button className="auth-close-btn" onClick={onClose}><X size={24} /></button>
+                <div className="auth-icon-circle">
+                    <Lock size={32} />
+                </div>
+                <h2>Akses Terbatas</h2>
+                <p>Halo! Halaman ini dikhususkan untuk <strong>Member Terdaftar</strong>. Silakan login atau daftar untuk mengakses konten lengkap dan mengunduh E-Book.</p>
+                <div className="auth-actions">
+                    <Link to="/member/login" className="btn-modal-login">Login Member</Link>
+                    <Link to="/member/register" className="btn-modal-register">Daftar Sekarang</Link>
+                </div>
+            </div>
+            <style jsx="true">{`
+                .auth-modal-overlay {
+                    position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(5px);
+                    z-index: 3000; display: flex; align-items: center; justify-content: center; padding: 1rem;
+                }
+                .auth-modal-content {
+                    background: white; width: 100%; max-width: 450px; padding: 2.5rem; border-radius: 20px;
+                    text-align: center; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+                    animation: modalPop 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                }
+                @keyframes modalPop { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+                .auth-close-btn {
+                    position: absolute; top: 1rem; right: 1rem; background: none; border: none;
+                    color: #94a3b8; cursor: pointer; padding: 0.5rem; border-radius: 50%; transition: 0.2s;
+                }
+                .auth-close-btn:hover { background: #f1f5f9; color: #0f172a; }
+                
+                .auth-icon-circle {
+                    width: 70px; height: 70px; background: #fee2e2; color: #da291c;
+                    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+                    margin: 0 auto 1.5rem;
+                }
+                .auth-modal-content h2 { font-size: 1.8rem; font-weight: 800; color: #0f172a; margin-bottom: 0.8rem; font-family: 'Outfit', sans-serif; }
+                .auth-modal-content p { color: #64748b; line-height: 1.6; margin-bottom: 2rem; }
+                .auth-actions { display: flex; flex-direction: column; gap: 1rem; }
+                
+                .btn-modal-login {
+                    background: #da291c; color: white; padding: 1rem; border-radius: 12px;
+                    font-weight: 700; text-decoration: none; transition: 0.3s;
+                }
+                .btn-modal-login:hover { background: #b91c1c; transform: translateY(-2px); }
+                
+                .btn-modal-register {
+                    background: white; color: #0f172a; padding: 1rem; border-radius: 12px;
+                    font-weight: 700; text-decoration: none; border: 2px solid #e2e8f0; transition: 0.3s;
+                }
+                .btn-modal-register:hover { border-color: #0f172a; }
+            `}</style>
+        </div>
+    );
+};
 
 const EBookPage = () => {
     const { t } = useTranslation();
@@ -10,16 +68,19 @@ const EBookPage = () => {
     const [member, setMember] = useState(null);
     const [loading, setLoading] = useState(true);
     const [ebooks, setEbooks] = useState([]);
+    const [showAuthModal, setShowAuthModal] = useState(false);
 
     useEffect(() => {
         // Check for member session
         const storedMember = localStorage.getItem('member_user');
         if (!storedMember) {
-            navigate('/member/login');
+            // No auto redirect, just set null and show modal
+            setMember(null);
+            setTimeout(() => setShowAuthModal(true), 1000); // Show popup after 1s
         } else {
             setMember(JSON.parse(storedMember));
-            fetchEbooks();
         }
+        fetchEbooks();
     }, [navigate]);
 
     const fetchEbooks = async () => {
@@ -31,6 +92,14 @@ const EBookPage = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleDownloadClick = (id, url) => {
+        if (!member) {
+            setShowAuthModal(true);
+            return;
+        }
+        trackEbookClick(id, url);
     };
 
     const trackEbookClick = async (id, url) => {
@@ -47,11 +116,17 @@ const EBookPage = () => {
 
     return (
         <div className="ebook-wrapper">
+            <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
+
             {/* Header / Hero */}
             <header className="ebook-hero">
                 <div className="container">
                     <div className="hero-content reveal-up">
-                        <span className="badge-member">{t('ebook.active_member')}: {member?.email}</span>
+                        {member ? (
+                            <span className="badge-member">{t('ebook.active_member')}: {member.email}</span>
+                        ) : (
+                            <span className="badge-guest">Mode Tamu / Guest</span>
+                        )}
                         <h1>{t('ebook.hero_title')} <br /><span className="text-stroke">{t('ebook.hero_subtitle')}</span></h1>
                         <p className="hero-desc">
                             {t('ebook.hero_desc')}
@@ -82,10 +157,12 @@ const EBookPage = () => {
                                     <h3>{book.title}</h3>
                                     <p>{book.description}</p>
                                     <button
-                                        className="btn-download"
-                                        onClick={() => trackEbookClick(book.id, book.file_url)}
+                                        className={`btn-download ${!member ? 'locked' : ''}`}
+                                        onClick={() => handleDownloadClick(book.id, book.file_url)}
+                                        title={!member ? "Login untuk mengunduh" : "Unduh E-Book"}
                                     >
-                                        <Download size={18} /> {t('ebook.download_btn')}
+                                        {!member ? <Lock size={18} /> : <Download size={18} />}
+                                        {t('ebook.download_btn')}
                                     </button>
                                 </div>
                             </div>
@@ -124,6 +201,17 @@ const EBookPage = () => {
                     display: inline-block;
                     background: #dcfce7;
                     color: #166534;
+                    padding: 0.5rem 1rem;
+                    border-radius: 100px;
+                    font-size: 0.8rem;
+                    font-weight: 700;
+                    margin-bottom: 1.5rem;
+                    letter-spacing: 1px;
+                }
+                .badge-guest {
+                    display: inline-block;
+                    background: #f1f5f9;
+                    color: #64748b;
                     padding: 0.5rem 1rem;
                     border-radius: 100px;
                     font-size: 0.8rem;
@@ -211,6 +299,8 @@ const EBookPage = () => {
                     font-size: 0.9rem;
                 }
                 .btn-download:hover { background: #1e293b; }
+                .btn-download.locked { background: #e2e8f0; color: #64748b; cursor: not-allowed; }
+                .btn-download.locked:hover { background: #cbd5e1; }
 
                 /* FOOTER WARNING */
                 .warning-box {
