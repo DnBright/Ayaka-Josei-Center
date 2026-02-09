@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Mail, Phone, MapPin, Clock, Send, Shield, Info, Instagram, Facebook, MessageCircle, ChevronRight, CheckCircle2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -58,8 +60,8 @@ const ContactPage = ({ content }) => {
                         <div className="hero-text-lux contact-reveal reveal-left">
                             <span className="contact-tag">{t('contact.channel')}</span>
                             <h1 className="contact-title-lux">
-                                {t('contact.partnership').split(' & ')[0]} <br />
-                                <span>& {t('contact.partnership').split(' & ')[1]}</span>
+                                {(t('contact.partnership') || '').split(' & ')[0]} <br />
+                                <span>& {(t('contact.partnership') || '').split(' & ')[1] || ''}</span>
                             </h1>
                             <div className="luxury-line"></div>
                             <p className="contact-p-lux">{data.pengantar?.content}</p>

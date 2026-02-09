@@ -66,16 +66,16 @@ const ProfilPage = ({ content }) => {
                         </div>
                         <div className="narrative-text-box">
                             <div className="narrative-block">
-                                <h2 className="section-title-prof">{data.pengantar?.title}</h2>
+                                <h2 className="section-title-prof">{t('profil.pengantar.title', { defaultValue: data.pengantar?.title })}</h2>
                                 <p className="section-p-prof">
-                                    {data.pengantar?.content}
+                                    {t('profil.pengantar.content', { defaultValue: data.pengantar?.content })}
                                 </p>
                             </div>
                             <div className="narrative-divider"></div>
                             <div className="narrative-block mt-12">
-                                <h2 className="section-title-prof">{data.latarBelakang?.title}</h2>
+                                <h2 className="section-title-prof">{t('profil.latar_belakang.title', { defaultValue: data.latarBelakang?.title })}</h2>
                                 <p className="section-p-prof">
-                                    {data.latarBelakang?.content}
+                                    {t('profil.latar_belakang.content', { defaultValue: data.latarBelakang?.content })}
                                 </p>
                             </div>
                         </div>
@@ -95,7 +95,7 @@ const ProfilPage = ({ content }) => {
                             <div className="vision-text">
                                 <h3 className="sub-title-prof">{t('profil.vision.visi_label')}</h3>
                                 <p className="text-xl leading-relaxed text-slate-700 italic">
-                                    "{data.visi?.content}"
+                                    "{t('profil.visi.content', { defaultValue: data.visi?.content })}"
                                 </p>
                             </div>
                             <div className="mission-list space-y-6">
@@ -103,7 +103,7 @@ const ProfilPage = ({ content }) => {
                                 {(data.misi?.items || []).map((item, idx) => (
                                     <div key={idx} className="mission-item-prof">
                                         <div className="num-dot">{idx + 1}</div>
-                                        <p>{item}</p>
+                                        <p>{t(`profil.misi.item_${idx}`, { defaultValue: item })}</p>
                                     </div>
                                 ))}
                             </div>
@@ -131,13 +131,13 @@ const ProfilPage = ({ content }) => {
                     <div className="grid md:grid-cols-2 gap-px bg-slate-800 border border-slate-800 overflow-hidden rounded-2xl">
                         <div className="impact-block-prof bg-slate-900 p-12 md:p-16">
                             <Layers className="text-red-500 mb-8" size={32} />
-                            <h3 className="text-2xl font-bold mb-6">{data.fokus?.title}</h3>
-                            <p className="text-slate-400 leading-relaxed text-lg">{data.fokus?.content}</p>
+                            <h3 className="text-2xl font-bold mb-6">{t('profil.fokus.title', { defaultValue: data.fokus?.title })}</h3>
+                            <p className="text-slate-400 leading-relaxed text-lg">{t('profil.fokus.content', { defaultValue: data.fokus?.content })}</p>
                         </div>
                         <div className="impact-block-prof bg-slate-900 p-12 md:p-16">
                             <Shield className="text-red-500 mb-8" size={32} />
-                            <h3 className="text-2xl font-bold mb-6">{data.legalitas?.title}</h3>
-                            <p className="text-slate-400 leading-relaxed text-lg">{data.legalitas?.content}</p>
+                            <h3 className="text-2xl font-bold mb-6">{t('profil.legalitas.title', { defaultValue: data.legalitas?.title })}</h3>
+                            <p className="text-slate-400 leading-relaxed text-lg">{t('profil.legalitas.content', { defaultValue: data.legalitas?.content })}</p>
                         </div>
                     </div>
                 </div>
@@ -146,8 +146,8 @@ const ProfilPage = ({ content }) => {
             {/* CALL TO ACTION */}
             <section className="prof-cta py-32 text-center bg-white relative overflow-hidden">
                 <div className="container-prof professional-reveal">
-                    <h2 className="prof-cta-title">{data.penutup?.title}</h2>
-                    <p className="prof-cta-desc mt-8">{data.penutup?.content}</p>
+                    <h2 className="prof-cta-title">{t('profil.penutup.title', { defaultValue: data.penutup?.title })}</h2>
+                    <p className="prof-cta-desc mt-8">{t('profil.penutup.content', { defaultValue: data.penutup?.content })}</p>
                     <div className="mt-12">
                         <button className="btn-prof-primary">
                             {t('btn.hubungi_kami')}

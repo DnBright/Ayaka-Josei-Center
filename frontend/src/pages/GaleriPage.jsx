@@ -46,8 +46,8 @@ const GaleriPage = ({ content }) => {
                         </div>
                         <div className="hero-intro-box atelier-reveal reveal-right">
                             <div className="intro-accent-line"></div>
-                            <h2>{data.pengantar?.title}</h2>
-                            <p>{data.pengantar?.content}</p>
+                            <h2>{t('galeri.hero.intro_title', { defaultValue: data.pengantar?.title })}</h2>
+                            <p>{t('galeri.hero.intro_content', { defaultValue: data.pengantar?.content })}</p>
                         </div>
                     </div>
                 </div>
@@ -69,7 +69,7 @@ const GaleriPage = ({ content }) => {
                                     className={`cat-btn-lux ${activeCategory === cat.id ? 'is-active' : ''}`}
                                     onClick={() => setActiveCategory(cat.id)}
                                 >
-                                    {cat.label}
+                                    {t(`galeri.category.${cat.id}`, { defaultValue: cat.label })}
                                 </button>
                             ))}
                         </div>
@@ -109,7 +109,7 @@ const GaleriPage = ({ content }) => {
                 <div className="atelier-container">
                     <div className="section-header-lux atelier-reveal reveal-up">
                         <span className="meta-white">{t('galeri.video.tag')}</span>
-                        <h2 className="heading-white-lux">{data.video?.title}</h2>
+                        <h2 className="heading-white-lux">{t('galeri.video.title', { defaultValue: data.video?.title })}</h2>
                     </div>
 
                     <div className="video-grid-lux">
@@ -136,14 +136,14 @@ const GaleriPage = ({ content }) => {
                     <div className="ethics-grid-lux">
                         <div className="ethics-left atelier-reveal reveal-left">
                             <Shield size={48} className="text-red" />
-                            <h2 className="ethics-title-lux">{data.etika?.title}</h2>
+                            <h2 className="ethics-title-lux">{t('galeri.etika.title', { defaultValue: data.etika?.title })}</h2>
                         </div>
                         <div className="ethics-right atelier-reveal reveal-right">
                             <div className="ethics-list-lux">
                                 {(data.etika?.points || []).map((point, idx) => (
                                     <div key={idx} className="ethics-item-lux">
                                         <div className="ethics-dot"></div>
-                                        <p>{point}</p>
+                                        <p>{t(`galeri.etika.item_${idx}`, { defaultValue: point })}</p>
                                     </div>
                                 ))}
                             </div>
@@ -157,7 +157,7 @@ const GaleriPage = ({ content }) => {
                 <div className="atelier-container">
                     <div className="footer-sign-off atelier-reveal reveal-up">
                         <div className="atelier-logo-mark">A</div>
-                        <p className="footer-content-lux">{data.penutup?.content}</p>
+                        <p className="footer-content-lux">{t('galeri.penutup.content', { defaultValue: data.penutup?.content })}</p>
                         <div className="footer-divider-lux"></div>
                         <span className="archive-date">{t('galeri.footer.archive_date')}</span>
                     </div>

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { User, Mail, Lock, Phone, ArrowRight, CheckCircle } from 'lucide-react';
 
 const MemberRegister = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         name: '',
@@ -47,12 +49,10 @@ const MemberRegister = () => {
         navigate('/member/login', {
             state: {
                 registrationSuccess: true,
-                message: "Pendaftaran berhasil! Silakan tunggu persetujuan Admin untuk login."
+                message: t('member.reg_success')
             }
         });
     };
-
-
 
     return (
         <div className="page-wrapper">
@@ -61,19 +61,19 @@ const MemberRegister = () => {
                     <div className="register-card reveal-up">
                         <div className="register-header">
                             <img src="/assets/logo ayakan.png" alt="Ayaka Logo" className="brand-logo" />
-                            <h2>Daftar Member</h2>
-                            <p>Bergabung dengan komunitas kami</p>
+                            <h2>{t('member.reg_title')}</h2>
+                            <p>{t('member.reg_subtitle')}</p>
                         </div>
 
                         <form onSubmit={handleSubmit} className="register-form">
                             <div className="form-group">
-                                <label>Nama Lengkap</label>
+                                <label>{t('member.name_label')}</label>
                                 <div className="input-wrapper">
                                     <User size={20} className="input-icon" />
                                     <input
                                         type="text"
                                         name="name"
-                                        placeholder="Nama Lengkap"
+                                        placeholder={t('member.name_label')}
                                         value={formData.name}
                                         onChange={handleChange}
                                         required
@@ -82,7 +82,7 @@ const MemberRegister = () => {
                             </div>
 
                             <div className="form-group">
-                                <label>Email Address</label>
+                                <label>{t('member.email_label')}</label>
                                 <div className="input-wrapper">
                                     <Mail size={20} className="input-icon" />
                                     <input
@@ -97,7 +97,7 @@ const MemberRegister = () => {
                             </div>
 
                             <div className="form-group">
-                                <label>Nomor Telepon / WhatsApp</label>
+                                <label>{t('member.phone_label')}</label>
                                 <div className="input-wrapper">
                                     <Phone size={20} className="input-icon" />
                                     <input
@@ -112,7 +112,7 @@ const MemberRegister = () => {
                             </div>
 
                             <div className="form-group">
-                                <label>Password</label>
+                                <label>{t('member.password_label')}</label>
                                 <div className="input-wrapper">
                                     <Lock size={20} className="input-icon" />
                                     <input
@@ -127,7 +127,7 @@ const MemberRegister = () => {
                             </div>
 
                             <div className="form-group">
-                                <label>Konfirmasi Password</label>
+                                <label>{t('member.confirm_password')}</label>
                                 <div className="input-wrapper">
                                     <Lock size={20} className="input-icon" />
                                     <input
@@ -142,13 +142,13 @@ const MemberRegister = () => {
                             </div>
 
                             <button type="submit" className="btn-submit">
-                                Daftar Sekarang <ArrowRight size={20} />
+                                {t('member.reg_btn')} <ArrowRight size={20} />
                             </button>
                         </form>
 
                         <div className="register-footer">
-                            <p>Sudah punya akun? <Link to="/member/login">Masuk disini</Link></p>
-                            <Link to="/" className="back-link">Kembali ke Beranda</Link>
+                            <p>{t('member.have_account')} <Link to="/member/login">{t('member.login_link')}</Link></p>
+                            <Link to="/" className="back-link">{t('member.back_home')}</Link>
                         </div>
                     </div>
                 </div>

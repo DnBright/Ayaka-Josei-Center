@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { Heart, Cpu, Hotel, Coffee, CheckCircle, Info, FileText, ArrowRight, Star, Target, Zap, Shield } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -37,9 +38,9 @@ const ProgramPage = ({ content }) => {
                     <div className="hero-text-side vangu-reveal reveal-left">
                         <div className="vangu-badge">{t('program.hero_edition')}</div>
                         <h1 className="hero-title-max">
-                            {t('program.hero_title').split(' ').slice(0, 2).join(' ')} <br />
-                            <span className="text-accent-red">{t('program.hero_title').split(' ').slice(2, 3)}</span> <br />
-                            {t('program.hero_title').split(' ').slice(3).join(' ')}
+                            {(t('program.hero_title') || '').split(' ').slice(0, 2).join(' ')} <br />
+                            <span className="text-accent-red">{(t('program.hero_title') || '').split(' ').slice(2, 3)}</span> <br />
+                            {(t('program.hero_title') || '').split(' ').slice(3).join(' ')}
                         </h1>
                         <p className="hero-desc-max">{t('program.hero_desc')}</p>
                         <div className="hero-cta-group">
@@ -66,8 +67,8 @@ const ProgramPage = ({ content }) => {
                     <div className="asymmetric-intro vangu-reveal reveal-up">
                         <div className="intro-accent-box"></div>
                         <div className="intro-content-vangu">
-                            <h2 className="vangu-heading-large">{data.pengantar?.title}</h2>
-                            <p className="vangu-p-large">{data.pengantar?.content}</p>
+                            <h2 className="vangu-heading-large">{t('program.pengantar.title', { defaultValue: data.pengantar?.title })}</h2>
+                            <p className="vangu-p-large">{t('program.pengantar.content', { defaultValue: data.pengantar?.content })}</p>
                         </div>
                     </div>
                 </div>
@@ -78,7 +79,7 @@ const ProgramPage = ({ content }) => {
                 <div className="container-full">
                     <div className="section-meta-center vangu-reveal reveal-up">
                         <span className="meta-tag">{t('program.specializations')}</span>
-                        <h2 className="vangu-heading-white center">{data.daftarProgram?.title}</h2>
+                        <h2 className="vangu-heading-white center">{t('program.listing.title', { defaultValue: data.daftarProgram?.title })}</h2>
                         <div className="interaction-hint">
                             <span className="hint-line"></span>
                             <span className="hint-text">{t('program.interaction_hint')}</span>
@@ -106,15 +107,15 @@ const ProgramPage = ({ content }) => {
                                         {prog.id === 'hospitality' && <Hotel size={32} />}
                                         {prog.id === 'fb' && <Coffee size={32} />}
                                     </div>
-                                    <h3 className="panel-title">{t(`program.${prog.id}.name`) || prog.name}</h3>
+                                    <h3 className="panel-title">{t(`program.${prog.id}.name`, { defaultValue: prog.name })}</h3>
                                     <div className="panel-details-reveal">
-                                        <p className="panel-desc-lux">{t(`program.${prog.id}.desc`) || prog.desc}</p>
+                                        <p className="panel-desc-lux">{t(`program.${prog.id}.desc`, { defaultValue: prog.desc })}</p>
                                         <div className="panel-grid-lux">
                                             <div className="panel-info-block">
                                                 <Target size={18} className="text-red" />
                                                 <div>
                                                     <span className="block-label">{t('program.tasks_label')}</span>
-                                                    <p>{prog.tasks}</p>
+                                                    <p>{t(`program.${prog.id}.tasks`, { defaultValue: prog.tasks })}</p>
                                                 </div>
                                             </div>
                                             {prog.qualifications && (
@@ -149,7 +150,7 @@ const ProgramPage = ({ content }) => {
                             {(data.persyaratan?.items || []).map((item, idx) => (
                                 <div key={idx} className={`radial-item item-${idx + 1} vangu-reveal reveal-up`}>
                                     <div className="item-label">0{idx + 1}</div>
-                                    <p>{item}</p>
+                                    <p>{t(`program.req.item_${idx}`, { defaultValue: item })}</p>
                                 </div>
                             ))}
                         </div>
@@ -161,15 +162,15 @@ const ProgramPage = ({ content }) => {
             <section className="vangu-section bg-vangu-soft">
                 <div className="container">
                     <div className="section-meta vangu-reveal reveal-up">
-                        <h2 className="vangu-heading-large">{data.fasilitas?.title}</h2>
+                        <h2 className="vangu-heading-large">{t('program.facility.title', { defaultValue: data.fasilitas?.title })}</h2>
                     </div>
                     <div className="bento-grid-vangu">
                         {(data.fasilitas?.items || []).map((item, idx) => (
                             <div key={idx} className={`bento-tile tile-${idx + 1} vangu-reveal reveal-up`}>
                                 <div className="bento-icon"><CheckCircle size={24} /></div>
                                 <div className="bento-content">
-                                    <h4>{item.label}</h4>
-                                    <p>{item.desc}</p>
+                                    <h4>{t(`program.facility.item_${idx}.title`, { defaultValue: item.label })}</h4>
+                                    <p>{t(`program.facility.item_${idx}.desc`, { defaultValue: item.desc })}</p>
                                 </div>
                             </div>
                         ))}
@@ -181,7 +182,7 @@ const ProgramPage = ({ content }) => {
             <section className="vangu-section">
                 <div className="container">
                     <div className="section-header-vangu center vangu-reveal reveal-up">
-                        <h2 className="vangu-heading-large">{data.alurSingkat?.title}</h2>
+                        <h2 className="vangu-heading-large">{t('program.alur.title', { defaultValue: data.alurSingkat?.title })}</h2>
                     </div>
                     <div className="snakepath-container">
                         <div className="vangu-line-draw"></div>
@@ -189,8 +190,8 @@ const ProgramPage = ({ content }) => {
                             <div key={idx} className={`snakepath-node node-${idx % 2 === 0 ? 'left' : 'right'} vangu-reveal reveal-up`}>
                                 <div className="node-num">{step.num}</div>
                                 <div className="node-box">
-                                    <h4>{step.title}</h4>
-                                    <p>{step.desc}</p>
+                                    <h4>{t(`program.alur.step_${idx}.title`, { defaultValue: step.title })}</h4>
+                                    <p>{t(`program.alur.step_${idx}.desc`, { defaultValue: step.desc })}</p>
                                 </div>
                             </div>
                         ))}
@@ -204,9 +205,9 @@ const ProgramPage = ({ content }) => {
                     <div className="modern-disclaimer vangu-reveal reveal-up">
                         <div className="disc-icon"><FileText size={30} /></div>
                         <div className="disc-text">
-                            <h3>{data.disclaimerLegal?.title}</h3>
-                            <p>{data.disclaimerLegal?.content}</p>
-                            <span className="disc-tag">{data.disclaimerLegal?.importance}</span>
+                            <h3>{t('program.disclaimer.title', { defaultValue: data.disclaimerLegal?.title })}</h3>
+                            <p>{t('program.disclaimer.content', { defaultValue: data.disclaimerLegal?.content })}</p>
+                            <span className="disc-tag">{t('program.disclaimer.importance', { defaultValue: data.disclaimerLegal?.importance })}</span>
                         </div>
                     </div>
                 </div>
@@ -218,10 +219,10 @@ const ProgramPage = ({ content }) => {
                     <div className="cta-image-vangu vangu-reveal reveal-left"></div>
                     <div className="cta-text-vangu vangu-reveal reveal-right">
                         <span className="cta-accent">{t('section.konsultasi_gratis')}</span>
-                        <h2 className="cta-title-vangu">{data.ajakanKonsultasi?.title}</h2>
-                        <p className="cta-desc-vangu">{data.ajakanKonsultasi?.content}</p>
+                        <h2 className="cta-title-vangu">{t('program.cta.title', { defaultValue: data.ajakanKonsultasi?.title })}</h2>
+                        <p className="cta-desc-vangu">{t('program.cta.content', { defaultValue: data.ajakanKonsultasi?.content })}</p>
                         <button className="vangu-btn-max">
-                            {data.ajakanKonsultasi?.cta} <ArrowRight size={24} />
+                            {t('program.cta.btn', { defaultValue: data.ajakanKonsultasi?.cta })} <ArrowRight size={24} />
                         </button>
                     </div>
                 </div>

@@ -1,10 +1,10 @@
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const SplashLoader = ({ onComplete }) => {
     const { t } = useTranslation();
     const [progress, setProgress] = useState(0);
     const [isExiting, setIsExiting] = useState(false);
-    // ... late lines updated properly by tool
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -34,13 +34,11 @@ const SplashLoader = ({ onComplete }) => {
 
             <div className="splash-content">
                 <div className="logo-container">
-                    <div className="logo-container">
-                        <img
-                            src="/assets/logo ayakan.png"
-                            alt="Ayaka Josei Center"
-                            className="splash-logo-img"
-                        />
-                    </div>
+                    <img
+                        src="/assets/logo ayakan.png"
+                        alt="Ayaka Josei Center"
+                        className="splash-logo-img"
+                    />
                 </div>
                 <h1 className="splash-name">AYAKA <span>JOSEI</span> CENTER</h1>
                 <div className="loading-meta">

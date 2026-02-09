@@ -79,7 +79,8 @@ const ArticleEditor = () => {
             navigate(`${prefix}/articles`);
         } catch (err) {
             console.error(err);
-            alert('Gagal menyimpan artikel. Cek koneksi atau login ulang.');
+            const errMsg = err.response?.data?.error || err.message || 'Gagal menyimpan artikel';
+            alert(`Gagal menyimpan artikel: ${errMsg}`);
         } finally {
             setLoading(false);
         }

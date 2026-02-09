@@ -34,6 +34,23 @@ const ArticleManager = () => {
         }
     };
 
+    const handleDelete = async (id) => {
+        if (!window.confirm('Apakah Anda yakin ingin menghapus artikel ini? Tindakan ini tidak dapat dibatalkan.')) return;
+
+        try {
+            const token = localStorage.getItem(`${keyPrefix}token`);
+            const apiUrl = `http://${window.location.hostname}:5005/api/admin/posts/${id}`;
+            await axios.delete(apiUrl, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            alert('Artikel berhasil dihapus');
+            fetchArticles(); // Refresh list
+        } catch (err) {
+            console.error(err);
+            alert('Gagal menghapus artikel: ' + (err.response?.data?.error || err.message));
+        }
+    };
+
     const getStatusBadge = (status) => {
         switch (status) {
             case 'publish': return <span className="text-xs font-bold bg-green-100 text-green-700 px-2 py-1 rounded">Published</span>;
@@ -115,7 +132,11 @@ const ArticleManager = () => {
                                         <Link to={`${prefix}/articles/edit/${art.id}`} className="act-btn edit" title="Edit Content">
                                             <Edit2 size={16} />
                                         </Link>
-                                        <button className="act-btn delete" title="Move to Trash">
+                                        <button
+                                            className="act-btn delete"
+                                            title="Move to Trash"
+                                            onClick={() => handleDelete(art.id)}
+                                        >
                                             <Trash2 size={16} />
                                         </button>
                                     </div>

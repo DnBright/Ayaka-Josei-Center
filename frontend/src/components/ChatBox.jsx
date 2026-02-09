@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 import { MessageCircle, X, Send, User, Mail, CheckCircle2 } from 'lucide-react';
 
 const ChatBox = () => {
+    const { t } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -21,7 +23,7 @@ const ChatBox = () => {
             const apiUrl = `http://${window.location.hostname}:5005/api/communications`;
             await axios.post(apiUrl, {
                 ...formData,
-                subject: 'Pesan dari Chat Box'
+                subject: t('chat.concierge')
             });
             setIsSubmitted(true);
             setLoading(false);
@@ -32,7 +34,7 @@ const ChatBox = () => {
             }, 3000);
         } catch (error) {
             console.error('Chat error:', error);
-            alert('Gagal mengirim pesan.');
+            // alert(t('error.failed_send')); // Add error keys if needed
             setLoading(false);
         }
     };
@@ -43,7 +45,7 @@ const ChatBox = () => {
             {!isOpen && (
                 <button onClick={toggleChat} className="chat-toggle-btn shadow-xl shadow-red-500/20">
                     <MessageCircle size={24} />
-                    <span className="tooltip-lux">Chat with Ayaka</span>
+                    <span className="tooltip-lux">{t('chat.toggle')}</span>
                 </button>
             )}
 
@@ -53,7 +55,7 @@ const ChatBox = () => {
                     <div className="chat-header-lux">
                         <div className="header-info">
                             <div className="header-dot"></div>
-                            <h4>Ayaka Concierge</h4>
+                            <h4>{t('chat.concierge')}</h4>
                         </div>
                         <button onClick={toggleChat} className="close-btn-lux">
                             <X size={20} />
@@ -66,18 +68,18 @@ const ChatBox = () => {
                                 <div className="success-icon-box">
                                     <CheckCircle2 size={40} className="text-green-500" />
                                 </div>
-                                <h3>Terima Kasih!</h3>
-                                <p>Pesan Anda telah kami terima. Tim kami akan segera menghubungi Anda kembali.</p>
+                                <h3>{t('chat.success_title')}</h3>
+                                <p>{t('chat.success_desc')}</p>
                             </div>
                         ) : (
                             <form onSubmit={handleSubmit} className="chat-form-lux">
-                                <p className="form-intro">Halo! Ada yang bisa kami bantu? Tinggalkan pesan di sini.</p>
+                                <p className="form-intro">{t('chat.intro')}</p>
 
                                 <div className="input-field-lux">
                                     <User size={16} className="field-icon" />
                                     <input
                                         type="text"
-                                        placeholder="Nama Anda"
+                                        placeholder={t('chat.name_placeholder')}
                                         required
                                         value={formData.name}
                                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -88,7 +90,7 @@ const ChatBox = () => {
                                     <Mail size={16} className="field-icon" />
                                     <input
                                         type="email"
-                                        placeholder="Email Anda"
+                                        placeholder={t('chat.email_placeholder')}
                                         required
                                         value={formData.email}
                                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -97,7 +99,7 @@ const ChatBox = () => {
 
                                 <div className="input-field-lux textarea">
                                     <textarea
-                                        placeholder="Apa pesan Anda?"
+                                        placeholder={t('chat.message_placeholder')}
                                         rows="4"
                                         required
                                         value={formData.message}
@@ -106,8 +108,8 @@ const ChatBox = () => {
                                 </div>
 
                                 <button type="submit" disabled={loading} className="send-btn-lux">
-                                    {loading ? 'Mengirim...' : (
-                                        <><span>Kirim Pesan</span> <Send size={16} /></>
+                                    {loading ? t('chat.sending') : (
+                                        <><span>{t('chat.send')}</span> <Send size={16} /></>
                                     )}
                                 </button>
                             </form>
@@ -158,6 +160,10 @@ const ChatBox = () => {
                     transform: translateX(10px);
                     transition: all 0.3s;
                     pointer-events: none;
+                }
+
+                .chat-toggle-btn:hover {
+                    z-index: 10000;
                 }
 
                 .chat-toggle-btn:hover .tooltip-lux {

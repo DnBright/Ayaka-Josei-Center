@@ -1,125 +1,131 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Lock } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { LogIn, User, Lock, AlertCircle } from 'lucide-react';
 
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const { t } = useTranslation();
+  const [credentials, setCredentials] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      const resp = await axios.post('http://127.0.0.1:5005/api/auth/login', { username, password });
-      localStorage.setItem('token', resp.data.token);
-      localStorage.setItem('role', resp.data.role);
-
-      const prefix = (resp.data.role === 'Super Admin' || resp.data.role === 'Editor') ? '/admin' : '/penulis';
-      navigate(prefix);
-    } catch (err) {
-      setError('Username atau password salah');
+    // Simple hardcoded admin check for demo purposes
+    if (credentials.username === 'admin' && credentials.password === 'admin123') {
+      localStorage.setItem('isAuthenticated', 'true');
+      localStorage.setItem('userRole', 'admin');
+      navigate('/admin');
+    } else {
+      setError(t('member.login_error'));
     }
   };
 
   return (
-    <div className="login-page">
-      <div className="login-card glass-card fade-in">
+    <div className="login-wrapper">
+      <div className="login-card reveal-up">
         <div className="login-header">
-          <div className="lock-icon"><Lock size={32} /></div>
-          <h2>Login Panel</h2>
-          <p>Akses Management Ayaka Josei Center</p>
+          <LogIn size={40} className="header-icon" />
+          <h2>{t('member.login_title')}</h2>
+          <p>{t('member.login_subtitle')}</p>
         </div>
-        <form onSubmit={handleLogin}>
-          <div className="form-group">
-            <label>Username</label>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
+
+        <form onSubmit={handleSubmit}>
+          <div className="input-group">
+            <label>{t('member.name_label')}</label>
+            <div className="input-field">
+              <User size={18} />
+              <input
+                type="text"
+                placeholder={t('member.name_label')}
+                value={credentials.username}
+                onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+              />
+            </div>
           </div>
-          <div className="form-group">
-            <label>Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+
+          <div className="input-group">
+            <label>{t('member.password_label')}</label>
+            <div className="input-field">
+              <Lock size={18} />
+              <input
+                type="password"
+                placeholder="••••••••"
+                value={credentials.password}
+                onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+              />
+            </div>
           </div>
-          {error && <p className="error-msg">{error}</p>}
-          <button type="submit" className="btn-login">Login Sekarang</button>
+
+          {error && (
+            <div className="error-msg animate-shake">
+              <AlertCircle size={14} /> {error}
+            </div>
+          )}
+
+          <button type="submit" className="btn-login">
+            {t('member.login_btn')}
+          </button>
         </form>
       </div>
 
       <style jsx="true">{`
-        .login-page {
-          height: 100vh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: #f8fafc;
-        }
-        .login-card {
-          width: 100%;
-          max-width: 400px;
-          padding: 3rem;
-          border-radius: 24px;
-        }
-        .login-header {
-          text-align: center;
-          margin-bottom: 2rem;
-        }
-        .lock-icon {
-          width: 64px;
-          height: 64px;
-          background: var(--accent);
-          color: white;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin: 0 auto 1rem;
-        }
-        .form-group {
-          margin-bottom: 1.5rem;
-        }
-        label {
-          display: block;
-          margin-bottom: 0.5rem;
-          font-weight: 500;
-        }
-        input {
-          width: 100%;
-          padding: 0.75rem 1rem;
-          border: 1px solid #e2e8f0;
-          border-radius: 12px;
-          font-size: 1rem;
-          transition: var(--transition);
-        }
-        input:focus {
-          border-color: var(--accent);
-          box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-        .btn-login {
-          width: 100%;
-          padding: 1rem;
-          background: var(--primary);
-          color: white;
-          border-radius: 12px;
-          font-weight: 600;
-          margin-top: 1rem;
-        }
-        .error-msg {
-          color: #ef4444;
-          font-size: 0.875rem;
-          margin-bottom: 1rem;
-          text-align: center;
-        }
-      `}</style>
+                .login-wrapper {
+                    height: 100vh;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: #0f172a;
+                    font-family: 'Inter', sans-serif;
+                }
+                .login-card {
+                    background: white;
+                    padding: 3rem;
+                    border-radius: 20px;
+                    width: 100%;
+                    max-width: 400px;
+                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+                }
+                .login-header { text-align: center; margin-bottom: 2rem; }
+                .header-icon { color: #ef4444; margin-bottom: 1rem; }
+                .login-header h2 { font-size: 1.5rem; font-weight: 800; color: #1e293b; margin-bottom: 0.5rem; }
+                .login-header p { color: #64748b; font-size: 0.875rem; }
+
+                .input-group { margin-bottom: 1.5rem; }
+                .input-group label { display: block; font-size: 0.875rem; font-weight: 600; color: #475569; margin-bottom: 0.5rem; }
+                .input-field { position: relative; display: flex; align-items: center; }
+                .input-field svg { position: absolute; left: 1rem; color: #94a3b8; }
+                .input-field input {
+                    width: 100%;
+                    padding: 0.75rem 1rem 0.75rem 2.75rem;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 10px;
+                    transition: 0.3s;
+                }
+                .input-field input:focus { outline: none; border-color: #ef4444; ring: 2px solid rgba(239, 68, 68, 0.1); }
+
+                .btn-login {
+                    width: 100%;
+                    padding: 0.75rem;
+                    background: #ef4444;
+                    color: white;
+                    border: none;
+                    border-radius: 10px;
+                    font-weight: 700;
+                    cursor: pointer;
+                    transition: 0.3s;
+                }
+                .btn-login:hover { background: #dc2626; transform: translateY(-1px); }
+
+                .error-msg { color: #ef4444; font-size: 0.875rem; margin-bottom: 1rem; text-align: center; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+                
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    25% { transform: translateX(-5px); }
+                    75% { transform: translateX(5px); }
+                }
+                .animate-shake { animation: shake 0.2s ease-in-out 0s 2; }
+            `}</style>
     </div>
   );
 };

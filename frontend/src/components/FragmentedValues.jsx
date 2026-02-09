@@ -1,7 +1,9 @@
 import React from 'react';
 import { Shield, Award, Users, Sparkles } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const FragmentedValues = ({ items, layout = 'fragmented' }) => {
+    const { t } = useTranslation();
     const icons = [<Shield />, <Award />, <Users />, <Sparkles />];
 
     if (layout === 'structured') {
@@ -11,8 +13,8 @@ const FragmentedValues = ({ items, layout = 'fragmented' }) => {
                     <div key={idx} className="structured-value-card">
                         <div className="structured-icon-box">{icons[idx % icons.length]}</div>
                         <div className="structured-content">
-                            <h3>{val.label}</h3>
-                            <p>{val.desc}</p>
+                            <h3>{t(`profil.values.item_${idx}.title`, { defaultValue: val.label || val.title })}</h3>
+                            <p>{t(`profil.values.item_${idx}.desc`, { defaultValue: val.desc || val.content })}</p>
                         </div>
                     </div>
                 ))}
@@ -76,8 +78,8 @@ const FragmentedValues = ({ items, layout = 'fragmented' }) => {
                 <div key={idx} className={`value-fragment frag-${idx + 1} page-reveal reveal-up`}>
                     <div className="frag-icon-wrap">{icons[idx % icons.length]}</div>
                     <div className="frag-content">
-                        <h3>{val.label}</h3>
-                        <p>{val.desc}</p>
+                        <h3>{t(`profil.values.item_${idx}.title`, { defaultValue: val.label || val.title })}</h3>
+                        <p>{t(`profil.values.item_${idx}.desc`, { defaultValue: val.desc || val.content })}</p>
                     </div>
                 </div>
             ))}

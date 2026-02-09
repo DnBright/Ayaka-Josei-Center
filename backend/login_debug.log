@@ -228,3 +228,29 @@
 [2026-02-09T11:25:49.426Z] Stats request from User ID: 1, Role: Super Admin
 [2026-02-09T11:25:49.426Z] Fetching global stats...
 [2026-02-09T11:25:49.430Z] Global stats successfully fetched.
+[2026-02-09T12:17:11.503Z] Stats request from User ID: 1, Role: Super Admin
+[2026-02-09T12:17:11.508Z] Fetching global stats...
+[2026-02-09T12:17:11.571Z] Global stats successfully fetched.
+[2026-02-09T12:17:11.574Z] Stats request from User ID: 1, Role: Super Admin
+[2026-02-09T12:17:11.575Z] Fetching global stats...
+[2026-02-09T12:17:11.577Z] Global stats successfully fetched.
+[2026-02-09T12:54:55.625Z] Server running on http://0.0.0.0:5005 (MySQL Mode)
+[2026-02-09T12:55:35.289Z] Stats request from User ID: 4, Role: Penulis
+[2026-02-09T12:55:35.289Z] Fetching author stats for ID: 4...
+[2026-02-09T12:55:35.300Z] Author stats successfully fetched.
+[2026-02-09T12:55:35.302Z] Stats request from User ID: 4, Role: Penulis
+[2026-02-09T12:55:35.302Z] Fetching author stats for ID: 4...
+[2026-02-09T12:55:35.305Z] Author stats successfully fetched.
+[2026-02-09T12:55:45.576Z] Stats request from User ID: 4, Role: Penulis
+[2026-02-09T12:55:45.576Z] Fetching author stats for ID: 4...
+[2026-02-09T12:55:45.582Z] Author stats successfully fetched.
+[2026-02-09T12:55:45.586Z] Stats request from User ID: 4, Role: Penulis
+[2026-02-09T12:55:45.586Z] Fetching author stats for ID: 4...
+[2026-02-09T12:55:45.597Z] Author stats successfully fetched.
+[2026-02-09T12:56:01.912Z] Stats request from User ID: 1, Role: Super Admin
+[2026-02-09T12:56:01.912Z] Fetching global stats...
+[2026-02-09T12:56:01.924Z] Global stats successfully fetched.
+[2026-02-09T12:56:01.926Z] Stats request from User ID: 1, Role: Super Admin
+[2026-02-09T12:56:01.926Z] Fetching global stats...
+[2026-02-09T12:56:01.928Z] Global stats successfully fetched.
+[2026-02-09T13:07:23.649Z] Server running on http://0.0.0.0:5005 (MySQL Mode)

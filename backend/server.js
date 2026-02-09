@@ -136,6 +136,26 @@ app.put('/api/admin/posts/:id', authenticateToken, authorizeRoles('Super Admin',
     }
 });
 
+app.delete('/api/admin/posts/:id', authenticateToken, authorizeRoles('Super Admin', 'Editor', 'Penulis'), async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        if (req.user.role === 'Penulis') {
+            const [posts] = await pool.query("SELECT author_id, author_source FROM posts WHERE id = ?", [id]);
+            if (posts.length === 0) return res.status(404).json({ error: 'Post not found' });
+
+            if (posts[0].author_id !== req.user.id || posts[0].author_source !== 'users') {
+                return res.status(403).json({ error: 'Not authorized to delete this post' });
+            }
+        }
+
+        await pool.execute("DELETE FROM posts WHERE id = ?", [id]);
+        res.json({ message: 'Post deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // --- EBOOKS API ---
 app.get('/api/ebooks', async (req, res) => {
     try {

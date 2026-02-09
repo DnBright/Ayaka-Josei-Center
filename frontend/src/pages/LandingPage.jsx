@@ -72,12 +72,12 @@ const LandingPage = ({ content }) => {
                         <div className="section-grid">
                             <div className="text-content">
                                 <span className="section-badge">{t('section.siapa_kami')}</span>
-                                <h2 className="section-title">{content.profil?.title}</h2>
-                                <p className="section-tagline">{content.profil?.tagline}</p>
-                                <p className="section-desc">{content.profil?.text}</p>
+                                <h2 className="section-title">{t('home.profil.title', { defaultValue: content.profil?.title })}</h2>
+                                <p className="section-tagline">{t('home.profil.tagline', { defaultValue: content.profil?.tagline })}</p>
+                                <p className="section-desc">{t('home.profil.desc', { defaultValue: content.profil?.text })}</p>
                                 <div className="objective-box">
                                     <strong>{t('section.tujuan_kami')}</strong>
-                                    <p>{content.profil?.objective}</p>
+                                    <p>{t('home.profil.objective', { defaultValue: content.profil?.objective })}</p>
                                 </div>
                             </div>
                             <div className="visual-content">
@@ -97,7 +97,7 @@ const LandingPage = ({ content }) => {
                     <div className="container">
                         <div className="section-header center">
                             <span className="section-badge">{t('section.program_kami')}</span>
-                            <h2 className="section-title">{content.program?.title}</h2>
+                            <h2 className="section-title">{t('home.program.title', { defaultValue: content.program?.title })}</h2>
                         </div>
                         <div className="program-grid">
                             {(content.program?.items || []).map((item, idx) => {
@@ -127,7 +127,7 @@ const LandingPage = ({ content }) => {
                     <div className="container">
                         <div className="section-header">
                             <span className="section-badge">{t('section.mengapa_jepang')}</span>
-                            <h2 className="section-title">{content.manfaat?.title}</h2>
+                            <h2 className="section-title">{t('home.manfaat.title', { defaultValue: content.manfaat?.title })}</h2>
                         </div>
                         <div className="manfaat-grid">
                             {(content.manfaat?.items || []).map((item, idx) => (
@@ -136,8 +136,8 @@ const LandingPage = ({ content }) => {
                                         <div className="manfaat-dot"></div>
                                     </div>
                                     <div className="manfaat-content">
-                                        <h4>{item?.title}</h4>
-                                        <p>{item?.desc}</p>
+                                        <h4>{t(`home.manfaat.item_${idx}.title`, { defaultValue: item?.title })}</h4>
+                                        <p>{t(`home.manfaat.item_${idx}.desc`, { defaultValue: item?.desc })}</p>
                                     </div>
                                 </div>
                             ))}
@@ -152,15 +152,15 @@ const LandingPage = ({ content }) => {
                     <div className="container">
                         <div className="section-header center">
                             <span className="section-badge">{t('section.transparansi')}</span>
-                            <h2 className="section-title">{content.alur?.title}</h2>
+                            <h2 className="section-title">{t('home.alur.title', { defaultValue: content.alur?.title })}</h2>
                         </div>
                         <div className="alur-timeline">
                             {(content.alur?.steps || []).map((step, idx) => (
                                 <div key={idx} className="alur-step reveal reveal-left" style={{ transitionDelay: `${idx * 0.1}s` }}>
                                     <div className="step-num">{idx + 1}</div>
                                     <div className="step-content">
-                                        <h4>{step?.title}</h4>
-                                        <p>{step?.desc}</p>
+                                        <h4>{t(`home.alur.step_${idx}.title`, { defaultValue: step?.title })}</h4>
+                                        <p>{t(`home.alur.step_${idx}.desc`, { defaultValue: step?.desc })}</p>
                                     </div>
                                     {idx < (content.alur?.steps?.length || 0) - 1 && <div className="step-connector"></div>}
                                 </div>
@@ -176,16 +176,16 @@ const LandingPage = ({ content }) => {
                     <div className="container">
                         <div className="section-header center">
                             <span className="section-badge">{t('section.cerita_mereka')}</span>
-                            <h2 className="section-title">{content.alumni?.title}</h2>
+                            <h2 className="section-title">{t('home.alumni.title', { defaultValue: content.alumni?.title })}</h2>
                         </div>
                         <div className="alumni-grid">
                             {(content.alumni?.items || []).map((item, idx) => (
                                 <div key={idx} className="alumni-card reveal reveal-up" style={{ transitionDelay: `${idx * 0.1}s` }}>
                                     <div className="quote-mark">“</div>
-                                    <p className="alumni-quote">{item?.quote}</p>
+                                    <p className="alumni-quote">{t(`home.alumni.item_${idx}.quote`, { defaultValue: item?.quote })}</p>
                                     <div className="alumni-info">
                                         <div className="alumni-avatar">{item?.name ? item.name[0] : 'A'}</div>
-                                        <h5 className="alumni-name">{item?.name}</h5>
+                                        <h5 className="alumni-name">{t(`home.alumni.item_${idx}.name`, { defaultValue: item?.name })}</h5>
                                     </div>
                                 </div>
                             ))}
@@ -200,7 +200,7 @@ const LandingPage = ({ content }) => {
                     <div className="container">
                         <div className="section-header">
                             <span className="section-badge">{t('section.edukasi_berita')}</span>
-                            <h2 className="section-title">{content.blog?.title}</h2>
+                            <h2 className="section-title">{t('home.blog.title', { defaultValue: content.blog?.title })}</h2>
                         </div>
                         <div className="blog-grid">
                             {(posts.length > 0 ? posts.slice(0, 3) : (content.blog?.posts || []).slice(0, 3)).map((post, idx) => (
@@ -234,11 +234,11 @@ const LandingPage = ({ content }) => {
                 <section id="cta" className="section-padding reveal reveal-up">
                     <div className="container">
                         <div className="cta-box">
-                            <h2 className="cta-title">{content.cta?.title}</h2>
-                            <p className="cta-subtitle">{content.cta?.subtitle}</p>
+                            <h2 className="cta-title">{t('home.cta.title', { defaultValue: content.cta?.title })}</h2>
+                            <p className="cta-subtitle">{t('home.cta.subtitle', { defaultValue: content.cta?.subtitle })}</p>
                             <div className="cta-actions">
-                                <button className="btn-astra-main">{content.cta?.buttonPrimary}</button>
-                                <button className="btn-astra-outline">{content.cta?.buttonSecondary}</button>
+                                <button className="btn-astra-main">{t('home.cta.btn1', { defaultValue: content.cta?.buttonPrimary })}</button>
+                                <button className="btn-astra-outline">{t('home.cta.btn2', { defaultValue: content.cta?.buttonSecondary })}</button>
                             </div>
                         </div>
                     </div>

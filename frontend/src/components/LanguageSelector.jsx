@@ -29,7 +29,7 @@ const LanguageSelector = () => {
         localStorage.setItem('preferred_language', langCode);
     };
 
-    const currentLang = languages.find(lang => lang.code === selectedLang);
+    const currentLang = languages.find(lang => lang.code === selectedLang) || languages.find(lang => lang.code === 'id') || languages[0];
 
     return (
         <div className="language-selector-container">

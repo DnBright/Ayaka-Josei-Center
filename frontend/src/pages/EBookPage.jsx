@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 import { Book, AlertCircle, Download } from 'lucide-react';
 
 const EBookPage = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [member, setMember] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -41,7 +43,7 @@ const EBookPage = () => {
         }
     };
 
-    if (loading) return <div className="ebook-loader">Syncing Resources...</div>;
+    if (loading) return <div className="ebook-loader">{t('ebook.syncing')}</div>;
 
     return (
         <div className="ebook-wrapper">
@@ -49,11 +51,10 @@ const EBookPage = () => {
             <header className="ebook-hero">
                 <div className="container">
                     <div className="hero-content reveal-up">
-                        <span className="badge-member">MEMBER ACTIVE: {member?.email}</span>
-                        <h1>E-LIBRARY <br /><span className="text-stroke">INTERNAL RESOURCES</span></h1>
+                        <span className="badge-member">{t('ebook.active_member')}: {member?.email}</span>
+                        <h1>{t('ebook.hero_title')} <br /><span className="text-stroke">{t('ebook.hero_subtitle')}</span></h1>
                         <p className="hero-desc">
-                            Akses materi eksklusif untuk pendalaman program.
-                            Dilarang menyebarluaskan konten ini ke pihak luar.
+                            {t('ebook.hero_desc')}
                         </p>
                     </div>
                 </div>
@@ -63,7 +64,7 @@ const EBookPage = () => {
             <section className="ebook-list-section">
                 <div className="container">
                     <div className="section-header reveal-up">
-                        <h2>Arsip Materi</h2>
+                        <h2>{t('ebook.archive_title')}</h2>
                         <div className="line-divider"></div>
                     </div>
 
@@ -84,7 +85,7 @@ const EBookPage = () => {
                                         className="btn-download"
                                         onClick={() => trackEbookClick(book.id, book.file_url)}
                                     >
-                                        <Download size={18} /> UNDUH MATERI
+                                        <Download size={18} /> {t('ebook.download_btn')}
                                     </button>
                                 </div>
                             </div>
@@ -99,8 +100,7 @@ const EBookPage = () => {
                     <div className="warning-box reveal-up">
                         <AlertCircle size={24} className="text-red" />
                         <p>
-                            <strong>PERINGATAN:</strong> Semua materi di halaman ini adalah Hak Cipta Ayaka Josei Center.
-                            Penyebaran tanpa izin dapat dikenakan sanksi keanggotaan.
+                            <strong>{t('ebook.warning_title')}:</strong> {t('ebook.warning_desc')}
                         </p>
                     </div>
                 </div>
