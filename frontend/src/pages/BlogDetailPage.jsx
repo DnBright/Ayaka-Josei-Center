@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
-import { ArrowLeft, Calendar, Tag, Info, User, Share2, Facebook, Twitter, Link as LinkIcon, Lock } from 'lucide-react';
+import { ArrowLeft, Calendar, Tag, Info, User, Share2, Facebook, Twitter, Link as LinkIcon, Lock, Eye } from 'lucide-react';
 
 const BlogDetailPage = ({ content }) => {
     const { slug } = useParams();
@@ -53,7 +53,7 @@ const BlogDetailPage = ({ content }) => {
 
     const isLocked = isMemberContent(article.category) && !member;
 
-    const relatedArticles = data.artikel.filter(a => a.id !== article.id).slice(0, 3);
+    const relatedArticles = (data?.artikel || []).filter(a => a.id !== article.id).slice(0, 3);
 
     return (
         <div className="read-wrapper">
@@ -64,18 +64,22 @@ const BlogDetailPage = ({ content }) => {
                         <ArrowLeft size={18} /> KEMBALI KE JOURNAL
                     </Link>
 
-                    <div className="header-grid-lux">
+                    <div className="header-stacked-lux">
                         <div className="header-text-side">
                             <span className="read-cat-tag">{article.category}</span>
                             <h1 className="read-title-lux">{article.title}</h1>
                             <div className="read-meta-box">
                                 <div className="meta-item-lux">
                                     <Calendar size={16} />
-                                    <span>{article.date}</span>
+                                    <span>{article.date || new Date(article.created_at).toLocaleDateString()}</span>
                                 </div>
                                 <div className="meta-item-lux">
                                     <User size={16} />
                                     <span>OFFICIAL AYAKA</span>
+                                </div>
+                                <div className="meta-item-lux">
+                                    <Eye size={16} />
+                                    <span>{article.views || 0} Views</span>
                                 </div>
                                 {isMemberContent(article.category) && (
                                     <div className="meta-item-lux" style={{ color: '#da291c' }}>
@@ -85,7 +89,7 @@ const BlogDetailPage = ({ content }) => {
                                 )}
                             </div>
                         </div>
-                        <div className="header-img-side">
+                        <div className="header-img-full">
                             <img src={article.image} alt={article.title} className="main-read-img" />
                         </div>
                     </div>
@@ -133,7 +137,7 @@ const BlogDetailPage = ({ content }) => {
                                 <span className="rel-tag">{rel.category}</span>
                                 <h3>{rel.title}</h3>
                                 <p>{rel.summary}</p>
-                                <span className="rel-date">{rel.date}</span>
+                                <span className="rel-date">{rel.date || new Date(rel.created_at).toLocaleDateString()}</span>
                             </Link>
                         ))}
                     </div>
@@ -148,7 +152,7 @@ const BlogDetailPage = ({ content }) => {
                             <Info size={20} />
                             <span>INFORMASI RESMI</span>
                         </div>
-                        <p>{data.disclaimer}</p>
+                        <p>{data?.disclaimer}</p>
                     </div>
                 </div>
             </footer>
@@ -166,7 +170,7 @@ const BlogDetailPage = ({ content }) => {
                 .read-container-narrow { max-width: 850px; margin: 0 auto; padding: 0 2rem; }
 
                 /* HEADER */
-                .read-header { padding: 4rem 0 6rem; background: #f8fafc; }
+                .read-header { padding: 4rem 0 0rem; background: #fff; }
                 .back-link-lux { 
                     display: inline-flex; align-items: center; gap: 1rem; 
                     text-decoration: none; color: var(--rd-dark); font-weight: 900; 
@@ -174,23 +178,31 @@ const BlogDetailPage = ({ content }) => {
                 }
                 .back-link-lux:hover { color: var(--rd-red); }
 
-                .header-grid-lux { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 5rem; align-items: center; }
+                .header-stacked-lux { display: flex; flex-direction: column; gap: 4rem; align-items: flex-start; }
                 
                 .read-cat-tag { color: var(--rd-red); font-weight: 900; font-size: 0.8rem; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 2rem; display: block; }
-                .read-title-lux { font-family: 'Outfit', sans-serif; font-size: 4rem; font-weight: 900; color: var(--rd-dark); line-height: 1.1; margin-bottom: 2.5rem; letter-spacing: -2px; }
+                .read-title-lux { font-family: 'Outfit', sans-serif; font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 900; color: var(--rd-dark); line-height: 1; margin-bottom: 3.5rem; letter-spacing: -3px; max-width: 1000px; }
                 
-                .read-meta-box { display: flex; gap: 3rem; border-top: 1px solid #e2e8f0; padding-top: 2rem; }
+                .read-meta-box { display: flex; gap: 3rem; border-top: 1px solid #e2e8f0; padding-top: 2rem; width: 100%; }
                 .meta-item-lux { display: flex; align-items: center; gap: 0.8rem; font-weight: 800; color: var(--rd-grey); font-size: 0.85rem; }
 
-                .main-read-img { width: 100%; border-radius: 12px; box-shadow: 0 20px 50px rgba(15,23,42,0.1); }
+                .header-img-full { width: 100%; margin-top: 2rem; }
+                .main-read-img { 
+                    width: 100%; 
+                    height: clamp(300px, 60vh, 700px);
+                    object-fit: cover;
+                    border-radius: 2rem; 
+                    box-shadow: 0 40px 100px rgba(15,23,42,0.15); 
+                }
 
                 /* BODY */
-                .read-body { padding: 8rem 0; }
+                .read-body { padding: 6rem 0; }
                 .read-content-main { 
                     font-size: 1.25rem; line-height: 1.8; color: #334155; 
                 }
                 .read-content-main p { margin-bottom: 2.5rem; }
                 .read-content-main strong { color: var(--rd-dark); font-weight: 900; }
+                .read-content-main img { max-width: 100%; height: auto; border-radius: 1rem; margin: 2rem 0; }
 
                 .read-share-lux { 
                     margin-top: 6rem; border-top: 1px solid #f1f5f9; padding-top: 3rem;
@@ -253,7 +265,6 @@ const BlogDetailPage = ({ content }) => {
 
                 @media (max-width: 1024px) {
                     .read-container { padding: 0 2rem; }
-                    .header-grid-lux { grid-template-columns: 1fr; gap: 3rem; }
                     .read-title-lux { font-size: 2.8rem; }
                     .related-grid-lux { grid-template-columns: 1fr; }
                     .read-meta-box { flex-direction: column; gap: 1rem; }

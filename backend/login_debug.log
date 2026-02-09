@@ -120,3 +120,58 @@
 [2026-02-08T16:34:15.801Z] Matches found: 1
 [2026-02-08T16:34:15.801Z] Checking user from users, role: Penulis
 [2026-02-08T16:34:15.885Z] Password valid: true
+[2026-02-08T16:38:18.078Z] Server running on http://0.0.0.0:5005 (MySQL Mode)
+[2026-02-08T16:39:21.928Z] Login attempt: "superadminganang" (Source: admins)
+[2026-02-08T16:39:21.990Z] Matches found: 0
+[2026-02-08T16:39:49.614Z] Login attempt: "superadminganang" (Source: admins)
+[2026-02-08T16:39:49.693Z] Matches found: 0
+[2026-02-08T16:40:02.590Z] Login attempt: "ganang" (Source: admins)
+[2026-02-08T16:40:02.604Z] Matches found: 1
+[2026-02-08T16:40:02.605Z] Checking user from admins, role: Super Admin
+[2026-02-08T16:40:02.686Z] Password valid: true
+[2026-02-08T16:40:33.980Z] Login attempt: "ganang" (Source: users)
+[2026-02-08T16:40:34.069Z] Matches found: 1
+[2026-02-08T16:40:34.070Z] Checking user from users, role: Penulis
+[2026-02-08T16:40:34.160Z] Password valid: true
+[2026-02-08T16:48:29.846Z] Login attempt: "superadminganang" (Source: admins)
+[2026-02-08T16:48:29.859Z] Matches found: 0
+[2026-02-08T16:49:09.623Z] Login attempt: "superadminganang" (Source: admins)
+[2026-02-08T16:49:09.643Z] Matches found: 0
+[2026-02-08T16:49:44.500Z] Login attempt: "superadmin" (Source: users)
+[2026-02-08T16:49:44.557Z] Matches found: 0
+[2026-02-08T16:51:54.979Z] Login attempt: "superadminganang" (Source: admins)
+[2026-02-08T16:51:55.077Z] Matches found: 0
+[2026-02-08T16:52:09.190Z] Login attempt: "ganang" (Source: admins)
+[2026-02-08T16:52:09.195Z] Matches found: 1
+[2026-02-08T16:52:09.195Z] Checking user from admins, role: Super Admin
+[2026-02-08T16:52:09.278Z] Password valid: true
+[2026-02-08T16:53:19.945Z] Login attempt: "penulis_ayaka" (Source: users)
+[2026-02-08T16:53:19.951Z] Matches found: 1
+[2026-02-08T16:53:19.951Z] Checking user from users, role: Penulis
+[2026-02-08T16:53:20.046Z] Password valid: true
+[2026-02-08T16:53:45.357Z] Login attempt: "ganang" (Source: admins)
+[2026-02-08T16:53:45.361Z] Matches found: 1
+[2026-02-08T16:53:45.362Z] Checking user from admins, role: Super Admin
+[2026-02-08T16:53:45.456Z] Password valid: false
+[2026-02-08T16:53:45.457Z] Login failed: No matching password found for any matched record.
+[2026-02-08T16:53:50.735Z] Login attempt: "ganang" (Source: admins)
+[2026-02-08T16:53:50.736Z] Matches found: 1
+[2026-02-08T16:53:50.737Z] Checking user from admins, role: Super Admin
+[2026-02-08T16:53:50.831Z] Password valid: true
+[2026-02-08T17:15:29.262Z] Login attempt: "superadmin" (Source: users)
+[2026-02-08T17:15:29.270Z] Matches found: 0
+[2026-02-08T17:15:34.813Z] Login attempt: "superadmin" (Source: users)
+[2026-02-08T17:15:34.815Z] Matches found: 0
+[2026-02-08T17:15:43.301Z] Login attempt: "penulis_ayaka" (Source: users)
+[2026-02-08T17:15:43.307Z] Matches found: 1
+[2026-02-08T17:15:43.307Z] Checking user from users, role: Penulis
+[2026-02-08T17:15:43.403Z] Password valid: true
+[2026-02-09T09:44:11.710Z] Server running on http://0.0.0.0:5005 (MySQL Mode)
+[2026-02-09T09:50:30.280Z] Login attempt: "ganang" (Source: admins)
+[2026-02-09T09:50:30.372Z] Matches found: 1
+[2026-02-09T09:50:30.372Z] Checking user from admins, role: Super Admin
+[2026-02-09T09:50:30.456Z] Password valid: true
+[2026-02-09T09:51:50.880Z] Login attempt: "penulis_ayaka" (Source: users)
+[2026-02-09T09:51:50.943Z] Matches found: 1
+[2026-02-09T09:51:50.944Z] Checking user from users, role: Penulis
+[2026-02-09T09:51:51.024Z] Password valid: true

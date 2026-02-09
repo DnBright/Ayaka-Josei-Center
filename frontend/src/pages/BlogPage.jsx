@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { BookOpen, Calendar, Tag, ChevronRight, Search, Filter, Book, PenTool, Info, Lock } from 'lucide-react';
+import { BookOpen, Calendar, Tag, ChevronRight, Search, Filter, Book, PenTool, Info, Lock, Eye } from 'lucide-react';
 
 const BlogPage = ({ content }) => {
     const data = content?.blog_halaman;
@@ -11,16 +12,25 @@ const BlogPage = ({ content }) => {
     useEffect(() => {
         window.scrollTo(0, 0);
         fetchArticles();
+    }, [content]);
 
+    useEffect(() => {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) entry.target.classList.add('is-revealed');
             });
         }, { threshold: 0.1 });
 
-        document.querySelectorAll('.journal-reveal').forEach(el => observer.observe(el));
-        return () => observer.disconnect();
-    }, [content]);
+        // Small delay to ensure DOM is ready
+        const timeout = setTimeout(() => {
+            document.querySelectorAll('.journal-reveal').forEach(el => observer.observe(el));
+        }, 100);
+
+        return () => {
+            observer.disconnect();
+            clearTimeout(timeout);
+        };
+    }, [content, articles]);
 
     const fetchArticles = async () => {
         try {
@@ -117,7 +127,8 @@ const BlogPage = ({ content }) => {
                                             </div>
                                             <div className="card-content-lux">
                                                 <div className="card-meta">
-                                                    <span className="meta-date"><Calendar size={14} /> {art.date}</span>
+                                                    <span className="meta-date"><Calendar size={14} /> {art.date || new Date(art.created_at).toLocaleDateString()}</span>
+                                                    <span className="meta-views"><Eye size={14} /> {art.views || 0}</span>
                                                     {isLocked && <span className="meta-lock">MEMBER ONLY</span>}
                                                 </div>
                                                 <h2 className="card-title-lux">{art.title}</h2>
@@ -219,7 +230,8 @@ const BlogPage = ({ content }) => {
                 .articles-grid-lux { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4rem; }
                 
                 .journal-card-lux { position: relative; border-bottom: 1px solid var(--jr-border); padding-bottom: 3rem; }
-                .journal-card-lux.feature-card { grid-column: span 2; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 3rem; align-items: start; border-bottom: 3px solid var(--jr-dark); padding-bottom: 5rem; }
+                .journal-card-lux.feature-card { grid-column: span 2; border-bottom: 3px solid var(--jr-dark); padding-bottom: 5rem; }
+                .journal-card-lux.feature-card .card-link-lux { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 3rem; align-items: start; }
 
                 .card-link-lux { text-decoration: none; display: block; height: 100%; }
                 
@@ -234,12 +246,26 @@ const BlogPage = ({ content }) => {
                 }
 
                 .card-meta { display: flex; gap: 1.5rem; margin-bottom: 1.5rem; opacity: 0.6; font-size: 0.8rem; font-weight: 800; }
-                .meta-date { display: flex; align-items: center; gap: 0.5rem; }
+                .meta-date, .meta-views { display: flex; align-items: center; gap: 0.5rem; }
+                .meta-views { color: var(--jr-red); }
                 .meta-lock { color: var(--jr-red); font-weight: 900; letter-spacing: 1px; font-size: 0.7rem; border: 1px solid var(--jr-red); padding: 2px 6px; border-radius: 4px; }
                 .tag-locked { background: #0f172a !important; display: flex; align-items: center; }
 
-                .card-title-lux { font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 900; color: var(--jr-dark); line-height: 1.2; margin-bottom: 1.5rem; transition: 0.3s; }
-                .feature-card .card-title-lux { font-size: 3rem; }
+                .card-title-lux { 
+                    font-family: 'Outfit', sans-serif; 
+                    font-size: 1.8rem; 
+                    font-weight: 900; 
+                    color: var(--jr-dark); 
+                    line-height: 1.2; 
+                    margin-bottom: 1.5rem; 
+                    transition: 0.3s;
+                    word-break: break-word;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                }
+                .feature-card .card-title-lux { font-size: 3rem; -webkit-line-clamp: 3; }
                 .journal-card-lux:hover .card-title-lux { color: var(--jr-red); }
 
                 .card-excerpt-lux { color: #475569; font-size: 1.05rem; line-height: 1.6; margin-bottom: 2rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }

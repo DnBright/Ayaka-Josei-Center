@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import LanguageSelector from '../components/LanguageSelector';
+import FloatingWhatsApp from '../components/FloatingWhatsApp';
 
 const PublicLayout = ({ content }) => {
     return (
@@ -13,6 +14,7 @@ const PublicLayout = ({ content }) => {
             </main>
             <Footer content={content?.kontak} />
             <LanguageSelector />
+            <FloatingWhatsApp />
         </>
     );
 };

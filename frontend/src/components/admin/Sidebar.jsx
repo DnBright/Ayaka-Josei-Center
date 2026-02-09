@@ -38,7 +38,9 @@ const Sidebar = () => {
 
   const adminItems = [
     { path: '/admin', icon: <LayoutDashboard size={20} />, label: 'Dashboard', end: true },
-    { path: '/admin/pages', icon: <FileText size={20} />, label: 'Halaman & Konten' },
+    { path: '/admin/articles', icon: <FileText size={20} />, label: 'Artikel & Berita' },
+    { path: '/admin/ebooks', icon: <FileText size={20} />, label: 'E-Book Materi' },
+    { path: '/admin/pages', icon: <LayoutDashboard size={20} />, label: 'Halaman & Konten' },
     { path: '/admin/media', icon: <Image size={20} />, label: 'Media & Galeri' },
     { path: '/admin/communications', icon: <MessageSquare size={20} />, label: 'Komunikasi' },
     { path: '/admin/users', icon: <Users size={20} />, label: 'User & Role' },
@@ -92,66 +94,68 @@ const Sidebar = () => {
           top: 0;
           display: flex;
           flex-direction: column;
-          background: white;
-          border-right: 1px solid #e2e8f0;
+          background: #0f172a; /* Dark sleek sidebar */
+          color: rgba(255,255,255,0.7);
           z-index: 50;
-          box-shadow: 4px 0 24px rgba(0,0,0,0.02);
+          box-shadow: 10px 0 40px rgba(0,0,0,0.1);
+          border-right: 1px solid rgba(255,255,255,0.05);
         }
 
         .sidebar-header {
-          padding: 2rem 1.5rem;
-          border-bottom: 1px solid #f1f5f9;
+          padding: 2.5rem 2rem;
+          border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
         .logo-section {
             font-family: 'Outfit', sans-serif;
             font-weight: 800;
-            font-size: 1.4rem;
-            color: var(--brand-dark);
-            letter-spacing: -0.5px;
+            font-size: 1.6rem;
+            color: white;
+            letter-spacing: -1px;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
         }
         
-        .brand-red { color: var(--brand-red); }
+        .brand-red { color: #ef4444; }
 
         .sidebar-nav {
           flex: 1;
-          padding: 1.5rem 1rem;
+          padding: 2rem 1.2rem;
           display: flex;
           flex-direction: column;
-          gap: 0.5rem;
+          gap: 0.4rem;
           overflow-y: auto;
         }
 
         .nav-item {
           display: flex;
           align-items: center;
-          gap: 1rem;
-          padding: 0.85rem 1rem;
-          border-radius: 12px;
-          color: #64748b;
+          gap: 1.2rem;
+          padding: 0.9rem 1.2rem;
+          border-radius: 14px;
+          color: rgba(255,255,255,0.6);
           text-decoration: none;
           font-weight: 600;
           font-size: 0.95rem;
-          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-          border: 1px solid transparent;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .nav-item:hover {
-          background: #f8fafc;
-          color: var(--brand-dark);
+          background: rgba(255,255,255,0.05);
+          color: white;
+          padding-left: 1.5rem;
         }
 
         .nav-item.active {
-          background: linear-gradient(135deg, var(--brand-red) 0%, #b91c1c 100%);
+          background: linear-gradient(135deg, #ef4444 0%, #991b1b 100%);
           color: white;
-          box-shadow: 0 4px 12px rgba(218, 41, 28, 0.25);
-          border: 1px solid rgba(255,255,255,0.1);
+          box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3);
         }
 
         .sidebar-footer {
-          padding: 1.5rem;
-          border-top: 1px solid #f1f5f9;
-          background: #fcfcfc;
+          padding: 2rem;
+          background: rgba(0,0,0,0.2);
         }
 
         .btn-logout {
@@ -160,21 +164,26 @@ const Sidebar = () => {
           align-items: center;
           justify-content: center;
           gap: 0.75rem;
-          padding: 0.85rem;
-          border-radius: 12px;
-          background: white;
-          border: 1px solid #fee2e2;
-          color: #ef4444;
+          padding: 1rem;
+          border-radius: 14px;
+          background: rgba(239, 68, 68, 0.1);
+          border: 1px solid rgba(239, 68, 68, 0.2);
+          color: #f87171;
           font-weight: 700;
-          transition: all 0.2s;
+          transition: all 0.3s;
+          cursor: pointer;
         }
 
         .btn-logout:hover {
-          background: #fef2f2;
-          border-color: #fca5a5;
+          background: #ef4444;
+          color: white;
           transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(239, 68, 68, 0.1);
+          box-shadow: 0 10px 20px rgba(239, 68, 68, 0.2);
         }
+
+        /* Scrollbar styling */
+        .sidebar-nav::-webkit-scrollbar { width: 4px; }
+        .sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
       `}</style>
     </aside>
   );

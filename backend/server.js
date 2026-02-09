@@ -357,6 +357,11 @@ app.get('/api/admin/stats', authenticateToken, async (req, res) => {
             const [postViews] = await pool.query("SELECT SUM(views) as total FROM posts");
             const [ebookViews] = await pool.query("SELECT SUM(views) as total FROM ebooks");
             const [totalPosts] = await pool.query("SELECT COUNT(*) as count FROM posts");
+
+            // Detailed Stats for Admin
+            const [postDetails] = await pool.query("SELECT id, title, views, category, created_at FROM posts ORDER BY views DESC LIMIT 10");
+            const [ebookDetails] = await pool.query("SELECT id, title, views, created_at FROM ebooks ORDER BY views DESC LIMIT 10");
+
             let totalMessages = 0;
             try {
                 const [msgRows] = await pool.query("SELECT COUNT(*) as count FROM communications");
@@ -368,7 +373,9 @@ app.get('/api/admin/stats', authenticateToken, async (req, res) => {
                 totalPostViews: postViews[0]?.total || 0,
                 totalEbookViews: ebookViews[0]?.total || 0,
                 totalPosts: totalPosts[0]?.count || 0,
-                totalMessages: totalMessages
+                totalMessages: totalMessages,
+                topPosts: postDetails,
+                topEbooks: ebookDetails
             };
         } else if (role === 'Penulis') {
             // Specific Author Stats
@@ -377,11 +384,17 @@ app.get('/api/admin/stats', authenticateToken, async (req, res) => {
             const [myEbooks] = await pool.query("SELECT COUNT(*) as count FROM ebooks WHERE author_id = ?", [id]);
             const [myEbookViews] = await pool.query("SELECT SUM(views) as total FROM ebooks WHERE author_id = ?", [id]);
 
+            // Detailed Stats for Penulis
+            const [myPostDetails] = await pool.query("SELECT id, title, views, category, created_at FROM posts WHERE author_id = ? ORDER BY views DESC", [id]);
+            const [myEbookDetails] = await pool.query("SELECT id, title, views, created_at FROM ebooks WHERE author_id = ? ORDER BY views DESC", [id]);
+
             stats = {
                 myPostViews: myPostViews[0]?.total || 0,
                 myPosts: myPosts[0]?.count || 0,
                 myEbooks: myEbooks[0]?.count || 0,
-                myEbookViews: myEbookViews[0]?.total || 0
+                myEbookViews: myEbookViews[0]?.total || 0,
+                topPosts: myPostDetails,
+                topEbooks: myEbookDetails
             };
         }
 

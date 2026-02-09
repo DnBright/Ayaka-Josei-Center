@@ -68,73 +68,79 @@ const UserManager = () => {
     };
 
     return (
-        <div className="user-manager">
-            <div className="flex justify-between items-center mb-6">
-                <div>
-                    <h2 className="text-xl font-bold">Manajemen User</h2>
-                    <p className="text-secondary text-sm">Kelola akses internal dan validasi member baru.</p>
+        <div className="premium-manager-wrapper">
+            <div className="manager-header">
+                <div className="header-info">
+                    <h2>Manajemen Hak Akses & User</h2>
+                    <p>Kelola tim internal, editor, dan validasi keanggotaan member Ayaka.</p>
                 </div>
                 {activeTab === 'internal' && (
-                    <button className="bg-brand-red text-white px-4 py-2 rounded-lg flex items-center gap-2 font-semibold">
-                        <Plus size={18} /> Tambah Admin
+                    <button className="btn-premium-action">
+                        <Plus size={18} /> Tambah Admin Baru
                     </button>
                 )}
             </div>
 
-            {/* TABS */}
-            <div className="flex gap-4 border-b mb-6">
+            {/* PREMIUM TABS */}
+            <div className="premium-tabs-lux">
                 <button
                     onClick={() => setActiveTab('internal')}
-                    className={`pb-3 font-semibold text-sm ${activeTab === 'internal' ? 'text-brand-red border-b-2 border-brand-red' : 'text-slate-500'}`}
+                    className={`tab-item-lux ${activeTab === 'internal' ? 'is-active' : ''}`}
                 >
-                    Internal Team
+                    Tim Internal Ayaka
                 </button>
                 <button
                     onClick={() => setActiveTab('members')}
-                    className={`pb-3 font-semibold text-sm flex items-center gap-2 ${activeTab === 'members' ? 'text-brand-red border-b-2 border-brand-red' : 'text-slate-500'}`}
+                    className={`tab-item-lux ${activeTab === 'members' ? 'is-active' : ''}`}
                 >
-                    Validasi Member
+                    Antrean Validasi Member
                     {pendingMembers.length > 0 && (
-                        <span className="bg-red-500 text-white text-[10px] px-1.5 rounded-full">{pendingMembers.length}</span>
+                        <span className="count-badge">{pendingMembers.length}</span>
                     )}
                 </button>
                 <button
                     onClick={() => setActiveTab('active_members')}
-                    className={`pb-3 font-semibold text-sm ${activeTab === 'active_members' ? 'text-brand-red border-b-2 border-brand-red' : 'text-slate-500'}`}
+                    className={`tab-item-lux ${activeTab === 'active_members' ? 'is-active' : ''}`}
                 >
-                    Data Member Aktif
+                    Database Member Aktif
                 </button>
             </div>
 
-            <div className="glass-card overflow-hidden">
-                <table className="w-full text-left border-collapse">
+            <div className="premium-table-container">
+                <table className="premium-table-lux">
                     <thead>
-                        <tr className="border-b bg-slate-50 text-secondary text-sm">
-                            <th className="p-4 font-semibold">User</th>
-                            <th className="p-4 font-semibold">Contact</th>
-                            <th className="p-4 font-semibold">Role / Status</th>
-                            <th className="p-4 font-semibold text-right">Aksi</th>
+                        <tr>
+                            <th>Identitas User</th>
+                            <th>Informasi Kontak</th>
+                            <th>Otoritas / Status</th>
+                            <th className="text-right">Aksi Kelola</th>
                         </tr>
                     </thead>
                     <tbody>
                         {/* INTERNAL USERS */}
                         {activeTab === 'internal' && internalUsers.map((user) => (
-                            <tr key={user.id} className="border-b hover:bg-slate-50">
-                                <td className="p-4">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 font-bold">
+                            <tr key={user.id}>
+                                <td>
+                                    <div className="user-profile-cell">
+                                        <div className="avatar-lux" style={{ background: 'linear-gradient(45deg, #f1f5f9, #e2e8f0)' }}>
                                             {user.name.charAt(0)}
                                         </div>
                                         <div>
-                                            <div className="font-semibold">{user.name}</div>
-                                            <div className="text-xs text-secondary">{user.role}</div>
+                                            <span className="name-main">{user.name}</span>
+                                            <span className="id-sub">UID-00{user.id}</span>
                                         </div>
                                     </div>
                                 </td>
-                                <td className="p-4 text-sm text-slate-600">{user.email}</td>
-                                <td className="p-4">{getRoleBadge(user.role)}</td>
-                                <td className="p-4 text-right">
-                                    <button className="p-2 text-slate-400 hover:text-red-500"><Trash2 size={16} /></button>
+                                <td>
+                                    <div className="contact-cell">
+                                        <span className="email-val">{user.email}</span>
+                                    </div>
+                                </td>
+                                <td>{getRoleBadge(user.role)}</td>
+                                <td className="text-right">
+                                    <div className="action-row-lux">
+                                        <button className="act-btn delete"><Trash2 size={16} /></button>
+                                    </div>
                                 </td>
                             </tr>
                         ))}
@@ -142,70 +148,78 @@ const UserManager = () => {
                         {/* PENDING MEMBERS */}
                         {activeTab === 'members' && (
                             pendingMembers.length > 0 ? pendingMembers.map((member) => (
-                                <tr key={member.id} className="border-b hover:bg-red-50 bg-red-50/30">
-                                    <td className="p-4">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 font-bold">
+                                <tr key={member.id} className="row-highlight-warn">
+                                    <td>
+                                        <div className="user-profile-cell">
+                                            <div className="avatar-lux color-warn">
                                                 {member.name.charAt(0)}
                                             </div>
                                             <div>
-                                                <div className="font-semibold">{member.name}</div>
-                                                <div className="text-xs text-secondary">Mendaftar: {member.date}</div>
+                                                <span className="name-main">{member.name}</span>
+                                                <span className="id-sub">Tgl Daftar: {member.date}</span>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="p-4 text-sm text-slate-600">
-                                        <div>{member.email}</div>
-                                        <div className="text-xs opacity-75">{member.phone}</div>
+                                    <td>
+                                        <div className="contact-cell">
+                                            <span className="email-val">{member.email}</span>
+                                            <span className="phone-sub">{member.phone}</span>
+                                        </div>
                                     </td>
-                                    <td className="p-4">
-                                        <span className="bg-orange-100 text-orange-700 px-2 py-1 rounded text-xs font-bold">Pending Review</span>
+                                    <td>
+                                        <span className="badge-status-lux warn">Pending Review</span>
                                     </td>
-                                    <td className="p-4 text-right flex justify-end gap-2">
-                                        <button
-                                            onClick={() => handleApprove(member)}
-                                            className="px-3 py-1.5 bg-green-600 text-white rounded-lg text-xs font-bold hover:bg-green-700 flex items-center gap-1"
-                                        >
-                                            <CheckCircle size={14} /> Terima (ACC)
-                                        </button>
-                                        <button
-                                            onClick={() => handleReject(member)}
-                                            className="px-3 py-1.5 bg-red-100 text-red-600 rounded-lg text-xs font-bold hover:bg-red-200 flex items-center gap-1"
-                                        >
-                                            <XCircle size={14} /> Tolak
-                                        </button>
+                                    <td className="text-right">
+                                        <div className="action-row-lux">
+                                            <button
+                                                onClick={() => handleApprove(member)}
+                                                className="btn-action-lux approve"
+                                            >
+                                                Approve
+                                            </button>
+                                            <button
+                                                onClick={() => handleReject(member)}
+                                                className="btn-action-lux reject"
+                                            >
+                                                Reject
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             )) : (
                                 <tr>
-                                    <td colSpan="4" className="p-8 text-center text-slate-400 italic">Tidak ada permintaan member baru.</td>
+                                    <td colSpan="4" className="empty-state-cell">Tidak ada antrean validasi saat ini.</td>
                                 </tr>
                             )
                         )}
 
                         {/* ACTIVE MEMBERS */}
                         {activeTab === 'active_members' && activeMembers.map((member) => (
-                            <tr key={member.id} className="border-b hover:bg-slate-50">
-                                <td className="p-4">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold">
+                            <tr key={member.id}>
+                                <td>
+                                    <div className="user-profile-cell">
+                                        <div className="avatar-lux color-success">
                                             {member.name.charAt(0)}
                                         </div>
                                         <div>
-                                            <div className="font-semibold">{member.name}</div>
-                                            <div className="text-xs text-secondary">Member Active</div>
+                                            <span className="name-main">{member.name}</span>
+                                            <span className="id-sub">Member ID: MB-{member.id}</span>
                                         </div>
                                     </div>
                                 </td>
-                                <td className="p-4 text-sm text-slate-600">
-                                    <div>{member.email}</div>
-                                    <div className="text-xs opacity-75">{member.phone}</div>
+                                <td>
+                                    <div className="contact-cell">
+                                        <span className="email-val">{member.email}</span>
+                                        <span className="phone-sub">{member.phone}</span>
+                                    </div>
                                 </td>
-                                <td className="p-4">
-                                    <span className="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold">Active Member</span>
+                                <td>
+                                    <span className="badge-status-lux success">Active Member</span>
                                 </td>
-                                <td className="p-4 text-right">
-                                    <button className="p-2 text-slate-400 hover:text-red-500"><Trash2 size={16} /></button>
+                                <td className="text-right">
+                                    <div className="action-row-lux">
+                                        <button className="act-btn delete"><Trash2 size={16} /></button>
+                                    </div>
                                 </td>
                             </tr>
                         ))}
@@ -214,51 +228,104 @@ const UserManager = () => {
             </div>
 
             <style>{`
-                .text-brand-red { color: var(--brand-red); }
-                .bg-brand-red { background-color: var(--brand-red); }
+                .premium-manager-wrapper { padding: 1rem 0; }
                 
-                /* Table Enhancements */
-                table { border-collapse: separate; border-spacing: 0; }
-                thead tr { background: #f8fafc; }
-                thead th { 
-                    font-weight: 700; 
-                    text-transform: uppercase; 
-                    font-size: 0.75rem; 
-                    letter-spacing: 0.5px;
-                    color: #64748b;
-                    padding: 1rem 1.5rem;
+                .manager-header { 
+                    display: flex; justify-content: space-between; align-items: center; 
+                    margin-bottom: 2.5rem; 
                 }
-                tbody tr { 
-                    transition: all 0.2s; 
-                    border-bottom: 1px solid #f1f5f9;
-                }
-                tbody tr:hover { background: #f8fafc; }
-                tbody td { padding: 1.25rem 1.5rem; }
+                .header-info h2 { font-size: 1.8rem; font-weight: 800; color: #0f172a; margin-bottom: 0.3rem; }
+                .header-info p { color: #64748b; font-size: 1rem; }
                 
-                /* Tabs */
-                .flex.gap-4.border-b { border-color: #e2e8f0; }
-                .flex.gap-4.border-b button {
-                    position: relative;
-                    padding-bottom: 1rem;
-                    transition: all 0.2s;
+                .btn-premium-action {
+                    background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+                    color: white; padding: 0.8rem 1.5rem; border-radius: 14px;
+                    display: flex; align-items: center; gap: 0.8rem;
+                    font-weight: 800; font-size: 0.95rem;
+                    box-shadow: 0 10px 25px rgba(239, 68, 68, 0.2);
+                    transition: all 0.3s;
+                    cursor: pointer; border: none;
                 }
-                .flex.gap-4.border-b button:hover { color: var(--brand-red); }
+                .btn-premium-action:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(239, 68, 68, 0.3); }
+
+                /* TABS LUX */
+                .premium-tabs-lux { 
+                    display: flex; gap: 2rem; border-bottom: 2px solid #f1f5f9; 
+                    margin-bottom: 2.5rem; padding-bottom: 2px;
+                }
+                .tab-item-lux { 
+                    background: none; border: none; padding: 0.8rem 0;
+                    font-size: 1rem; font-weight: 700; color: #94a3b8;
+                    cursor: pointer; position: relative; transition: all 0.3s;
+                    display: flex; align-items: center; gap: 0.8rem;
+                }
+                .tab-item-lux:hover { color: #0f172a; }
+                .tab-item-lux.is-active { color: #ef4444; }
+                .tab-item-lux.is-active::after {
+                    content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 3px;
+                    background: #ef4444; border-radius: 10px;
+                }
                 
-                /* Action Buttons */
-                button { 
-                    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
-                    font-weight: 600;
+                .count-badge {
+                    background: #ef4444; color: white; border-radius: 100px;
+                    padding: 2px 8px; font-size: 0.65rem; font-weight: 800;
+                    box-shadow: 0 4px 8px rgba(239, 68, 68, 0.2);
                 }
-                button:hover { transform: translateY(-1px); }
-                button:active { transform: translateY(0); }
+
+                /* TABLE LUX */
+                .premium-table-container { 
+                    background: white; border-radius: 24px; border: 1px solid #f1f5f9; 
+                    overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+                }
+                .premium-table-lux { width: 100%; border-collapse: collapse; }
+                .premium-table-lux th { 
+                    text-align: left; padding: 1.5rem 2rem; background: #fafafa;
+                    font-size: 0.75rem; color: #94a3b8; text-transform: uppercase;
+                    letter-spacing: 1.5px; font-weight: 800; border-bottom: 1px solid #f1f5f9;
+                }
+                .premium-table-lux td { padding: 1.5rem 2rem; border-bottom: 1px solid #f8fafc; vertical-align: middle; }
+                .premium-table-lux tr:hover { background: #fafafa; }
                 
-                /* Badge Enhancements */
-                .bg-orange-100 { background: #fff7ed; border: 1px solid #fed7aa; }
-                .bg-green-100 { background: #f0fdf4; border: 1px solid #bbf7d0; }
-                .bg-red-500 { 
-                    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); 
-                    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+                .user-profile-cell { display: flex; align-items: center; gap: 1.2rem; }
+                .avatar-lux { 
+                    width: 44px; height: 44px; border-radius: 14px; 
+                    display: flex; align-items: center; justify-content: center;
+                    font-weight: 800; font-size: 1.1rem; color: #475569;
                 }
+                .avatar-lux.color-warn { background: #fff7ed; color: #f97316; }
+                .avatar-lux.color-success { background: #f0fdf4; color: #22c55e; }
+                
+                .name-main { display: block; font-weight: 700; color: #0f172a; font-size: 0.95rem; margin-bottom: 2px; }
+                .id-sub { display: block; font-size: 0.75rem; color: #94a3b8; font-weight: 500; }
+                
+                .contact-cell .email-val { display: block; color: #0f172a; font-weight: 600; font-size: 0.9rem; }
+                .contact-cell .phone-sub { display: block; color: #64748b; font-size: 0.75rem; margin-top: 2px; }
+                
+                .badge-status-lux { 
+                    padding: 6px 12px; border-radius: 10px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase;
+                }
+                .badge-status-lux.warn { background: #fff7ed; color: #f97316; }
+                .badge-status-lux.success { background: #f0fdf4; color: #22c55e; }
+                
+                .action-row-lux { display: flex; justify-content: flex-end; gap: 0.8rem; }
+                .act-btn { 
+                    width: 36px; height: 36px; border-radius: 10px; display: flex; transition: 0.2s;
+                    align-items: center; justify-content: center; cursor: pointer; border: none;
+                }
+                .act-btn.delete { background: #fef2f2; color: #ef4444; }
+                .act-btn.delete:hover { background: #ef4444; color: white; transform: translateY(-2px); }
+
+                .btn-action-lux { 
+                    padding: 0.6rem 1.2rem; border-radius: 10px; font-weight: 700; font-size: 0.8rem; 
+                    cursor: pointer; transition: 0.2s; border: none;
+                }
+                .btn-action-lux.approve { background: #22c55e; color: white; }
+                .btn-action-lux.approve:hover { background: #16a34a; transform: translateY(-2px); }
+                .btn-action-lux.reject { background: #f1f5f9; color: #64748b; }
+                .btn-action-lux.reject:hover { background: #e2e8f0; color: #0f172a; }
+
+                .empty-state-cell { padding: 4rem 2rem; text-align: center; color: #94a3b8; font-weight: 600; font-style: italic; }
+                .row-highlight-warn { background: rgba(255, 247, 237, 0.3) !important; }
             `}</style>
         </div>
     );

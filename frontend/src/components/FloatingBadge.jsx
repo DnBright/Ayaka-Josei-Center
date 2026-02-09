@@ -2,50 +2,50 @@ import React, { useEffect, useState } from 'react';
 import { Globe } from 'lucide-react';
 
 const FloatingBadge = () => {
-    const [rotation, setRotation] = useState(0);
-    const [isVisible, setIsVisible] = useState(false);
+  const [rotation, setRotation] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
 
-    useEffect(() => {
-        const handleScroll = () => {
-            // Rotate based on scroll position (proportional)
-            const scrollPos = window.scrollY;
-            setRotation(scrollPos * 0.2); // Adjust multiplier for rotation speed
+  useEffect(() => {
+    const handleScroll = () => {
+      // Rotate based on scroll position (proportional)
+      const scrollPos = window.scrollY;
+      setRotation(scrollPos * 0.2); // Adjust multiplier for rotation speed
 
-            // Show badge only after certain scroll
-            setIsVisible(scrollPos > 300);
-        };
+      // Show badge only after certain scroll
+      setIsVisible(scrollPos > 300);
+    };
 
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-    return (
-        <div className={`floating-badge-container ${isVisible ? 'is-visible' : ''}`}>
-            <div
-                className="badge-wrapper"
-                style={{ transform: `rotate(${rotation}deg)` }}
-            >
-                <svg viewBox="0 0 100 100" className="circular-text">
-                    <path
-                        id="circlePath"
-                        d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"
-                        fill="transparent"
-                    />
-                    <text className="badge-text" fill="var(--brand-red)">
-                        <textPath xlinkHref="#circlePath">
-                            AYAKA JOSEI CENTER • TRUSTED LPK JAPAN •&nbsp;
-                        </textPath>
-                    </text>
-                </svg>
-                <div className="badge-center">
-                    <Globe size={24} color="var(--brand-red)" />
-                </div>
-            </div>
+  return (
+    <div className={`floating-badge-container ${isVisible ? 'is-visible' : ''}`}>
+      <div
+        className="badge-wrapper"
+        style={{ transform: `rotate(${rotation}deg)` }}
+      >
+        <svg viewBox="0 0 100 100" className="circular-text">
+          <path
+            id="circlePath"
+            d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"
+            fill="transparent"
+          />
+          <text className="badge-text" fill="var(--brand-red)">
+            <textPath xlinkHref="#circlePath">
+              AYAKA JOSEI CENTER • TRUSTED LPK JAPAN •&nbsp;
+            </textPath>
+          </text>
+        </svg>
+        <div className="badge-center">
+          <Globe size={24} color="var(--brand-red)" />
+        </div>
+      </div>
 
-            <style jsx="true">{`
+      <style jsx="true">{`
         .floating-badge-container {
           position: fixed;
-          bottom: 40px;
+          bottom: 120px;
           right: 40px;
           z-index: 1000;
           opacity: 0;
@@ -110,8 +110,8 @@ const FloatingBadge = () => {
           }
         }
       `}</style>
-        </div>
-    );
+    </div>
+  );
 };
 
 export default FloatingBadge;

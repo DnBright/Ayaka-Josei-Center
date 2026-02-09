@@ -1,10 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
 import FloatingBadge from '../components/FloatingBadge';
 
 const LandingPage = ({ content }) => {
     const observerRef = useRef(null);
+    const [posts, setPosts] = useState([]);
+
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const res = await axios.get('http://127.0.0.1:5005/api/posts');
+                setPosts(res.data);
+            } catch (err) {
+                console.error('Failed to fetch posts:', err);
+            }
+        };
+        fetchPosts();
+    }, []);
 
     useEffect(() => {
         // Track Website Visit
@@ -179,16 +193,27 @@ const LandingPage = ({ content }) => {
                             <h2 className="section-title">{content.blog?.title}</h2>
                         </div>
                         <div className="blog-grid">
-                            {(content.blog?.posts || []).map((post, idx) => (
-                                <div key={idx} className="blog-card reveal reveal-up" style={{ transitionDelay: `${idx * 0.1}s` }}>
-                                    <div className="blog-image"></div>
+                            {(posts.length > 0 ? posts.slice(0, 3) : (content.blog?.posts || []).slice(0, 3)).map((post, idx) => (
+                                <Link to={`/blog/${post.slug}`} key={idx} className="blog-card reveal reveal-up" style={{ transitionDelay: `${idx * 0.1}s` }}>
+                                    <div className="blog-image">
+                                        {post.image ? <img src={post.image} alt={post.title} className="w-full h-full object-cover" /> : null}
+                                    </div>
                                     <div className="blog-content">
-                                        <span className="blog-date">{post?.date}</span>
-                                        <h4>{post?.title}</h4>
+                                        <div className="blog-meta-lux">
+                                            <span className="blog-date">{new Date(post.created_at || post.date).toLocaleDateString()}</span>
+                                            <span className="blog-views">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0z" /><circle cx="12" cy="12" r="3" /></svg>
+                                                {post.views || 0}
+                                            </span>
+                                        </div>
+                                        <h4>{post.title}</h4>
                                         <button className="blog-link">Baca Selengkapnya</button>
                                     </div>
-                                </div>
+                                </Link>
                             ))}
+                        </div>
+                        <div className="mt-8 text-center">
+                            <Link to="/blog" className="btn-astra-outline">Lihat Semua Berita</Link>
                         </div>
                     </div>
                 </section>
@@ -289,13 +314,35 @@ const LandingPage = ({ content }) => {
 
         /* Blog Grid */
         .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; }
-        .blog-card { background: white; border-radius: 2rem; overflow: hidden; box-shadow: var(--shadow-md); transition: all 0.4s ease; cursor: pointer; }
+        .blog-card { background: white; border-radius: 2rem; overflow: hidden; box-shadow: var(--shadow-md); transition: all 0.4s ease; cursor: pointer; position: relative; }
         .blog-card:hover { transform: translateY(-10px); box-shadow: var(--shadow-lg); }
-        .blog-image { height: 200px; background: #e2e8f0; }
-        .blog-content { padding: 2.5rem; }
-        .blog-date { font-size: 0.8rem; font-weight: 700; color: #94a3b8; display: block; margin-bottom: 1rem; }
-        .blog-card h4 { font-size: 1.4rem; font-weight: 800; color: #0f172a; line-height: 1.4; margin-bottom: 2rem; }
-        .blog-link { background: none; border: none; color: var(--brand-red); font-weight: 800; padding: 0; cursor: pointer; }
+        .blog-image { height: 400px; background: #e2e8f0; }
+        .blog-image img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+        .blog-content { 
+            position: absolute; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            padding: 1.5rem; 
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .blog-meta-lux { display: flex; gap: 1rem; align-items: center; margin-bottom: 0.5rem; }
+        .blog-date { display: none; }
+        .blog-views { color: white; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; gap: 0.3rem; opacity: 0.8; }
+        .blog-card h4 { display: none; }
+        .blog-link { 
+            background: var(--brand-red); 
+            color: white; 
+            font-weight: 800; 
+            padding: 0.8rem 1.5rem; 
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .blog-link:hover { background: #b22222; transform: scale(1.05); }
 
         /* CTA Section */
         .cta-box { background: #020617; padding: 6rem 4rem; border-radius: 4rem; text-align: center; color: white; position: relative; overflow: hidden; }
