@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Mail, Phone, MapPin, Clock, Send, Shield, Info, Instagram, Facebook, MessageCircle, ChevronRight, CheckCircle2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const ContactPage = ({ content }) => {
+    const { t } = useTranslation();
     const data = content?.kontak_halaman;
     const [formData, setFormData] = useState({
         name: '',
@@ -56,8 +56,11 @@ const ContactPage = ({ content }) => {
                 <div className="contact-container">
                     <div className="hero-flex-lux">
                         <div className="hero-text-lux contact-reveal reveal-left">
-                            <span className="contact-tag">CHANNEL KOMUNIKASI RESMI</span>
-                            <h1 className="contact-title-lux">PARTNERSHIP <br /><span>& CONSULTANCY</span></h1>
+                            <span className="contact-tag">{t('contact.channel')}</span>
+                            <h1 className="contact-title-lux">
+                                {t('contact.partnership').split(' & ')[0]} <br />
+                                <span>& {t('contact.partnership').split(' & ')[1]}</span>
+                            </h1>
                             <div className="luxury-line"></div>
                             <p className="contact-p-lux">{data.pengantar?.content}</p>
                         </div>
@@ -74,34 +77,34 @@ const ContactPage = ({ content }) => {
                             <div className="info-card-lux">
                                 <div className="info-header-vangu">
                                     <div className="vangu-dot"></div>
-                                    <h2>Informasi Lembaga</h2>
+                                    <h2>{t('contact.info_lembaga')}</h2>
                                 </div>
                                 <div className="info-body-lux">
                                     <div className="info-item-lux">
                                         <div className="icon-box-min"><MapPin size={20} /></div>
                                         <div>
-                                            <label>Alamat Kantor</label>
+                                            <label>{t('contact.alamat')}</label>
                                             <p>{data.infoUtama?.alamat}</p>
                                         </div>
                                     </div>
                                     <div className="info-item-lux">
                                         <div className="icon-box-min"><MessageCircle size={20} /></div>
                                         <div>
-                                            <label>WhatsApp Resmi</label>
+                                            <label>{t('contact.wa')}</label>
                                             <p>{data.infoUtama?.whatsapp}</p>
                                         </div>
                                     </div>
                                     <div className="info-item-lux">
                                         <div className="icon-box-min"><Mail size={20} /></div>
                                         <div>
-                                            <label>Email Korespondensi</label>
+                                            <label>{t('contact.email')}</label>
                                             <p>{data.infoUtama?.email}</p>
                                         </div>
                                     </div>
                                     <div className="info-item-lux">
                                         <div className="icon-box-min"><Clock size={20} /></div>
                                         <div>
-                                            <label>Jam Operasional</label>
+                                            <label>{t('contact.jam')}</label>
                                             <p>{data.infoUtama?.jamOperasional}</p>
                                         </div>
                                     </div>
@@ -140,17 +143,17 @@ const ContactPage = ({ content }) => {
                         <div className="form-side-lux contact-reveal reveal-right">
                             <div className="form-box-lux">
                                 <div className="form-header-lux">
-                                    <h3>Kirim Pesan</h3>
-                                    <p>Tim kami akan merespon dalam 1-2 hari kerja.</p>
+                                    <h3>{t('contact.kirim_pesan')}</h3>
+                                    <p>{t('contact.respon_time')}</p>
                                 </div>
 
                                 <form onSubmit={handleSubmit} className="vangu-form">
                                     <div className="input-group-lux">
-                                        <label>Nama Lengkap</label>
+                                        <label>{t('contact.nama_lengkap')}</label>
                                         <input
                                             type="text"
                                             name="name"
-                                            placeholder="Masukkan nama Anda"
+                                            placeholder={t('contact.placeholder_nama')}
                                             value={formData.name}
                                             onChange={handleChange}
                                             required
@@ -158,37 +161,37 @@ const ContactPage = ({ content }) => {
                                     </div>
                                     <div className="input-grid-min">
                                         <div className="input-group-lux">
-                                            <label>Email / Kontak</label>
+                                            <label>{t('contact.email_kontak')}</label>
                                             <input
                                                 type="text"
                                                 name="email"
-                                                placeholder="Email atau No. HP"
+                                                placeholder={t('contact.placeholder_email')}
                                                 value={formData.email}
                                                 onChange={handleChange}
                                                 required
                                             />
                                         </div>
                                         <div className="input-group-lux">
-                                            <label>Subjek</label>
+                                            <label>{t('contact.subjek')}</label>
                                             <select
                                                 name="subject"
                                                 value={formData.subject}
                                                 onChange={handleChange}
                                                 required
                                             >
-                                                <option value="">Pilih Subjek</option>
-                                                <option value="konsultasi">Konsultasi Program</option>
-                                                <option value="pendaftaran">Pendaftaran</option>
-                                                <option value="umum">Informasi Umum</option>
+                                                <option value="">{t('contact.pilih_subjek')}</option>
+                                                <option value="konsultasi">{t('contact.subjek_konsul')}</option>
+                                                <option value="pendaftaran">{t('contact.subjek_daftar')}</option>
+                                                <option value="umum">{t('contact.subjek_umum')}</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div className="input-group-lux">
-                                        <label>Pesan</label>
+                                        <label>{t('contact.pesan')}</label>
                                         <textarea
                                             name="message"
                                             rows="5"
-                                            placeholder="Bagaimana kami bisa membantu Anda?"
+                                            placeholder={t('contact.placeholder_pesan')}
                                             value={formData.message}
                                             onChange={handleChange}
                                             required
@@ -197,9 +200,9 @@ const ContactPage = ({ content }) => {
 
                                     <button type="submit" className={`submit-btn-lux ${isSubmitted ? 'is-success' : ''}`}>
                                         {isSubmitted ? (
-                                            <><CheckCircle2 size={20} /> PESAN TERKIRIM</>
+                                            <><CheckCircle2 size={20} /> {t('btn.terkirim')}</>
                                         ) : (
-                                            <><Send size={18} /> KIRIM KE AYAKA</>
+                                            <><Send size={18} /> {t('btn.kirim')}</>
                                         )}
                                     </button>
                                 </form>

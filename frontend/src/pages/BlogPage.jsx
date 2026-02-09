@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { BookOpen, Calendar, Tag, ChevronRight, Search, Filter, Book, PenTool, Info, Lock, Eye } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const BlogPage = ({ content }) => {
+    const { t } = useTranslation();
     const data = content?.blog_halaman;
     const [activeCategory, setActiveCategory] = useState('all');
     const [searchTerm, setSearchTerm] = useState('');
@@ -65,8 +67,8 @@ const BlogPage = ({ content }) => {
                 <div className="journal-container">
                     <div className="hero-content-lux">
                         <div className="hero-header-min journal-reveal reveal-up">
-                            <span className="journal-tag">OFFICIAL INTELLIGENCE HUB</span>
-                            <h1 className="journal-title-lux">AYAKA <br /><span>JOURNAL</span></h1>
+                            <span className="journal-tag">{t('blog.hero.tag')}</span>
+                            <h1 className="journal-title-lux">{t('blog.hero.title')}</h1>
                         </div>
                         <div className="hero-brief-lux journal-reveal reveal-up" style={{ transitionDelay: '0.2s' }}>
                             <div className="brief-line"></div>
@@ -84,7 +86,7 @@ const BlogPage = ({ content }) => {
                             <Search size={20} className="search-icon" />
                             <input
                                 type="text"
-                                placeholder="Cari topik edukasi..."
+                                placeholder={t('blog.search.placeholder')}
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
@@ -129,13 +131,13 @@ const BlogPage = ({ content }) => {
                                                 <div className="card-meta">
                                                     <span className="meta-date"><Calendar size={14} /> {art.date || new Date(art.created_at).toLocaleDateString()}</span>
                                                     <span className="meta-views"><Eye size={14} /> {art.views || 0}</span>
-                                                    {isLocked && <span className="meta-lock">MEMBER ONLY</span>}
+                                                    {isLocked && <span className="meta-lock">{t('blog.card.member_only')}</span>}
                                                 </div>
                                                 <h2 className="card-title-lux">{art.title}</h2>
                                                 <p className="card-excerpt-lux">{art.excerpt || art.summary}</p>
                                                 <div className="card-footer-lux">
                                                     <span className="read-more-lux">
-                                                        {isLocked ? 'AKSES MEMBER' : 'BACA ARTIKEL'} <ChevronRight size={16} />
+                                                        {isLocked ? t('btn.member_access') : t('btn.read_article')} <ChevronRight size={16} />
                                                     </span>
                                                 </div>
                                             </div>
@@ -144,7 +146,7 @@ const BlogPage = ({ content }) => {
                                 );
                             })
                         ) : (
-                            <div className="empty-state-journal">Tidak ada artikel yang ditemukan.</div>
+                            <div className="empty-state-journal">{t('blog.empty')}</div>
                         )}
                     </div>
                 </div>
@@ -161,7 +163,7 @@ const BlogPage = ({ content }) => {
                         <div className="footer-sign-journal">
                             <h3 className="footer-cta-journal">{data.penutup}</h3>
                             <div className="journal-divider-min"></div>
-                            <span className="journal-mark">AYAKA LITERACY PROJECT 2026</span>
+                            <span className="journal-mark">{t('blog.footer.mark')}</span>
                         </div>
                     </div>
                 </div>

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Camera, Play, Shield, Info, Filter, ArrowRight, Layers, Eye } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const GaleriPage = ({ content }) => {
+    const { t } = useTranslation();
     const data = content?.galeri_halaman;
     const [activeCategory, setActiveCategory] = useState('all');
     const [scrollY, setScrollY] = useState(0);
@@ -37,11 +39,9 @@ const GaleriPage = ({ content }) => {
                 <div className="atelier-container">
                     <div className="hero-split-lux">
                         <div className="hero-meta atelier-reveal reveal-left">
-                            <span className="atelier-tag">DOCUMENTATION ARCHIVE</span>
+                            <span className="atelier-tag">{t('galeri.hero.tag')}</span>
                             <h1 className="atelier-title-lux">
-                                THE <br />
-                                <span>LIVING</span> <br />
-                                RECORD
+                                {t('galeri.hero.title')}
                             </h1>
                         </div>
                         <div className="hero-intro-box atelier-reveal reveal-right">
@@ -60,7 +60,7 @@ const GaleriPage = ({ content }) => {
                     <div className="filter-inner-lux">
                         <div className="filter-label">
                             <Filter size={18} />
-                            <span>FILTER BY CONTEXT</span>
+                            <span>{t('galeri.filter.label')}</span>
                         </div>
                         <div className="category-group-lux">
                             {(data.kategori || []).map(cat => (
@@ -108,7 +108,7 @@ const GaleriPage = ({ content }) => {
             <section className="atelier-section video-atelier bg-atelier-dark">
                 <div className="atelier-container">
                     <div className="section-header-lux atelier-reveal reveal-up">
-                        <span className="meta-white">VISUAL NARRATIVE</span>
+                        <span className="meta-white">{t('galeri.video.tag')}</span>
                         <h2 className="heading-white-lux">{data.video?.title}</h2>
                     </div>
 
@@ -122,7 +122,7 @@ const GaleriPage = ({ content }) => {
                                 <div className="video-info-lux">
                                     <h3>{vid.title}</h3>
                                     <p>{vid.desc}</p>
-                                    <button className="text-btn-lux">WATCH FILM <ArrowRight size={16} /></button>
+                                    <button className="text-btn-lux">{t('btn.watch_film')} <ArrowRight size={16} /></button>
                                 </div>
                             </div>
                         ))}
@@ -159,7 +159,7 @@ const GaleriPage = ({ content }) => {
                         <div className="atelier-logo-mark">A</div>
                         <p className="footer-content-lux">{data.penutup?.content}</p>
                         <div className="footer-divider-lux"></div>
-                        <span className="archive-date">AYAKA ARCHIVE 2026</span>
+                        <span className="archive-date">{t('galeri.footer.archive_date')}</span>
                     </div>
                 </div>
             </footer>

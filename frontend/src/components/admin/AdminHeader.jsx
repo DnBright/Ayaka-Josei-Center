@@ -1,31 +1,116 @@
-import React from 'react';
-import { Bell, User, Search } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Bell, User, Search, LogOut, ChevronDown } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 const AdminHeader = ({ title }) => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const isPenulisPath = location.pathname.startsWith('/penulis');
+    const keyPrefix = isPenulisPath ? 'penulis_' : 'admin_';
+
+    const [username, setUsername] = useState('User');
+    const [role, setRole] = useState('Guest');
+    const [unreadCount, setUnreadCount] = useState(0);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [showProfileMenu, setShowProfileMenu] = useState(false);
+
+    useEffect(() => {
+        // Load User Info
+        const storedName = localStorage.getItem(`${keyPrefix}username`);
+        const storedRole = localStorage.getItem(`${keyPrefix}role`);
+        if (storedName) setUsername(storedName);
+        if (storedRole) setRole(storedRole);
+
+        // Load Unread Count (Only for Admins/Editors)
+        if (!isPenulisPath) {
+            fetchUnreadCount();
+        }
+    }, [isPenulisPath, keyPrefix]);
+
+    const fetchUnreadCount = async () => {
+        try {
+            const token = localStorage.getItem('admin_token');
+            if (!token) return;
+            const apiUrl = `http://${window.location.hostname}:5005/api/admin/communications/unread-count`;
+            const resp = await axios.get(apiUrl, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setUnreadCount(resp.data.count);
+        } catch (err) {
+            console.error('Error fetching unread count:', err);
+        }
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem(`${keyPrefix}token`);
+        localStorage.removeItem(`${keyPrefix}role`);
+        localStorage.removeItem(`${keyPrefix}username`);
+        navigate(isPenulisPath ? '/penulis/login' : '/admin/login');
+    };
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        console.log('Searching for:', searchTerm);
+        // Implement search logic if needed, or redirect to a search results page
+    };
+
     return (
         <header className="admin-header glass">
             <div className="header-content">
                 <h2 className="page-title">{title}</h2>
 
                 <div className="header-actions">
-                    <div className="search-bar">
+                    <form onSubmit={handleSearch} className="search-bar">
                         <Search size={18} className="search-icon" />
-                        <input type="text" placeholder="Cari..." />
-                    </div>
+                        <input
+                            type="text"
+                            placeholder="Cari..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </form>
 
                     <div className="action-buttons">
-                        <button className="icon-btn">
-                            <Bell size={20} />
-                            <span className="badge">3</span>
-                        </button>
-                        <div className="user-profile">
-                            <div className="avatar">
-                                <User size={20} />
+                        {!isPenulisPath && (
+                            <button
+                                className="icon-btn"
+                                onClick={() => navigate('/admin/communication')}
+                                title="Pesan Masuk"
+                            >
+                                <Bell size={20} />
+                                {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
+                            </button>
+                        )}
+
+                        <div className="profile-container-lux">
+                            <div
+                                className={`user-profile ${showProfileMenu ? 'active' : ''}`}
+                                onClick={() => setShowProfileMenu(!showProfileMenu)}
+                            >
+                                <div className="avatar">
+                                    <User size={20} />
+                                </div>
+                                <div className="user-info">
+                                    <span className="name">{username}</span>
+                                    <span className="role">{role}</span>
+                                </div>
+                                <ChevronDown size={16} className={`chevron ${showProfileMenu ? 'rotate' : ''}`} />
                             </div>
-                            <div className="user-info">
-                                <span className="name">Admin</span>
-                                <span className="role">Super Admin</span>
-                            </div>
+
+                            {showProfileMenu && (
+                                <div className="profile-dropdown-lux shadow-2xl animate-fade-in-up">
+                                    <div className="dropdown-header">
+                                        <p className="logged-as">Masuk sebagai</p>
+                                        <p className="user-name">{username}</p>
+                                    </div>
+                                    <div className="dropdown-divider"></div>
+                                    <button onClick={handleLogout} className="dropdown-item logout text-red-600">
+                                        <LogOut size={16} />
+                                        <span>Keluar Sesi</span>
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -36,7 +121,7 @@ const AdminHeader = ({ title }) => {
           height: 80px;
           position: sticky;
           top: 0;
-          z-index: 40;
+          z-index: 1001; /* Higher than sidebar */
           background: rgba(255, 255, 255, 0.9);
           backdrop-filter: blur(20px);
           border-bottom: 1px solid #f1f5f9;
@@ -115,6 +200,7 @@ const AdminHeader = ({ title }) => {
             justify-content: center;
             border: 1px solid #f1f5f9;
             transition: all 0.2s;
+            cursor: pointer;
         }
 
         .icon-btn:hover {
@@ -141,25 +227,33 @@ const AdminHeader = ({ title }) => {
             box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
         }
 
+        .profile-container-lux {
+            position: relative;
+        }
+
         .user-profile {
             display: flex;
             align-items: center;
             gap: 1rem;
-            padding: 0.5rem;
-            padding-left: 1.5rem;
-            border-left: 1px solid #e2e8f0;
+            padding: 0.5rem 1rem;
+            border-radius: 16px;
             cursor: pointer;
             transition: 0.2s;
+            border: 1px solid transparent;
         }
         
-        .user-profile:hover { opacity: 0.8; }
+        .user-profile:hover, .user-profile.active { 
+            background: white; 
+            border-color: #f1f5f9;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
 
         .avatar {
-            width: 42px;
-            height: 42px;
+            width: 36px;
+            height: 36px;
             background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
             color: #ef4444;
-            border-radius: 12px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -173,17 +267,72 @@ const AdminHeader = ({ title }) => {
         }
 
         .user-info .name {
-            font-size: 0.95rem;
-            font-weight: 700;
+            font-size: 0.9rem;
+            font-weight: 800;
             color: #0f172a;
             line-height: 1.2;
         }
 
         .user-info .role {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #94a3b8;
-            font-weight: 600;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
+
+        .chevron {
+            color: #94a3b8;
+            transition: transform 0.3s;
+        }
+
+        .chevron.rotate { transform: rotate(180deg); }
+
+        .profile-dropdown-lux {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            width: 220px;
+            background: white;
+            border-radius: 20px;
+            border: 1px solid #f1f5f9;
+            padding: 1rem;
+            z-index: 1002;
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.3s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dropdown-header { margin-bottom: 0.8rem; }
+        .logged-as { font-size: 0.7rem; color: #94a3b8; font-weight: 700; text-transform: uppercase; }
+        .user-name { font-size: 0.9rem; font-weight: 800; color: #1e293b; }
+
+        .dropdown-divider { height: 1px; background: #f1f5f9; margin: 0.8rem -1rem; }
+
+        .dropdown-item {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem;
+            border: none;
+            background: none;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #475569;
+        }
+
+        .dropdown-item:hover { background: #f8fafc; color: #0f172a; }
+        .dropdown-item.logout:hover { background: #fef2f2; color: #da291c; }
       `}</style>
         </header>
     );

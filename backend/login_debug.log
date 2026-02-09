@@ -221,3 +221,10 @@
 [2026-02-09T11:11:30.853Z] Global stats successfully fetched.
 [2026-02-09T11:12:21.148Z] Server running on http://0.0.0.0:5005 (MySQL Mode)
 [2026-02-09T11:15:29.001Z] Server running on http://0.0.0.0:5005 (MySQL Mode)
+[2026-02-09T11:19:24.995Z] Server running on http://0.0.0.0:5005 (MySQL Mode)
+[2026-02-09T11:25:49.411Z] Stats request from User ID: 1, Role: Super Admin
+[2026-02-09T11:25:49.412Z] Fetching global stats...
+[2026-02-09T11:25:49.423Z] Global stats successfully fetched.
+[2026-02-09T11:25:49.426Z] Stats request from User ID: 1, Role: Super Admin
+[2026-02-09T11:25:49.426Z] Fetching global stats...
+[2026-02-09T11:25:49.430Z] Global stats successfully fetched.

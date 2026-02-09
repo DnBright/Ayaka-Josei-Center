@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const SplashLoader = ({ onComplete }) => {
+    const { t } = useTranslation();
     const [progress, setProgress] = useState(0);
     const [isExiting, setIsExiting] = useState(false);
+    // ... late lines updated properly by tool
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -46,7 +48,7 @@ const SplashLoader = ({ onComplete }) => {
                         <div className="progress-fill" style={{ width: `${progress}%` }}></div>
                     </div>
                     <div className="percentage-lux">{progress}%</div>
-                    <div className="status-text">Mempersiapkan Masa Depan Anda...</div>
+                    <div className="status-text">{t('splash.status')}</div>
                 </div>
             </div>
 

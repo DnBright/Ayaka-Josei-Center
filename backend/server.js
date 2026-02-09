@@ -369,6 +369,15 @@ app.post('/api/communications', async (req, res) => {
     }
 });
 
+app.get('/api/admin/communications/unread-count', authenticateToken, authorizeRoles('Super Admin', 'Editor'), async (req, res) => {
+    try {
+        const [rows] = await pool.execute("SELECT COUNT(*) as count FROM communications WHERE status = 'unread'");
+        res.json({ count: rows[0].count });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 app.patch('/api/admin/communications/:id/status', authenticateToken, authorizeRoles('Super Admin', 'Editor'), async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;

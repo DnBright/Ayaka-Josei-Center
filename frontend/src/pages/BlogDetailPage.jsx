@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Calendar, Tag, Info, User, Share2, Facebook, Twitter, Link as LinkIcon, Lock, Eye } from 'lucide-react';
 
 const BlogDetailPage = ({ content }) => {
+    const { t } = useTranslation();
     const { slug } = useParams();
     const data = content?.blog_halaman;
     const [article, setArticle] = useState(null);
@@ -44,7 +46,7 @@ const BlogDetailPage = ({ content }) => {
         }
     };
 
-    if (loading || !article) return <div className="read-loader">Retrieving Records...</div>;
+    if (loading || !article) return <div className="read-loader">{t('blog.retrieving')}</div>;
 
     const isMemberContent = (cat) => {
         const c = cat?.toLowerCase() || '';
@@ -61,7 +63,7 @@ const BlogDetailPage = ({ content }) => {
             <header className="read-header">
                 <div className="read-container">
                     <Link to="/blog" className="back-link-lux">
-                        <ArrowLeft size={18} /> KEMBALI KE JOURNAL
+                        <ArrowLeft size={18} /> {t('blog.back')}
                     </Link>
 
                     <div className="header-stacked-lux">
@@ -75,16 +77,16 @@ const BlogDetailPage = ({ content }) => {
                                 </div>
                                 <div className="meta-item-lux">
                                     <User size={16} />
-                                    <span>OFFICIAL AYAKA</span>
+                                    <span>{t('blog.official')}</span>
                                 </div>
                                 <div className="meta-item-lux">
                                     <Eye size={16} />
-                                    <span>{article.views || 0} Views</span>
+                                    <span>{article.views || 0} {t('blog.views')}</span>
                                 </div>
                                 {isMemberContent(article.category) && (
                                     <div className="meta-item-lux" style={{ color: '#da291c' }}>
                                         <Lock size={16} />
-                                        <span>MEMBER ONLY</span>
+                                        <span>{t('blog.card.member_only')}</span>
                                     </div>
                                 )}
                             </div>
@@ -102,16 +104,16 @@ const BlogDetailPage = ({ content }) => {
                     {isLocked ? (
                         <div className="content-locked-box">
                             <Lock size={48} className="lock-icon-lg" />
-                            <h2>Konten Terbatas</h2>
-                            <p>Artikel ini khusus untuk Member Active Ayaka Josei Center. Silakan login untuk membaca konten lengkap.</p>
-                            <Link to="/member/login" className="btn-login-content">LOGIN MEMBER</Link>
+                            <h2>{t('blog.member_content')}</h2>
+                            <p>{t('blog.member_desc')}</p>
+                            <Link to="/member/login" className="btn-login-content">{t('nav.masuk')} MEMBER</Link>
                         </div>
                     ) : (
                         <>
                             <div className="read-content-main" dangerouslySetInnerHTML={{ __html: article.content }}></div>
 
                             <div className="read-share-lux">
-                                <span>BAGIKAN ARTIKEL:</span>
+                                <span>{t('blog.share')}</span>
                                 <div className="share-icons-lux">
                                     <button><Facebook size={20} /></button>
                                     <button><Twitter size={20} /></button>
@@ -127,7 +129,7 @@ const BlogDetailPage = ({ content }) => {
             <section className="read-related">
                 <div className="read-container">
                     <div className="related-header-lux">
-                        <h2 className="related-title">SIMAK ARTIKEL LAINNYA</h2>
+                        <h2 className="related-title">{t('blog.simak_lain')}</h2>
                         <div className="related-line"></div>
                     </div>
 
@@ -150,7 +152,7 @@ const BlogDetailPage = ({ content }) => {
                     <div className="read-disclaimer-box">
                         <div className="disc-header">
                             <Info size={20} />
-                            <span>INFORMASI RESMI</span>
+                            <span>{t('blog.info_resmi')}</span>
                         </div>
                         <p>{data?.disclaimer}</p>
                     </div>

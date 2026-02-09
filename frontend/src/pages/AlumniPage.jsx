@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Users, Quote, Shield, ExternalLink, MapPin, Award, CheckCircle, ChevronRight, MessageCircle, Star, Heart, Sparkles, ArrowRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const AlumniPage = ({ content }) => {
+    const { t } = useTranslation();
     const data = content?.alumni_halaman;
     const [activeFilter, setActiveFilter] = useState('all');
     const [mouseX, setMouseX] = useState(0);
@@ -51,20 +53,19 @@ const AlumniPage = ({ content }) => {
                     <div className="hero-split-vangu">
                         <div className="hero-text-vangu circle-reveal reveal-left">
                             <div className="badge-official-vangu">
-                                <Sparkles size={14} /> <span>OFFICIAL SUCCESS ARCHIVE</span>
+                                <Sparkles size={14} /> <span>{t('alumni.hero.badge')}</span>
                             </div>
                             <h1 className="hero-title-max">
-                                THE <span className="text-outline">CIRCLE</span> <br />
-                                OF <i>RESULTS</i>
+                                {t('alumni.hero.title')}
                             </h1>
                             <div className="vangu-line-accent"></div>
                             <p className="hero-p-lux">{data.pengantar?.content}</p>
 
                             <div className="hero-cta-vangu">
-                                <button className="btn-vangu-dark">EXPLORE STORIES</button>
+                                <button className="btn-vangu-dark">{t('alumni.hero.cta')}</button>
                                 <div className="hero-avatars-min">
                                     {[1, 2, 3, 4].map(i => <div key={i} className="mini-av"></div>)}
-                                    <span>Join 500+ Alumni</span>
+                                    <span>{t('alumni.hero.join_count')}</span>
                                 </div>
                             </div>
                         </div>
@@ -97,7 +98,7 @@ const AlumniPage = ({ content }) => {
             {/* 2. INFINITE TESTIMONIAL MARQUEE - REPLACING MONOTONOUS GRID */}
             <section className="marquee-section bg-vangu-dark">
                 <div className="marquee-header circle-reveal reveal-up">
-                    <h2 className="vangu-heading-white">VOICES OF THE <i>REVOLUTION</i></h2>
+                    <h2 className="vangu-heading-white">{t('alumni.marquee.title')}</h2>
                 </div>
 
                 <div className="marquee-container">
@@ -132,8 +133,8 @@ const AlumniPage = ({ content }) => {
             <section className="circle-section bento-stories-box">
                 <div className="circle-container">
                     <div className="bento-header circle-reveal reveal-up">
-                        <span className="vangu-tag">DEEP NARRATIVES</span>
-                        <h2 className="vangu-heading-large">STORIES THAT <span>DEFINED</span> US</h2>
+                        <span className="vangu-tag">{t('alumni.bento.tag')}</span>
+                        <h2 className="vangu-heading-large">{t('alumni.bento.title')}</h2>
                     </div>
 
                     <div className="bento-grid-vangu">
@@ -141,12 +142,12 @@ const AlumniPage = ({ content }) => {
                             <div key={story.id} className={`bento-story-item item-${idx + 1} circle-reveal reveal-up`}>
                                 <div className="bento-story-inner">
                                     <div className="bento-meta">
-                                        <span className="b-tag">FEATURE JOURNEY</span>
+                                        <span className="b-tag">{t('alumni.bento.item_tag')}</span>
                                         <span className="b-author">{story.author}</span>
                                     </div>
                                     <h3>{story.title}</h3>
                                     <p>{story.story}</p>
-                                    <button className="b-link">READ FULL STORY <ChevronRight size={16} /></button>
+                                    <button className="b-link">{t('btn.read_full_story')} <ChevronRight size={16} /></button>
                                 </div>
                                 <div className="bento-decor">
                                     <Award size={80} className="decor-icon" />
@@ -158,8 +159,8 @@ const AlumniPage = ({ content }) => {
                             <div className="bento-visual-placeholder circle-reveal reveal-up">
                                 <div className="placeholder-content">
                                     <Heart size={40} className="text-red" />
-                                    <h4>Your Story Could Be Next</h4>
-                                    <p>Join the circle and start your own journey to Japan.</p>
+                                    <h4>{t('alumni.bento.placeholder_title')}</h4>
+                                    <p>{t('alumni.bento.placeholder_desc')}</p>
                                 </div>
                             </div>
                         )}
@@ -171,7 +172,7 @@ const AlumniPage = ({ content }) => {
             <section className="circle-section directory-vangu">
                 <div className="circle-container">
                     <div className="directory-header-lux circle-reveal reveal-up">
-                        <h2 className="vangu-heading-mid">THE ARCHIVE</h2>
+                        <h2 className="vangu-heading-mid">{t('alumni.directory.title')}</h2>
                         <div className="vangu-filters">
                             {(data.filter || []).map(f => (
                                 <button
@@ -234,10 +235,10 @@ const AlumniPage = ({ content }) => {
                         <div className="vangu-footer-decor">A</div>
                         <h2 className="vangu-footer-h">{data.penutup?.content}</h2>
                         <button className="btn-vangu-red">
-                            JOIN THE SUCCESS CIRCLE <ArrowRight size={20} />
+                            {t('btn.join_success')} <ArrowRight size={20} />
                         </button>
                         <div className="vangu-footer-meta">
-                            <span>ALUMNI ARCHIVE SERIES</span>
+                            <span>{t('alumni.footer.archive_series')}</span>
                             <span className="vangu-meta-dot"></span>
                             <span>VERSION 2026.01</span>
                             <span className="vangu-meta-dot"></span>

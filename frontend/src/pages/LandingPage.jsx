@@ -3,8 +3,10 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
 import FloatingBadge from '../components/FloatingBadge';
+import { useTranslation } from 'react-i18next';
 
 const LandingPage = ({ content }) => {
+    const { t } = useTranslation();
     const observerRef = useRef(null);
     const [posts, setPosts] = useState([]);
 
@@ -69,12 +71,12 @@ const LandingPage = ({ content }) => {
                     <div className="container">
                         <div className="section-grid">
                             <div className="text-content">
-                                <span className="section-badge">SIAPA KAMI</span>
+                                <span className="section-badge">{t('section.siapa_kami')}</span>
                                 <h2 className="section-title">{content.profil?.title}</h2>
                                 <p className="section-tagline">{content.profil?.tagline}</p>
                                 <p className="section-desc">{content.profil?.text}</p>
                                 <div className="objective-box">
-                                    <strong>TUJUAN KAMI:</strong>
+                                    <strong>{t('section.tujuan_kami')}</strong>
                                     <p>{content.profil?.objective}</p>
                                 </div>
                             </div>
@@ -94,18 +96,26 @@ const LandingPage = ({ content }) => {
                 <section id="program" className="section-padding bg-surface reveal reveal-up">
                     <div className="container">
                         <div className="section-header center">
-                            <span className="section-badge">PROGRAM KAMI</span>
+                            <span className="section-badge">{t('section.program_kami')}</span>
                             <h2 className="section-title">{content.program?.title}</h2>
                         </div>
                         <div className="program-grid">
-                            {(content.program?.items || []).map((item, idx) => (
-                                <div key={idx} className="program-card reveal reveal-up" style={{ transitionDelay: `${idx * 0.1}s` }}>
-                                    <div className="card-icon">0{idx + 1}</div>
-                                    <h3>{item?.name}</h3>
-                                    <p>{item?.desc}</p>
-                                    <button className="card-link">Detail Program</button>
-                                </div>
-                            ))}
+                            {(content.program?.items || []).map((item, idx) => {
+                                // Fallback translation for default programs
+                                const programKey = item?.name?.toLowerCase().includes('kaigo') ? 'kaigo' :
+                                    item?.name?.toLowerCase().includes('food') ? 'fb' :
+                                        item?.name?.toLowerCase().includes('industri') ? 'industri' :
+                                            item?.name?.toLowerCase().includes('hospitality') ? 'hospitality' : null;
+
+                                return (
+                                    <div key={idx} className="program-card reveal reveal-up" style={{ transitionDelay: `${idx * 0.1}s` }}>
+                                        <div className="card-icon">0{idx + 1}</div>
+                                        <h3>{programKey ? t(`program.${programKey}.name`) : item?.name}</h3>
+                                        <p>{programKey ? t(`program.${programKey}.desc`) : item?.desc}</p>
+                                        <button className="card-link">{t('btn.detail_program')}</button>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
                 </section>
@@ -116,7 +126,7 @@ const LandingPage = ({ content }) => {
                 <section id="manfaat" className="section-padding reveal reveal-up">
                     <div className="container">
                         <div className="section-header">
-                            <span className="section-badge">MENGAPA JEPANG?</span>
+                            <span className="section-badge">{t('section.mengapa_jepang')}</span>
                             <h2 className="section-title">{content.manfaat?.title}</h2>
                         </div>
                         <div className="manfaat-grid">
@@ -141,7 +151,7 @@ const LandingPage = ({ content }) => {
                 <section id="alur" className="section-padding bg-surface reveal reveal-up">
                     <div className="container">
                         <div className="section-header center">
-                            <span className="section-badge">TRANSPARANSI PROSES</span>
+                            <span className="section-badge">{t('section.transparansi')}</span>
                             <h2 className="section-title">{content.alur?.title}</h2>
                         </div>
                         <div className="alur-timeline">
@@ -165,7 +175,7 @@ const LandingPage = ({ content }) => {
                 <section id="alumni" className="section-padding reveal reveal-up">
                     <div className="container">
                         <div className="section-header center">
-                            <span className="section-badge">CERITA MEREKA</span>
+                            <span className="section-badge">{t('section.cerita_mereka')}</span>
                             <h2 className="section-title">{content.alumni?.title}</h2>
                         </div>
                         <div className="alumni-grid">
@@ -189,7 +199,7 @@ const LandingPage = ({ content }) => {
                 <section id="blog" className="section-padding bg-surface reveal reveal-up">
                     <div className="container">
                         <div className="section-header">
-                            <span className="section-badge">EDUKASI & BERITA</span>
+                            <span className="section-badge">{t('section.edukasi_berita')}</span>
                             <h2 className="section-title">{content.blog?.title}</h2>
                         </div>
                         <div className="blog-grid">
@@ -207,13 +217,13 @@ const LandingPage = ({ content }) => {
                                             </span>
                                         </div>
                                         <h4>{post.title}</h4>
-                                        <button className="blog-link">Baca Selengkapnya</button>
+                                        <button className="blog-link">{t('btn.baca_selengkapnya')}</button>
                                     </div>
                                 </Link>
                             ))}
                         </div>
                         <div className="mt-8 text-center">
-                            <Link to="/blog" className="btn-astra-outline">Lihat Semua Berita</Link>
+                            <Link to="/blog" className="btn-astra-outline">{t('btn.lihat_semua')}</Link>
                         </div>
                     </div>
                 </section>

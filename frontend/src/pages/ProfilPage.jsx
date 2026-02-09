@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Shield, Target, Award, Users, FileCheck, ArrowRight, Compass, Layers } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import FragmentedValues from '../components/FragmentedValues';
 
 const ProfilPage = ({ content }) => {
+    const { t } = useTranslation();
     const data = content?.profil_halaman;
     const [activeSection, setActiveSection] = useState('pengantar');
 
@@ -36,12 +38,12 @@ const ProfilPage = ({ content }) => {
             <header className="prof-hero">
                 <div className="container-prof">
                     <div className="hero-content-prof text-center professional-reveal">
-                        <span className="prof-label">PROFIL LEMBAGA</span>
+                        <span className="prof-label">{t('profil.hero.label')}</span>
                         <h1 className="prof-main-title">
-                            Menemani Langkah Menuju <span className="title-accent">Masa Depan Global</span>
+                            {t('profil.hero.title')}
                         </h1>
                         <p className="prof-hero-lead">
-                            LPK Ayaka Global Indonesia adalah mitra strategis dalam pengembangan kompetensi dan pemberdayaan wanita Indonesia untuk berkarir di kancah internasional.
+                            {t('profil.hero.lead')}
                         </p>
                     </div>
                 </div>
@@ -87,17 +89,17 @@ const ProfilPage = ({ content }) => {
                     <div className="vision-card professional-reveal">
                         <div className="vision-header text-center mb-16">
                             <Target className="icon-main-red" size={48} />
-                            <h2 className="section-title-prof mt-6">Visi & Misi Strategis</h2>
+                            <h2 className="section-title-prof mt-6">{t('profil.vision.title')}</h2>
                         </div>
                         <div className="grid md:grid-cols-2 gap-12">
                             <div className="vision-text">
-                                <h3 className="sub-title-prof">Visi Kami</h3>
+                                <h3 className="sub-title-prof">{t('profil.vision.visi_label')}</h3>
                                 <p className="text-xl leading-relaxed text-slate-700 italic">
                                     "{data.visi?.content}"
                                 </p>
                             </div>
                             <div className="mission-list space-y-6">
-                                <h3 className="sub-title-prof">Misi Utama</h3>
+                                <h3 className="sub-title-prof">{t('profil.vision.misi_label')}</h3>
                                 {(data.misi?.items || []).map((item, idx) => (
                                     <div key={idx} className="mission-item-prof">
                                         <div className="num-dot">{idx + 1}</div>
@@ -114,8 +116,8 @@ const ProfilPage = ({ content }) => {
             <section className="prof-values-section py-24">
                 <div className="container-prof">
                     <div className="text-center mb-20 professional-reveal">
-                        <h2 className="section-title-prof">Pilar Nilai & Prinsip</h2>
-                        <p className="text-slate-500 max-w-2xl mx-auto mt-4">Landasan integritas kami dalam mendidik dan membina tunas bangsa.</p>
+                        <h2 className="section-title-prof">{t('profil.values.title')}</h2>
+                        <p className="text-slate-500 max-w-2xl mx-auto mt-4">{t('profil.values.desc')}</p>
                     </div>
                     <div className="professional-reveal">
                         <FragmentedValues items={data.nilai?.items || []} layout="structured" />
@@ -148,7 +150,7 @@ const ProfilPage = ({ content }) => {
                     <p className="prof-cta-desc mt-8">{data.penutup?.content}</p>
                     <div className="mt-12">
                         <button className="btn-prof-primary">
-                            HUBUNGI KAMI SEKARANG
+                            {t('btn.hubungi_kami')}
                             <ArrowRight size={20} />
                         </button>
                     </div>

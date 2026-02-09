@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
 import { Heart, Cpu, Hotel, Coffee, CheckCircle, Info, FileText, ArrowRight, Star, Target, Zap, Shield } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const ProgramPage = ({ content }) => {
+    const { t } = useTranslation();
     const data = content?.program_halaman;
     const [activeProgram, setActiveProgram] = useState('kaigo');
     const [scrollY, setScrollY] = useState(0);
@@ -34,15 +35,15 @@ const ProgramPage = ({ content }) => {
             <header className="vangu-hero">
                 <div className="hero-grid">
                     <div className="hero-text-side vangu-reveal reveal-left">
-                        <div className="vangu-badge">PROGRAM 2026 EDITION</div>
+                        <div className="vangu-badge">{t('program.hero_edition')}</div>
                         <h1 className="hero-title-max">
-                            FUTURE <br />
-                            <span className="text-accent-red">CAREERS</span> <br />
-                            IN JAPAN
+                            {t('program.hero_title').split(' ').slice(0, 2).join(' ')} <br />
+                            <span className="text-accent-red">{t('program.hero_title').split(' ').slice(2, 3)}</span> <br />
+                            {t('program.hero_title').split(' ').slice(3).join(' ')}
                         </h1>
-                        <p className="hero-desc-max">Empowering Indonesian women through specialized vocational training and direct placement in Japan's most strategic sectors.</p>
+                        <p className="hero-desc-max">{t('program.hero_desc')}</p>
                         <div className="hero-cta-group">
-                            <button className="vangu-btn-primary">EXPLORE PROGRAMS</button>
+                            <button className="vangu-btn-primary">{t('btn.jelajahi')}</button>
                             <div className="vangu-scroll-line"></div>
                         </div>
                     </div>
@@ -52,7 +53,7 @@ const ProgramPage = ({ content }) => {
                         </div>
                         <div className="floating-stat-card glass-morph">
                             <span className="stat-num">98%</span>
-                            <span className="stat-label">Placement Rate</span>
+                            <span className="stat-label">{t('program.placement_rate')}</span>
                         </div>
                     </div>
                 </div>
@@ -76,11 +77,11 @@ const ProgramPage = ({ content }) => {
             <section className="vangu-section bg-vangu-dark">
                 <div className="container-full">
                     <div className="section-meta-center vangu-reveal reveal-up">
-                        <span className="meta-tag">OUR SPECIALIZATIONS</span>
+                        <span className="meta-tag">{t('program.specializations')}</span>
                         <h2 className="vangu-heading-white center">{data.daftarProgram?.title}</h2>
                         <div className="interaction-hint">
                             <span className="hint-line"></span>
-                            <span className="hint-text">Arahkan kursor atau klik untuk detail program</span>
+                            <span className="hint-text">{t('program.interaction_hint')}</span>
                             <span className="hint-line"></span>
                         </div>
                     </div>
@@ -97,7 +98,7 @@ const ProgramPage = ({ content }) => {
                                 <div className="panel-content">
                                     <div className="panel-header-lux">
                                         <div className="panel-number">0{idx + 1}</div>
-                                        {activeProgram !== prog.id && <div className="explore-label">EXPLORE <ArrowRight size={14} /></div>}
+                                        {activeProgram !== prog.id && <div className="explore-label">{t('program.explore')} <ArrowRight size={14} /></div>}
                                     </div>
                                     <div className="panel-icon-box">
                                         {prog.id === 'kaigo' && <Heart size={32} />}
@@ -105,14 +106,14 @@ const ProgramPage = ({ content }) => {
                                         {prog.id === 'hospitality' && <Hotel size={32} />}
                                         {prog.id === 'fb' && <Coffee size={32} />}
                                     </div>
-                                    <h3 className="panel-title">{prog.name}</h3>
+                                    <h3 className="panel-title">{t(`program.${prog.id}.name`) || prog.name}</h3>
                                     <div className="panel-details-reveal">
-                                        <p className="panel-desc-lux">{prog.desc}</p>
+                                        <p className="panel-desc-lux">{t(`program.${prog.id}.desc`) || prog.desc}</p>
                                         <div className="panel-grid-lux">
                                             <div className="panel-info-block">
                                                 <Target size={18} className="text-red" />
                                                 <div>
-                                                    <span className="block-label">LINGKUP TUGAS</span>
+                                                    <span className="block-label">{t('program.tasks_label')}</span>
                                                     <p>{prog.tasks}</p>
                                                 </div>
                                             </div>
@@ -120,7 +121,7 @@ const ProgramPage = ({ content }) => {
                                                 <div className="panel-info-block">
                                                     <Star size={18} className="text-red" />
                                                     <div>
-                                                        <span className="block-label">KUALIFIKASI UTAMA</span>
+                                                        <span className="block-label">{t('program.qual_label')}</span>
                                                         <p>{prog.qualifications}</p>
                                                     </div>
                                                 </div>
@@ -141,7 +142,7 @@ const ProgramPage = ({ content }) => {
                         <div className="radial-center vangu-reveal reveal-scale">
                             <div className="center-inner">
                                 <Shield size={40} className="text-red" />
-                                <span>MINIMUM <br /> REQUIREMENTS</span>
+                                <span>{t('program.min_req').split(' ').slice(0, 1)} <br /> {t('program.min_req').split(' ').slice(1).join(' ')}</span>
                             </div>
                         </div>
                         <div className="radial-items">
@@ -216,7 +217,7 @@ const ProgramPage = ({ content }) => {
                 <div className="cta-grid-vangu">
                     <div className="cta-image-vangu vangu-reveal reveal-left"></div>
                     <div className="cta-text-vangu vangu-reveal reveal-right">
-                        <span className="cta-accent">KONSULTASI GRATIS</span>
+                        <span className="cta-accent">{t('section.konsultasi_gratis')}</span>
                         <h2 className="cta-title-vangu">{data.ajakanKonsultasi?.title}</h2>
                         <p className="cta-desc-vangu">{data.ajakanKonsultasi?.content}</p>
                         <button className="vangu-btn-max">

@@ -1,7 +1,9 @@
 import React from 'react';
 import { Mail, Phone, MapPin } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Footer = ({ content }) => {
+  const { t } = useTranslation();
   return (
     <footer className="footer">
       <div className="container footer-grid">
@@ -12,20 +14,20 @@ const Footer = ({ content }) => {
             className="footer-logo-img"
           />
           <h3>Ayaka Josei Center</h3>
-          <p>Membantu mewujudkan karir profesional putri Indonesia di Jepang dengan aman, bermartabat, dan terpercaya.</p>
+          <p>{t('footer.tagline')}</p>
         </div>
         <div className="footer-links">
-          <h4>Navigasi</h4>
+          <h4>{t('footer.nav')}</h4>
           <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#profil">Profil Perusahaan</a></li>
-            <li><a href="#program">Program SO</a></li>
-            <li><a href="#galeri">Galeri</a></li>
-            <li><a href="#blog">Blog & Berita</a></li>
+            <li><a href="#home">{t('nav.home')}</a></li>
+            <li><a href="#profil">{t('nav.profil')}</a></li>
+            <li><a href="#program">{t('nav.program')}</a></li>
+            <li><a href="#galeri">{t('nav.galeri')}</a></li>
+            <li><a href="#blog">{t('nav.blog')}</a></li>
           </ul>
         </div>
         <div className="footer-contact">
-          <h4>Kontak & Legal</h4>
+          <h4>{t('footer.contact_legal')}</h4>
           <div className="contact-item">
             <Mail size={18} />
             <span>{content?.email || 'admin@ayakajoseicenter.com'}</span>
@@ -42,7 +44,7 @@ const Footer = ({ content }) => {
         </div>
       </div>
       <div className="footer-bottom text-center">
-        <p>&copy; {new Date().getFullYear()} Ayaka Josei Center. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} Ayaka Josei Center. {t('footer.all_rights')}</p>
       </div>
 
       <style jsx="true">{`

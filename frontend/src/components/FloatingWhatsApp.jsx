@@ -64,7 +64,7 @@ const FloatingWhatsApp = () => {
             <style jsx="true">{`
                 .wa-float-container {
                     position: fixed;
-                    bottom: 2rem;
+                    bottom: 7rem;
                     right: 2rem;
                     z-index: 1001;
                     display: flex;

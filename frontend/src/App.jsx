@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import axios from 'axios';
-import Navbar from './components/Navbar'; // Kept for now if PublicLayout needs it, but App.jsx might not
+import { useTranslation } from 'react-i18next';
+import Navbar from './components/Navbar';
 import Footer from './components/Footer'; // Kept for now
 import PublicLayout from './layouts/PublicLayout';
 import LandingPage from './pages/LandingPage';
@@ -69,8 +70,16 @@ const RoleGuard = ({ children, allowedRoles }) => {
 };
 
 function App() {
+  const { i18n } = useTranslation();
   const [content, setContent] = useState(null);
   const [splashFinished, setSplashFinished] = useState(false);
+
+  useEffect(() => {
+    // Handle RTL orientation based on language
+    const dir = i18n.language === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.dir = dir;
+    document.documentElement.lang = i18n.language;
+  }, [i18n.language]);
 
   useEffect(() => {
     fetchContent();
