@@ -36,7 +36,8 @@ const ArticleEditor = () => {
     const fetchPost = async () => {
         try {
             const token = localStorage.getItem(`${keyPrefix}token`);
-            const resp = await axios.get('http://127.0.0.1:5005/api/admin/posts', {
+            const apiUrl = `http://${window.location.hostname}:5005/api/admin/posts`;
+            const resp = await axios.get(apiUrl, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             // Note: In production, fetch by ID directly to avoid large payloads
@@ -61,12 +62,16 @@ const ArticleEditor = () => {
 
         try {
             const token = localStorage.getItem(`${keyPrefix}token`);
+            const apiUrl = id
+                ? `http://${window.location.hostname}:5005/api/admin/posts/${id}`
+                : `http://${window.location.hostname}:5005/api/admin/posts`;
+
             if (id) {
-                await axios.put(`http://127.0.0.1:5005/api/admin/posts/${id}`, dataToSave, {
+                await axios.put(apiUrl, dataToSave, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             } else {
-                await axios.post('http://127.0.0.1:5005/api/admin/posts', dataToSave, {
+                await axios.post(apiUrl, dataToSave, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             }

@@ -16,7 +16,8 @@ const AdminLogin = () => {
         setLoading(true);
         setError('');
         try {
-            const resp = await axios.post('http://127.0.0.1:5005/api/auth/login', { username, password, source: 'admins' });
+            const apiUrl = `http://${window.location.hostname}:5005/api/auth/login`;
+            const resp = await axios.post(apiUrl, { username, password, source: 'admins' });
 
             // Validate if role is Admin or Editor
             if (resp.data.role !== 'Super Admin' && resp.data.role !== 'Editor') {

@@ -21,56 +21,67 @@ const MediaManager = () => {
     };
 
     return (
-        <div className="media-manager">
-            <div className="flex justify-between items-center mb-6">
-                <div>
-                    <h2 className="text-xl font-bold">Media Library</h2>
-                    <p className="text-secondary text-sm">Kelola semua aset gambar dan video website.</p>
+        <div className="premium-media-wrapper">
+            <div className="media-header">
+                <div className="header-info">
+                    <h2>Media Library Ayaka</h2>
+                    <p>Kelola koleksi aset visual, dokumentasi, dan media konten edukasi.</p>
                 </div>
                 <button
                     onClick={handleUpload}
-                    className="btn-primary flex items-center gap-2 bg-brand-red text-white px-4 py-2 rounded-lg"
+                    className="btn-premium-upload"
                 >
-                    <Upload size={18} /> Upload File
+                    <Upload size={18} /> Upload Media Baru
                 </button>
             </div>
 
-            {/* Toolbar */}
-            <div className="glass-card p-4 mb-6 flex justify-between items-center">
-                <div className="search-box relative">
-                    <Search size={18} className="absolute left-3 top-2.5 text-secondary" />
+            {/* PREMIUM TOOLBAR */}
+            <div className="premium-toolbar-lux">
+                <div className="search-box-lux">
+                    <Search size={18} className="search-icon" />
                     <input
                         type="text"
-                        placeholder="Cari file..."
-                        className="pl-10 pr-4 py-2 border rounded-lg w-64 focus:outline-none focus:border-brand-red"
+                        placeholder="Telusuri aset media..."
+                        className="search-input-lux"
                     />
                 </div>
-                <div className="flex gap-2">
-                    <button className="p-2 border rounded hover:bg-slate-50 text-secondary">
-                        <Filter size={18} />
+                <div className="filter-actions-lux">
+                    <button className="filter-btn-lux">
+                        <Filter size={18} /> Filter
                     </button>
+                    <div className="view-toggle-lux">
+                        <div className="toggle-bg"></div>
+                        <button className="toggle-item-lux active"><Image size={16} /></button>
+                    </div>
                 </div>
             </div>
 
-            {/* Grid */}
-            <div className="grid grid-4 gap-4">
+            {/* MEDIA GRID LUX */}
+            <div className="premium-media-grid">
                 {mediaItems.map((item) => (
-                    <div key={item.id} className="media-item glass-card p-2 group relative">
-                        <div className="aspect-square bg-slate-100 rounded-lg overflow-hidden mb-2 relative">
-                            <img src={item.url} alt={item.name} className="w-full h-full object-cover" />
-                            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
-                                <button
-                                    onClick={() => handleDelete(item.id)}
-                                    className="p-2 bg-white text-red-600 rounded-full hover:scale-110 transition-transform"
-                                >
-                                    <Trash2 size={18} />
-                                </button>
+                    <div key={item.id} className="media-card-lux group">
+                        <div className="media-preview-lux">
+                            <img src={item.url} alt={item.name} />
+                            <div className="media-overlay-lux">
+                                <div className="overlay-actions">
+                                    <button className="icon-btn-lux preview" title="Preview Full">
+                                        <Image size={16} />
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(item.id)}
+                                        className="icon-btn-lux delete"
+                                        title="Hapus Permanen"
+                                    >
+                                        <Trash2 size={16} />
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <div className="px-1">
-                            <h4 className="font-semibold text-sm truncate" title={item.name}>{item.name}</h4>
-                            <div className="flex justify-between text-xs text-secondary mt-1">
+                        <div className="media-info-lux">
+                            <span className="file-name" title={item.name}>{item.name}</span>
+                            <div className="file-meta">
                                 <span>{item.size}</span>
+                                <span className="meta-dot"></span>
                                 <span>{item.date}</span>
                             </div>
                         </div>
@@ -79,10 +90,98 @@ const MediaManager = () => {
             </div>
 
             <style>{`
-                .text-brand-red { color: var(--brand-red); }
-                .bg-brand-red { background-color: var(--brand-red); }
-                .focus\\:border-brand-red:focus { border-color: var(--brand-red); }
-                .aspect-square { aspect-ratio: 1 / 1; }
+                .premium-media-wrapper { padding: 1rem 0; }
+                
+                .media-header { 
+                    display: flex; justify-content: space-between; align-items: center; 
+                    margin-bottom: 2.5rem; 
+                }
+                .header-info h2 { font-size: 1.8rem; font-weight: 800; color: #0f172a; margin-bottom: 0.3rem; }
+                .header-info p { color: #64748b; font-size: 1rem; }
+                
+                .btn-premium-upload {
+                    background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+                    color: white; padding: 0.8rem 1.5rem; border-radius: 14px;
+                    display: flex; align-items: center; gap: 0.8rem;
+                    font-weight: 800; font-size: 0.95rem;
+                    box-shadow: 0 10px 25px rgba(239, 68, 68, 0.2);
+                    transition: all 0.3s;
+                    cursor: pointer; border: none;
+                }
+                .btn-premium-upload:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(239, 68, 68, 0.3); }
+
+                /* TOOLBAR LUX */
+                .premium-toolbar-lux {
+                    background: white; border-radius: 20px; padding: 1rem 1.5rem;
+                    border: 1px solid #f1f5f9; display: flex; justify-content: space-between;
+                    align-items: center; margin-bottom: 2.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+                }
+                .search-box-lux { position: relative; width: 320px; }
+                .search-icon { position: absolute; left: 1.2rem; top: 1rem; color: #94a3b8; }
+                .search-input-lux {
+                    width: 100%; border: 1px solid #e2e8f0; border-radius: 12px;
+                    padding: 0.8rem 1rem 0.8rem 3.2rem; font-size: 0.9rem; font-weight: 500;
+                    transition: all 0.3s; background: #f8fafc;
+                }
+                .search-input-lux:focus { outline: none; border-color: #ef4444; background: white; box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.05); }
+
+                .filter-actions-lux { display: flex; align-items: center; gap: 1.5rem; }
+                .filter-btn-lux {
+                    display: flex; align-items: center; gap: 0.6rem;
+                    background: #f1f5f9; border: none; padding: 0.7rem 1.2rem;
+                    border-radius: 12px; font-weight: 700; color: #475569; font-size: 0.9rem;
+                    cursor: pointer; transition: all 0.2s;
+                }
+                .filter-btn-lux:hover { background: #e2e8f0; color: #0f172a; }
+
+                /* MEDIA GRID */
+                .premium-media-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                    gap: 2rem;
+                }
+                .media-card-lux {
+                    background: white; border-radius: 24px; overflow: hidden;
+                    border: 1px solid #f1f5f9; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                    position: relative; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+                }
+                .media-card-lux:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+                
+                .media-preview-lux { aspect-ratio: 16/10; position: relative; overflow: hidden; background: #f8fafc; }
+                .media-preview-lux img { width: 100%; height: 100%; object-cover: cover; transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+                .media-card-lux:hover .media-preview-lux img { scale: 1.1; }
+
+                .media-overlay-lux {
+                    position: absolute; inset: 0; background: rgba(15, 23, 42, 0.4);
+                    backdrop-filter: blur(2px); opacity: 0; transition: all 0.3s;
+                    display: flex; items-center: center; justify-content: center;
+                }
+                .media-card-lux:hover .media-overlay-lux { opacity: 1; display: flex; align-items: center; }
+                
+                .overlay-actions { display: flex; gap: 1rem; }
+                .icon-btn-lux {
+                    width: 44px; height: 44px; border-radius: 14px;
+                    display: flex; align-items: center; justify-content: center;
+                    border: none; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+                .icon-btn-lux.preview { background: white; color: #0f172a; }
+                .icon-btn-lux.preview:hover { scale: 1.1; background: #ef4444; color: white; }
+                .icon-btn-lux.delete { background: rgba(239, 68, 68, 0.9); color: white; }
+                .icon-btn-lux.delete:hover { scale: 1.1; background: #ef4444; box-shadow: 0 8px 15px rgba(239, 68, 68, 0.3); }
+
+                .media-info-lux { padding: 1.2rem; }
+                .file-name { 
+                    display: block; font-weight: 700; color: #0f172a; font-size: 0.9rem; 
+                    margin-bottom: 0.4rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+                }
+                .file-meta { display: flex; align-items: center; gap: 0.6rem; color: #94a3b8; font-size: 0.75rem; font-weight: 600; }
+                .meta-dot { width: 3px; height: 3px; background: #cbd5e1; border-radius: 50%; }
+
+                @media (max-width: 768px) {
+                    .media-header { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+                    .premium-toolbar-lux { flex-direction: column; gap: 1rem; }
+                    .search-box-lux { width: 100%; }
+                }
             `}</style>
         </div>
     );

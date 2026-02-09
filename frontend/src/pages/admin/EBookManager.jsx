@@ -27,14 +27,15 @@ const EBookManager = () => {
     const fetchEbooks = async () => {
         try {
             const token = localStorage.getItem(`${keyPrefix}token`);
-            const resp = await axios.get('http://127.0.0.1:5005/api/admin/ebooks', {
+            const apiUrl = `http://${window.location.hostname}:5005/api/admin/ebooks`;
+            const resp = await axios.get(apiUrl, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             // Since there's no specific admin route to list all yet (except public), 
             // the backend currently returns public ones. This acts as a placeholder.
             setEbooks(resp.data);
         } catch (err) {
-            console.error(err);
+            console.error('Failed to fetch ebooks:', err);
         } finally {
             setLoading(false);
         }
@@ -44,13 +45,14 @@ const EBookManager = () => {
         e.preventDefault();
         try {
             const token = localStorage.getItem(`${keyPrefix}token`);
-            await axios.post('http://127.0.0.1:5005/api/admin/ebooks', formData, {
+            const apiUrl = `http://${window.location.hostname}:5005/api/admin/ebooks`;
+            await axios.post(apiUrl, formData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setShowForm(false);
             fetchEbooks();
         } catch (err) {
-            console.error(err);
+            console.error('Failed to save ebook:', err);
         }
     };
 

@@ -175,3 +175,49 @@
 [2026-02-09T09:51:50.943Z] Matches found: 1
 [2026-02-09T09:51:50.944Z] Checking user from users, role: Penulis
 [2026-02-09T09:51:51.024Z] Password valid: true
+[2026-02-09T11:05:45.512Z] Server running on http://0.0.0.0:5005 (MySQL Mode)
+[2026-02-09T11:05:54.645Z] Stats request from User ID: 4, Role: Penulis
+[2026-02-09T11:05:54.646Z] Fetching author stats for ID: 4...
+[2026-02-09T11:05:54.678Z] Author stats successfully fetched.
+[2026-02-09T11:06:02.908Z] Stats request from User ID: 1, Role: Super Admin
+[2026-02-09T11:06:02.908Z] Fetching global stats...
+[2026-02-09T11:06:02.919Z] Table communications missing or error: Table 'ayaka_db.communications' doesn't exist
+[2026-02-09T11:06:02.919Z] Global stats successfully fetched.
+[2026-02-09T11:06:47.615Z] Stats request from User ID: 1, Role: Super Admin
+[2026-02-09T11:06:47.616Z] Fetching global stats...
+[2026-02-09T11:06:47.624Z] Table communications missing or error: Table 'ayaka_db.communications' doesn't exist
+[2026-02-09T11:06:47.625Z] Global stats successfully fetched.
+[2026-02-09T11:06:47.627Z] Stats request from User ID: 1, Role: Super Admin
+[2026-02-09T11:06:47.627Z] Fetching global stats...
+[2026-02-09T11:06:47.630Z] Table communications missing or error: Table 'ayaka_db.communications' doesn't exist
+[2026-02-09T11:06:47.631Z] Global stats successfully fetched.
+[2026-02-09T11:07:01.370Z] Stats request from User ID: 4, Role: Penulis
+[2026-02-09T11:07:01.370Z] Fetching author stats for ID: 4...
+[2026-02-09T11:07:01.374Z] Author stats successfully fetched.
+[2026-02-09T11:07:01.376Z] Stats request from User ID: 4, Role: Penulis
+[2026-02-09T11:07:01.376Z] Fetching author stats for ID: 4...
+[2026-02-09T11:07:01.379Z] Author stats successfully fetched.
+[2026-02-09T11:08:58.113Z] Stats request from User ID: 1, Role: Super Admin
+[2026-02-09T11:08:58.114Z] Fetching global stats...
+[2026-02-09T11:08:58.119Z] Table communications missing or error: Table 'ayaka_db.communications' doesn't exist
+[2026-02-09T11:08:58.120Z] Global stats successfully fetched.
+[2026-02-09T11:08:58.122Z] Stats request from User ID: 1, Role: Super Admin
+[2026-02-09T11:08:58.122Z] Fetching global stats...
+[2026-02-09T11:08:58.125Z] Table communications missing or error: Table 'ayaka_db.communications' doesn't exist
+[2026-02-09T11:08:58.125Z] Global stats successfully fetched.
+[2026-02-09T11:09:31.501Z] Stats request from User ID: 1, Role: Super Admin
+[2026-02-09T11:09:31.504Z] Fetching global stats...
+[2026-02-09T11:09:31.514Z] Table communications missing or error: Table 'ayaka_db.communications' doesn't exist
+[2026-02-09T11:09:31.515Z] Global stats successfully fetched.
+[2026-02-09T11:09:31.517Z] Stats request from User ID: 1, Role: Super Admin
+[2026-02-09T11:09:31.517Z] Fetching global stats...
+[2026-02-09T11:09:31.522Z] Table communications missing or error: Table 'ayaka_db.communications' doesn't exist
+[2026-02-09T11:09:31.522Z] Global stats successfully fetched.
+[2026-02-09T11:11:30.835Z] Stats request from User ID: 1, Role: Super Admin
+[2026-02-09T11:11:30.836Z] Fetching global stats...
+[2026-02-09T11:11:30.846Z] Global stats successfully fetched.
+[2026-02-09T11:11:30.848Z] Stats request from User ID: 1, Role: Super Admin
+[2026-02-09T11:11:30.848Z] Fetching global stats...
+[2026-02-09T11:11:30.853Z] Global stats successfully fetched.
+[2026-02-09T11:12:21.148Z] Server running on http://0.0.0.0:5005 (MySQL Mode)
+[2026-02-09T11:15:29.001Z] Server running on http://0.0.0.0:5005 (MySQL Mode)

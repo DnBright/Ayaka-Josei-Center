@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Mail, Phone, MapPin, Clock, Send, Shield, Info, Instagram, Facebook, MessageCircle, ChevronRight, CheckCircle2 } from 'lucide-react';
 
 const ContactPage = ({ content }) => {
@@ -10,6 +11,7 @@ const ContactPage = ({ content }) => {
         message: ''
     });
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -25,12 +27,21 @@ const ContactPage = ({ content }) => {
 
     if (!data) return <div className="contact-loader">Initializing Concierge...</div>;
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Simulation of submission
-        setIsSubmitted(true);
-        setTimeout(() => setIsSubmitted(false), 5000);
-        setFormData({ name: '', email: '', subject: '', message: '' });
+        setLoading(true);
+        try {
+            const apiUrl = `http://${window.location.hostname}:5005/api/communications`;
+            await axios.post(apiUrl, formData);
+            setIsSubmitted(true);
+            setTimeout(() => setIsSubmitted(false), 5000);
+            setFormData({ name: '', email: '', subject: '', message: '' });
+        } catch (error) {
+            console.error('Error sending message:', error);
+            alert('Gagal mengirim pesan. Silakan coba lagi nanti.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleChange = (e) => {

@@ -22,12 +22,13 @@ const ArticleManager = () => {
     const fetchArticles = async () => {
         try {
             const token = localStorage.getItem(`${keyPrefix}token`);
-            const resp = await axios.get('http://127.0.0.1:5005/api/admin/posts', {
+            const apiUrl = `http://${window.location.hostname}:5005/api/admin/posts`;
+            const resp = await axios.get(apiUrl, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setArticles(resp.data);
         } catch (err) {
-            console.error(err);
+            console.error('Failed to fetch articles:', err);
         } finally {
             setLoading(false);
         }

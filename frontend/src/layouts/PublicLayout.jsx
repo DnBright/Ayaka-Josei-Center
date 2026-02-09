@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import LanguageSelector from '../components/LanguageSelector';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
+import ChatBox from '../components/ChatBox';
 
 const PublicLayout = ({ content }) => {
     return (
@@ -15,6 +16,7 @@ const PublicLayout = ({ content }) => {
             <Footer content={content?.kontak} />
             <LanguageSelector />
             <FloatingWhatsApp />
+            <ChatBox />
         </>
     );
 };

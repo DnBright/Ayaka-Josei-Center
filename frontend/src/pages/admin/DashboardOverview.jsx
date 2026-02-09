@@ -16,18 +16,25 @@ const DashboardOverview = ({ content }) => {
         const fetchStats = async () => {
             try {
                 const token = localStorage.getItem(`${keyPrefix}token`);
-                const resp = await axios.get('http://127.0.0.1:5005/api/admin/stats', {
+                // Use a more robust URL approach or relative if proxy is set, 
+                // but sticking to the current port pattern for consistency with other parts of the app
+                const apiUrl = `http://${window.location.hostname}:5005/api/admin/stats`;
+                const resp = await axios.get(apiUrl, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-                setStats(resp.data);
+
+                if (resp.data) {
+                    setStats(resp.data);
+                }
             } catch (err) {
                 console.error('Failed to fetch dashboard stats:', err);
+                // Optionally set a flag for connection error UI
             } finally {
                 setLoading(false);
             }
         };
         fetchStats();
-    }, []);
+    }, [keyPrefix]);
 
     const adminStats = [
         { label: 'Total Pesan', value: stats?.totalMessages ?? 0, icon: <MessageSquare size={20} />, color: '#3b82f6', bg: 'rgba(59, 130, 246, 0.1)' },
@@ -97,19 +104,26 @@ const DashboardOverview = ({ content }) => {
                         <table className="premium-table">
                             <thead>
                                 <tr>
-                                    <th>Judul Artikel</th>
-                                    <th>Kategori</th>
-                                    <th>Views</th>
-                                    <th>Status</th>
+                                    <th style={{ width: '45%' }}>Judul Artikel</th>
+                                    <th style={{ width: '25%' }}>Kategori</th>
+                                    <th style={{ width: '15%' }}>Views</th>
+                                    <th style={{ width: '15%' }}>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {stats?.topPosts?.length > 0 ? stats.topPosts.map(post => (
                                     <tr key={post.id}>
-                                        <td className="font-bold text-slate-700">{post.title}</td>
-                                        <td><span className="table-tag">{post.category}</span></td>
+                                        <td className="font-bold text-slate-700">
+                                            <div className="title-truncate" title={post.title}>{post.title}</div>
+                                        </td>
+                                        <td><span className="table-tag">{post.category || 'Uncategorized'}</span></td>
                                         <td className="text-blue-600 font-bold">{post.views}</td>
-                                        <td><span className="dot-active"></span> Terbit</td>
+                                        <td>
+                                            <div className="status-cell">
+                                                <span className="dot-active"></span>
+                                                <span className="status-text">Terbit</span>
+                                            </div>
+                                        </td>
                                     </tr>
                                 )) : (
                                     <tr><td colSpan="4" className="text-center py-8 opacity-50">Belum ada data artikel.</td></tr>
@@ -129,15 +143,17 @@ const DashboardOverview = ({ content }) => {
                         <table className="premium-table">
                             <thead>
                                 <tr>
-                                    <th>Judul E-Book</th>
-                                    <th>Views</th>
-                                    <th>Interest</th>
+                                    <th style={{ width: '60%' }}>Judul E-Book</th>
+                                    <th style={{ width: '15%' }}>Views</th>
+                                    <th style={{ width: '25%' }}>Interest</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {stats?.topEbooks?.length > 0 ? stats.topEbooks.map(ebook => (
                                     <tr key={ebook.id}>
-                                        <td className="font-bold text-slate-700">{ebook.title}</td>
+                                        <td className="font-bold text-slate-700">
+                                            <div className="title-truncate" title={ebook.title}>{ebook.title}</div>
+                                        </td>
                                         <td className="text-purple-600 font-bold">{ebook.views}</td>
                                         <td>
                                             <div className="interest-meter">
@@ -185,51 +201,73 @@ const DashboardOverview = ({ content }) => {
                 .stats-grid-premium {
                     display: grid;
                     grid-template-columns: repeat(4, 1fr);
-                    gap: 2rem;
+                    gap: 1.5rem;
                     margin-bottom: 3rem;
                 }
                 .premium-stat-card {
-                    background: white; padding: 2rem; border-radius: 24px;
+                    background: white; padding: 1.5rem; border-radius: 20px;
                     border: 1px solid #f1f5f9; position: relative;
                     transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
                 }
                 .premium-stat-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
                 .stat-icon-box {
-                    width: 48px; height: 48px; border-radius: 14px;
+                    width: 44px; height: 44px; border-radius: 12px;
                     display: flex; align-items: center; justify-content: center;
-                    margin-bottom: 1.5rem;
+                    margin-bottom: 1.2rem;
                 }
-                .stat-content .val { display: block; font-size: 2rem; font-weight: 900; color: #0f172a; margin-bottom: 0.3rem; }
-                .stat-content .lab { color: #94a3b8; font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+                .stat-content .val { display: block; font-size: 1.8rem; font-weight: 900; color: #0f172a; margin-bottom: 0.2rem; }
+                .stat-content .lab { color: #94a3b8; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.2px; }
                 .stat-trend {
-                    position: absolute; top: 2rem; right: 2rem;
+                    position: absolute; top: 1.5rem; right: 1.5rem;
                     display: flex; align-items: center; gap: 0.4rem;
-                    color: #10b981; font-size: 0.75rem; font-weight: 800;
+                    color: #10b981; font-size: 0.7rem; font-weight: 800;
                 }
 
                 /* ANALYTICS DETAILS */
                 .analytics-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-                .details-card { background: white; border-radius: 24px; border: 1px solid #f1f5f9; overflow: hidden; }
+                .details-card { background: white; border-radius: 24px; border: 1px solid #f1f5f9; overflow: hidden; display: flex; flex-direction: column; }
                 .card-head { 
                     padding: 1.5rem 2rem; border-bottom: 1px solid #f1f5f9;
                     display: flex; justify-content: space-between; align-items: center;
                 }
-                .card-head h3 { font-size: 1.1rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 0.8rem; }
-                .badge-details { background: #f1f5f9; color: #64748b; padding: 4px 10px; border-radius: 100px; font-size: 0.75rem; font-weight: 700; }
+                .card-head h3 { font-size: 1rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 0.8rem; }
+                .badge-details { background: #f1f5f9; color: #64748b; padding: 4px 10px; border-radius: 100px; font-size: 0.7rem; font-weight: 700; }
 
-                .premium-table { width: 100%; border-collapse: collapse; }
-                .premium-table th { text-align: left; padding: 1.2rem 2rem; background: #fafafa; font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; font-weight: 800; border-bottom: 1px solid #f1f5f9; }
-                .premium-table td { padding: 1.2rem 2rem; border-bottom: 1px solid #f8fafc; font-size: 0.95rem; vertical-align: middle; }
+                .table-responsive { overflow-x: auto; }
+                .premium-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+                .premium-table th { 
+                    text-align: left; padding: 1rem 1.5rem; background: #fafafa; 
+                    font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; 
+                    letter-spacing: 1px; font-weight: 800; border-bottom: 1px solid #f1f5f9; 
+                }
+                .premium-table td { padding: 1rem 1.5rem; border-bottom: 1px solid #f8fafc; font-size: 0.85rem; vertical-align: middle; }
                 .premium-table tr:last-child td { border-bottom: none; }
-                .table-tag { background: #eff6ff; color: #3b82f6; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; }
-                .dot-active { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #10b981; margin-right: 8px; }
+                
+                .title-truncate {
+                    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+                    max-width: 100%; font-weight: 700; color: #334155;
+                }
+                
+                .table-tag { background: #eff6ff; color: #3b82f6; padding: 3px 10px; border-radius: 100px; font-size: 0.7rem; font-weight: 700; white-space: nowrap; }
+                .dot-active { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #22c55e; flex-shrink: 0; }
+                .status-cell { display: flex; align-items: center; gap: 8px; }
+                .status-text { font-size: 0.75rem; color: #64748b; font-weight: 600; }
 
                 .interest-meter { width: 100%; height: 6px; background: #f1f5f9; border-radius: 100px; overflow: hidden; }
                 .meter-fill { height: 100%; border-radius: 100px; transition: width 1s ease; }
 
+                @media (max-width: 1400px) {
+                    .premium-table th, .premium-table td { padding: 1rem; }
+                }
+
                 @media (max-width: 1200px) {
                     .stats-grid-premium { grid-template-columns: 1fr 1fr; }
                     .analytics-details-grid { grid-template-columns: 1fr; }
+                }
+
+                @media (max-width: 640px) {
+                    .stats-grid-premium { grid-template-columns: 1fr; }
+                    .dashboard-header-premium { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
                 }
             `}</style>
         </div>

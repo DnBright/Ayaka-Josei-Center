@@ -14,86 +14,84 @@ const PageManager = () => {
     ];
 
     return (
-        <div className="page-manager">
-            <div className="mb-6">
-                <h2 className="text-xl font-bold mb-2">Manajemen Halaman</h2>
-                <p className="text-secondary">Pilih halaman yang ingin Anda edit kontennya.</p>
+        <div className="premium-manager-wrapper">
+            <div className="manager-header">
+                <div className="header-info">
+                    <h2>Manajemen Konten Halaman</h2>
+                    <p>Pilih dan modifikasi konten visual maupun tekstual pada setiap halaman website.</p>
+                </div>
             </div>
 
-            <div className="grid grid-2">
+            <div className="premium-page-grid">
                 {pages.map((page) => (
-                    <Link key={page.id} to={page.path} className="page-card glass-card">
-                        <div className="icon-wrapper">
+                    <Link key={page.id} to={page.path} className="page-card-lux group">
+                        <div className="page-icon-lux">
                             <FileText size={24} />
                         </div>
-                        <div className="card-content">
-                            <h3 className="font-semibold text-lg">{page.title}</h3>
-                            <p className="text-sm text-secondary">{page.desc}</p>
+                        <div className="page-content-lux">
+                            <h3>{page.title}</h3>
+                            <p>{page.desc}</p>
                         </div>
-                        <div className="action-icon">
-                            <div className="btn-icon">
-                                <Edit3 size={18} />
-                            </div>
+                        <div className="page-arrow-lux">
+                            <ChevronRight size={20} />
                         </div>
                     </Link>
                 ))}
             </div>
 
             <style>{`
-                .page-card {
-                    display: flex;
-                    align-items: center;
+                .premium-manager-wrapper { padding: 1rem 0; }
+                
+                .manager-header { 
+                    display: flex; justify-content: space-between; align-items: center; 
+                    margin-bottom: 3rem; 
+                }
+                .header-info h2 { font-size: 1.8rem; font-weight: 800; color: #0f172a; margin-bottom: 0.3rem; }
+                .header-info p { color: #64748b; font-size: 1rem; }
+
+                .premium-page-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
                     gap: 1.5rem;
-                    padding: 1.5rem;
-                    border-radius: 12px;
-                    transition: all 0.2s ease;
-                    text-decoration: none;
-                    color: inherit;
-                    border: 1px solid transparent;
                 }
 
-                .page-card:hover {
-                    transform: translateY(-2px);
-                    border-color: var(--brand-red);
-                    background: white;
-                    box-shadow: 0 10px 25px -5px rgba(218, 41, 28, 0.1);
+                .page-card-lux {
+                    background: white; border-radius: 20px; padding: 1.8rem;
+                    display: flex; align-items: center; gap: 1.5rem;
+                    border: 1px solid #f1f5f9; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    text-decoration: none; color: inherit;
+                    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
                 }
 
-                .icon-wrapper {
-                    width: 48px;
-                    height: 48px;
-                    background: #fdf2f2;
-                    border-radius: 10px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    color: var(--brand-red);
+                .page-card-lux:hover {
+                    transform: translateY(-5px);
+                    border-color: #fee2e2;
+                    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
                 }
 
-                .card-content {
-                    flex: 1;
+                .page-icon-lux {
+                    width: 56px; height: 56px; background: #fdf2f2;
+                    color: #ef4444; border-radius: 16px;
+                    display: flex; align-items: center; justify-content: center;
+                    transition: all 0.3s;
+                }
+                .page-card-lux:hover .page-icon-lux {
+                    background: #ef4444; color: white; scale: 1.05;
                 }
 
-                .action-icon {
-                    opacity: 0;
-                    transform: translateX(-10px);
-                    transition: all 0.2s;
+                .page-content-lux { flex: 1; }
+                .page-content-lux h3 { font-size: 1.1rem; font-weight: 800; color: #0f172a; margin-bottom: 4px; }
+                .page-content-lux p { font-size: 0.85rem; color: #64748b; font-weight: 500; }
+
+                .page-arrow-lux {
+                    color: #cbd5e1; transition: all 0.3s; transform: translateX(-10px); opacity: 0;
+                }
+                .page-card-lux:hover .page-arrow-lux {
+                    opacity: 1; transform: translateX(0); color: #ef4444;
                 }
 
-                .page-card:hover .action-icon {
-                    opacity: 1;
-                    transform: translateX(0);
-                }
-
-                .btn-icon {
-                    width: 36px;
-                    height: 36px;
-                    border-radius: 50%;
-                    background: var(--brand-red);
-                    color: white;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
+                @media (max-width: 640px) {
+                    .premium-page-grid { grid-template-columns: 1fr; }
                 }
             `}</style>
         </div>

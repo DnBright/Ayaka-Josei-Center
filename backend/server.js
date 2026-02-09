@@ -346,13 +346,58 @@ app.post('/api/analytics/track', async (req, res) => {
     }
 });
 
+// --- COMMUNICATIONS / CONTACT API ---
+app.get('/api/admin/communications', authenticateToken, authorizeRoles('Super Admin', 'Editor'), async (req, res) => {
+    try {
+        const [rows] = await pool.query("SELECT * FROM communications ORDER BY created_at DESC");
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.post('/api/communications', async (req, res) => {
+    const { name, email, subject, message } = req.body;
+    try {
+        const [result] = await pool.execute(
+            "INSERT INTO communications (name, email, subject, message, status) VALUES (?, ?, ?, ?, 'unread')",
+            [name, email, subject, message]
+        );
+        res.json({ id: result.insertId, message: 'Message sent successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.patch('/api/admin/communications/:id/status', authenticateToken, authorizeRoles('Super Admin', 'Editor'), async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+    try {
+        await pool.execute("UPDATE communications SET status = ? WHERE id = ?", [status, id]);
+        res.json({ message: 'Status updated successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.delete('/api/admin/communications/:id', authenticateToken, authorizeRoles('Super Admin', 'Editor'), async (req, res) => {
+    const { id } = req.params;
+    try {
+        await pool.execute("DELETE FROM communications WHERE id = ?", [id]);
+        res.json({ message: 'Message deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 app.get('/api/admin/stats', authenticateToken, async (req, res) => {
     try {
         const { role, id } = req.user;
+        log(`Stats request from User ID: ${id}, Role: ${role}`);
         let stats = {};
 
         if (role === 'Super Admin' || role === 'Editor') {
-            // Global Stats
+            log('Fetching global stats...');
             const [visits] = await pool.query("SELECT metric_value FROM site_stats WHERE metric_name = 'total_visits'");
             const [postViews] = await pool.query("SELECT SUM(views) as total FROM posts");
             const [ebookViews] = await pool.query("SELECT SUM(views) as total FROM ebooks");
@@ -366,7 +411,7 @@ app.get('/api/admin/stats', authenticateToken, async (req, res) => {
             try {
                 const [msgRows] = await pool.query("SELECT COUNT(*) as count FROM communications");
                 totalMessages = msgRows[0]?.count || 0;
-            } catch (e) { /* ignore if table missing */ }
+            } catch (e) { log(`Table communications missing or error: ${e.message}`); }
 
             stats = {
                 totalVisits: visits[0]?.metric_value || 0,
@@ -377,8 +422,9 @@ app.get('/api/admin/stats', authenticateToken, async (req, res) => {
                 topPosts: postDetails,
                 topEbooks: ebookDetails
             };
+            log('Global stats successfully fetched.');
         } else if (role === 'Penulis') {
-            // Specific Author Stats
+            log(`Fetching author stats for ID: ${id}...`);
             const [myPostViews] = await pool.query("SELECT SUM(views) as total FROM posts WHERE author_id = ?", [id]);
             const [myPosts] = await pool.query("SELECT COUNT(*) as count FROM posts WHERE author_id = ?", [id]);
             const [myEbooks] = await pool.query("SELECT COUNT(*) as count FROM ebooks WHERE author_id = ?", [id]);
@@ -396,10 +442,12 @@ app.get('/api/admin/stats', authenticateToken, async (req, res) => {
                 topPosts: myPostDetails,
                 topEbooks: myEbookDetails
             };
+            log('Author stats successfully fetched.');
         }
 
         res.json(stats);
     } catch (err) {
+        log(`CRITICAL ERROR in /api/admin/stats: ${err.message}`);
         res.status(500).json({ error: err.message });
     }
 });
