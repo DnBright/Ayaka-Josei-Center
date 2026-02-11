@@ -58,7 +58,7 @@ const ContactPage = ({ content }) => {
                     <div className="header-content contact-reveal reveal-up">
                         <span className="brand-tag">{t('contact.hero_tag')}</span>
                         <h1>{t('contact.partnership')}</h1>
-                        <p>{t('contact.pengantar', { defaultValue: data.pengantar?.content })}</p>
+                        <p>{t('contact.pengantar')}</p>
                     </div>
                 </div>
             </header>
@@ -198,7 +198,7 @@ const ContactPage = ({ content }) => {
 
                             <div className="privacy-note">
                                 <Shield size={16} className="icon-shield" />
-                                <p>{t('contact.privasi', { defaultValue: data.privasi?.content })}</p>
+                                <p>{t('contact.privasi')}</p>
                             </div>
                         </div>
 
@@ -210,7 +210,7 @@ const ContactPage = ({ content }) => {
             <footer className="contact-footer contact-reveal reveal-up">
                 <div className="contact-container">
                     <div className="footer-quote">
-                        <h2>{t('contact.penutup', { defaultValue: data.penutup?.content })}</h2>
+                        <h2>{t('contact.penutup')}</h2>
                         <div className="quote-line"></div>
                     </div>
                 </div>

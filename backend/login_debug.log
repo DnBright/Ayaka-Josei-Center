@@ -359,3 +359,4 @@
     at console.value (node:internal/console/constructor:313:16)
     at console.error (node:internal/console/constructor:444:26)
     at app.logerror (/Users/mac/Ayaka Josei Center/Ayaka-Josei-Center/backend/node_modules/express/lib/application.js:617:43)
+[2026-02-11T12:43:33.677Z] Server running on http://0.0.0.0:5005 (MySQL Mode)

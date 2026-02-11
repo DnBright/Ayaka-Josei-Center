@@ -117,7 +117,7 @@ const BlogDetailPage = ({ content }) => {
                                 <Lock size={48} className="lock-icon-lg" />
                                 <h2>{t('blog.member_content')}</h2>
                                 <p>{t('blog.member_desc')}</p>
-                                <Link to="/member/login" className="btn-login-content">{t('nav.masuk')} MEMBER</Link>
+                                <Link to="/member/login" className="btn-login-content">{t('nav.login_member')}</Link>
                             </div>
                         ) : (
                             <>
@@ -144,7 +144,7 @@ const BlogDetailPage = ({ content }) => {
                             <div className="widget-box">
                                 <h3 className="widget-title">
                                     <Zap size={18} className="icon-pulse" />
-                                    Rekomendasi
+                                    {t('blog.recommendations')}
                                 </h3>
                                 <div className="widget-line"></div>
 
@@ -160,14 +160,14 @@ const BlogDetailPage = ({ content }) => {
                                             </div>
                                         </Link>
                                     ))}
-                                    {recommendations.length === 0 && <p className="text-slate-400 text-sm">Belum ada rekomendasi lain.</p>}
+                                    {recommendations.length === 0 && <p className="text-slate-400 text-sm">{t('blog.no_recommendations')}</p>}
                                 </div>
                             </div>
 
                             <div className="widget-box promotional">
-                                <h4>Bergabunglah Menjadi Member</h4>
-                                <p>Dapatkan akses ke jurnal eksklusif dan panduan khusus wanita.</p>
-                                <Link to="/member/register" className="btn-sidebar-promo">Daftar Sekarang</Link>
+                                <h4>{t('blog.promo.title')}</h4>
+                                <p>{t('blog.promo.desc')}</p>
+                                <Link to="/member/register" className="btn-sidebar-promo">{t('nav.daftar')}</Link>
                             </div>
                         </div>
                     </aside>

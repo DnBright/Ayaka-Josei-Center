@@ -98,7 +98,7 @@ const BlogPage = ({ content }) => {
                                     className={`cat-btn-journal ${activeCategory === cat.id ? 'is-active' : ''}`}
                                     onClick={() => setActiveCategory(cat.id)}
                                 >
-                                    {cat.label}
+                                    {cat.id === 'all' ? t('galeri.category.all') : t(`blog.category.${cat.id}`)}
                                 </button>
                             ))}
                         </div>
@@ -124,7 +124,7 @@ const BlogPage = ({ content }) => {
                                                 <img src={art.image} alt={art.title} />
                                                 <span className={`card-cat-tag ${isLocked ? 'tag-locked' : ''}`}>
                                                     {isLocked && <Lock size={12} style={{ marginRight: 5 }} />}
-                                                    {art.category}
+                                                    {t(`blog.category.${art.category.toLowerCase().replace(' ', '-')}`)}
                                                 </span>
                                             </div>
                                             <div className="card-content-lux">

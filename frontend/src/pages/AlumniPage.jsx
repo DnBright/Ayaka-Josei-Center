@@ -145,8 +145,8 @@ const AlumniPage = ({ content }) => {
                                         <span className="b-tag">{t('alumni.bento.item_tag')}</span>
                                         <span className="b-author">{story.author}</span>
                                     </div>
-                                    <h3>{story.title}</h3>
-                                    <p>{story.story}</p>
+                                    <h3>{story.title === "Perjalanan Menuju Kyoto" ? t('alumni.story.kyoto.title') : story.title}</h3>
+                                    <p>{story.title === "Perjalanan Menuju Kyoto" ? t('alumni.story.kyoto.content') : story.story}</p>
                                     <button className="b-link">{t('btn.read_full_story')} <ChevronRight size={16} /></button>
                                 </div>
                                 <div className="bento-decor">

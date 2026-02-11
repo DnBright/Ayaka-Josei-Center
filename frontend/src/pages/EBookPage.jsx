@@ -13,11 +13,11 @@ const AuthModal = ({ isOpen, onClose }) => {
                 <div className="auth-icon-circle">
                     <Lock size={32} />
                 </div>
-                <h2>Akses Terbatas</h2>
-                <p>Halo! Halaman ini dikhususkan untuk <strong>Member Terdaftar</strong>. Silakan login atau daftar untuk mengakses konten lengkap dan mengunduh E-Book.</p>
+                <h2>{t('ebook.limited_access_title')}</h2>
+                <p>{t('ebook.limited_access_desc')}</p>
                 <div className="auth-actions">
-                    <Link to="/member/login" className="btn-modal-login">Login Member</Link>
-                    <Link to="/member/register" className="btn-modal-register">Daftar Sekarang</Link>
+                    <Link to="/member/login" className="btn-modal-login">{t('member.login_btn')}</Link>
+                    <Link to="/member/register" className="btn-modal-register">{t('member.reg_btn')}</Link>
                 </div>
             </div>
             <style jsx="true">{`
@@ -125,7 +125,7 @@ const EBookPage = () => {
                         {member ? (
                             <span className="badge-member">{t('ebook.active_member')}: {member.email}</span>
                         ) : (
-                            <span className="badge-guest">Mode Tamu / Guest</span>
+                            <span className="badge-guest">{t('ebook.guest_mode')}</span>
                         )}
                         <h1>{t('ebook.hero_title')} <br /><span className="text-stroke">{t('ebook.hero_subtitle')}</span></h1>
                         <p className="hero-desc">
@@ -159,7 +159,7 @@ const EBookPage = () => {
                                     <button
                                         className={`btn-download ${!member ? 'locked' : ''}`}
                                         onClick={() => handleDownloadClick(book.id, book.file_url)}
-                                        title={!member ? "Login untuk mengunduh" : "Unduh E-Book"}
+                                        title={!member ? t('ebook.login_to_download') : t('ebook.download_ebook')}
                                     >
                                         {!member ? <Lock size={18} /> : <Download size={18} />}
                                         {t('ebook.download_btn')}
