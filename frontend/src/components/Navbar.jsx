@@ -146,11 +146,11 @@ const Navbar = () => {
 
             {member ? (
               <button onClick={() => { handleLogout(); setIsOpen(false); }} className="drawer-link logout-link">
-                <LogOut size={18} /> LOGOUT
+                <LogOut size={18} /> {t('nav.logout')}
               </button>
             ) : (
               <Link to="/member/login" className="drawer-link login-link" onClick={() => setIsOpen(false)}>
-                <LogIn size={18} /> LOGIN MEMBER
+                <LogIn size={18} /> {t('nav.login_member')}
               </Link>
             )}
           </div>

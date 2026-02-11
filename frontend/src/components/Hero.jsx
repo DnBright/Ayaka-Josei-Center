@@ -86,7 +86,7 @@ const Hero = ({ content }) => {
             </div>
             <div className="glass-info">
               <h3>AJC</h3>
-              <p>TRUSTED LPK JAPAN</p>
+              <p>{t('hero.highlight_desc')}</p>
             </div>
           </div>
         </div>

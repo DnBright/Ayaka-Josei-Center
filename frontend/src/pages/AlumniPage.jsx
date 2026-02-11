@@ -59,7 +59,7 @@ const AlumniPage = ({ content }) => {
                                 {t('alumni.hero.title')}
                             </h1>
                             <div className="vangu-line-accent"></div>
-                            <p className="hero-p-lux">{data.pengantar?.content}</p>
+                            <p className="hero-p-lux">{t('alumni.pengantar', { defaultValue: data.pengantar?.content })}</p>
 
                             <div className="hero-cta-vangu">
                                 <button className="btn-vangu-dark">{t('alumni.hero.cta')}</button>
@@ -219,9 +219,9 @@ const AlumniPage = ({ content }) => {
                                 <div className="pulse-ring"></div>
                             </div>
                             <div className="vangu-trans-text">
-                                <h3>{data.transparansi?.title}</h3>
+                                <h3>{t('alumni.transparansi.title', { defaultValue: data.transparansi?.title })}</h3>
                                 <div className="vangu-trans-line"></div>
-                                <p>{data.transparansi?.content}</p>
+                                <p>{t('alumni.transparansi.content', { defaultValue: data.transparansi?.content })}</p>
                             </div>
                         </div>
                     </div>
@@ -233,7 +233,7 @@ const AlumniPage = ({ content }) => {
                 <div className="circle-container">
                     <div className="vangu-footer-inner circle-reveal reveal-up">
                         <div className="vangu-footer-decor">A</div>
-                        <h2 className="vangu-footer-h">{data.penutup?.content}</h2>
+                        <h2 className="vangu-footer-h">{t('alumni.penutup', { defaultValue: data.penutup?.content })}</h2>
                         <button className="btn-vangu-red">
                             {t('btn.join_success')} <ArrowRight size={20} />
                         </button>
