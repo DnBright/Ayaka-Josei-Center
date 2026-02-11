@@ -54,7 +54,7 @@ const LandingPage = ({ content }) => {
         };
     }, [content]);
 
-    if (!content) return null;
+    if (!content) return <div className="landing-loader">{t('splash.status') || 'Assembling Ayaka...'}</div>;
 
     return (
         <div className="landing-wrapper is-ready">
@@ -374,6 +374,8 @@ const LandingPage = ({ content }) => {
           .manfaat-grid { grid-template-columns: 1fr; }
           .alur-step { gap: 1.5rem; }
         }
+
+        .landing-loader { height: 100vh; display: flex; align-items: center; justify-content: center; font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 2rem; letter-spacing: 5px; color: #0f172a; text-transform: uppercase; }
       `}</style>
         </div>
     );

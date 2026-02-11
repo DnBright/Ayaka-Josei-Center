@@ -198,7 +198,7 @@ const AlumniPage = ({ content }) => {
                                 <div className="vangu-alumni-body">
                                     <div className="vangu-alumni-meta">
                                         <span className={`vangu-status ${al.status}`}>{al.status}</span>
-                                        <span className="vangu-year">'{al.year.slice(-2)}</span>
+                                        <span className="vangu-year">'{(al.year || '').slice(-2)}</span>
                                     </div>
                                     <h3>{al.name}</h3>
                                     <p><MapPin size={12} /> {al.location}</p>

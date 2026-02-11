@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import { Book, AlertCircle, Download, X, Lock } from 'lucide-react';
 
-const AuthModal = ({ isOpen, onClose }) => {
+const AuthModal = ({ isOpen, onClose, t }) => {
     if (!isOpen) return null;
     return (
         <div className="auth-modal-overlay">
@@ -116,7 +116,7 @@ const EBookPage = () => {
 
     return (
         <div className="ebook-wrapper">
-            <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
+            <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} t={t} />
 
             {/* Header / Hero */}
             <header className="ebook-hero">
