@@ -269,6 +269,8 @@ const Navbar = () => {
             padding: 0.6rem 1.2rem;
             border: 1px solid #e2e8f0;
             border-radius: 100px;
+            background: #ffffff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
         .btn-auth-login:hover { 
             color: #da291c; 
@@ -285,7 +287,7 @@ const Navbar = () => {
             font-size: 0.9rem;
             font-weight: 700;
             transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(218, 41, 28, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             display: flex;
             align-items: center;
             gap: 0.5rem;

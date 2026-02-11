@@ -1,9 +1,12 @@
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const mysql = require('mysql2/promise');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const path = require('path');
+const { body, validationResult } = require('express-validator');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const fs = require('fs');
@@ -21,8 +24,64 @@ const log = (msg) => {
     console.log(`[${time}] ${msg}`);
 };
 
-app.use(cors());
-app.use(express.json());
+app.use(helmet());
+
+// Improved CORS Policy
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'http://localhost:3000',
+    process.env.FRONTEND_URL
+].filter(Boolean);
+
+app.use(cors({
+    origin: (origin, callback) => {
+        log(`CORS check for origin: ${origin}`);
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            log(`CORS REJECTED: ${origin} not in [${allowedOrigins.join(', ')}]`);
+            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+            return callback(new Error(msg), false);
+        }
+        log(`CORS ALLOWED: ${origin}`);
+        return callback(null, true);
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+}));
+
+app.use(express.json({ limit: '10kb' })); // Limit request size to 10kb to prevent DOS
+
+// Rate Limiting
+const generalLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    message: { error: 'Terlalu banyak permintaan dari IP ini, silakan coba lagi nanti.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 10, // limit each IP to 10 login attempts per windowMs
+    message: { error: 'Terlalu banyak upaya login, silakan coba lagi dalam 15 menit.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+const analyticsLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 50, // limit each IP to 50 tracking requests per windowMs
+    message: { error: 'Terlalu banyak permintaan pelacakan.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+app.use('/api/', generalLimiter);
+app.use('/api/auth/login', loginLimiter);
+app.use('/api/analytics/', analyticsLimiter);
 
 // Health Check
 app.get('/ping', (req, res) => {
@@ -376,18 +435,30 @@ app.get('/api/admin/communications', authenticateToken, authorizeRoles('Super Ad
     }
 });
 
-app.post('/api/communications', async (req, res) => {
-    const { name, email, subject, message } = req.body;
-    try {
-        const [result] = await pool.execute(
-            "INSERT INTO communications (name, email, subject, message, status) VALUES (?, ?, ?, ?, 'unread')",
-            [name, email, subject, message]
-        );
-        res.json({ id: result.insertId, message: 'Message sent successfully' });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
+app.post('/api/communications',
+    [
+        body('name').trim().isLength({ min: 2, max: 100 }).escape(),
+        body('email').isEmail().normalizeEmail(),
+        body('subject').trim().isLength({ min: 2, max: 200 }).escape(),
+        body('message').trim().isLength({ min: 10, max: 2000 }).escape()
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const { name, email, subject, message } = req.body;
+        try {
+            const [result] = await pool.execute(
+                "INSERT INTO communications (name, email, subject, message, status) VALUES (?, ?, ?, ?, 'unread')",
+                [name, email, subject, message]
+            );
+            res.json({ id: result.insertId, message: 'Message sent successfully' });
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    });
 
 app.get('/api/admin/communications/unread-count', authenticateToken, authorizeRoles('Super Admin', 'Editor'), async (req, res) => {
     try {

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
+import DOMPurify from 'dompurify';
 import { ArrowLeft, Calendar, Tag, Info, User, Share2, Facebook, Twitter, Link as LinkIcon, Lock, Eye, Zap } from 'lucide-react';
 
 const BlogDetailPage = ({ content }) => {
@@ -120,7 +121,10 @@ const BlogDetailPage = ({ content }) => {
                             </div>
                         ) : (
                             <>
-                                <div className="read-content-main" dangerouslySetInnerHTML={{ __html: article.content }}></div>
+                                <div
+                                    className="read-content-main"
+                                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.content) }}
+                                ></div>
 
                                 <div className="read-share-lux">
                                     <span>{t('blog.share')}</span>

@@ -56,9 +56,9 @@ const ContactPage = ({ content }) => {
             <header className="contact-header">
                 <div className="contact-container">
                     <div className="header-content contact-reveal reveal-up">
-                        <span className="brand-tag">CONTACT US</span>
-                        <h1>{t('contact.partnership') || 'Partnership & Collaboration'}</h1>
-                        <p>{data.pengantar?.content}</p>
+                        <span className="brand-tag">{t('contact.hero_tag')}</span>
+                        <h1>{t('contact.partnership')}</h1>
+                        <p>{t('contact.pengantar', { defaultValue: data.pengantar?.content })}</p>
                     </div>
                 </div>
             </header>
@@ -198,7 +198,7 @@ const ContactPage = ({ content }) => {
 
                             <div className="privacy-note">
                                 <Shield size={16} className="icon-shield" />
-                                <p>{data.privasi?.content || 'Data Anda aman bersama kami.'}</p>
+                                <p>{t('contact.privasi', { defaultValue: data.privasi?.content })}</p>
                             </div>
                         </div>
 
@@ -210,7 +210,7 @@ const ContactPage = ({ content }) => {
             <footer className="contact-footer contact-reveal reveal-up">
                 <div className="contact-container">
                     <div className="footer-quote">
-                        <h2>{data.penutup?.content}</h2>
+                        <h2>{t('contact.penutup', { defaultValue: data.penutup?.content })}</h2>
                         <div className="quote-line"></div>
                     </div>
                 </div>

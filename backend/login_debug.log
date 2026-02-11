@@ -339,3 +339,23 @@
 [2026-02-09T18:37:51.735Z] Stats request from User ID: 4, Role: Penulis
 [2026-02-09T18:37:51.735Z] Fetching author stats for ID: 4...
 [2026-02-09T18:37:51.737Z] Author stats successfully fetched.
+[2026-02-11T12:18:57.179Z] Server running on http://0.0.0.0:5005 (MySQL Mode)
+[2026-02-11T12:19:04.611Z] Ping received
+[2026-02-11T12:20:51.675Z] Server running on http://0.0.0.0:5005 (MySQL Mode)
+[2026-02-11T12:22:38.977Z] Server running on http://0.0.0.0:5005 (MySQL Mode)
+[2026-02-11T12:24:27.700Z] Server running on http://0.0.0.0:5005 (MySQL Mode)
+[2026-02-11T12:30:11.825Z] Server running on http://0.0.0.0:5005 (MySQL Mode)
+[2026-02-11T12:30:34.038Z] Server running on http://0.0.0.0:5005 (MySQL Mode)
+[2026-02-11T12:31:48.155Z] Server running on http://0.0.0.0:5005 (MySQL Mode)
+[2026-02-11T12:31:57.053Z] Uncaught Exception: write EPIPE
+[2026-02-11T12:31:57.055Z] Error: write EPIPE
+    at afterWriteDispatched (node:internal/stream_base_commons:159:15)
+    at writeGeneric (node:internal/stream_base_commons:150:3)
+    at Socket._writeGeneric (node:net:966:11)
+    at Socket._write (node:net:978:8)
+    at writeOrBuffer (node:internal/streams/writable:570:12)
+    at _write (node:internal/streams/writable:499:10)
+    at Writable.write (node:internal/streams/writable:508:10)
+    at console.value (node:internal/console/constructor:313:16)
+    at console.error (node:internal/console/constructor:444:26)
+    at app.logerror (/Users/mac/Ayaka Josei Center/Ayaka-Josei-Center/backend/node_modules/express/lib/application.js:617:43)
