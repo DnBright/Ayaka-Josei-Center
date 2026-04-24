@@ -66,9 +66,8 @@ async function initDB() {
         const [admins] = await pool.query('SELECT * FROM admins LIMIT 1');
         if (admins.length === 0) {
             console.log('Seeding default admin user...');
-            // Note: If your app uses bcrypt, you should hash this. 
-            // Based on your previous setup, we'll start with plain text or simple hash if needed.
-            await pool.query("INSERT INTO admins (username, password, role) VALUES ('admin@gmail.com', 'password', 'Super Admin')");
+            const hashedPassword = await bcrypt.hash('password', 10);
+            await pool.query("INSERT INTO admins (username, password, role) VALUES (?, ?, ?)", ['admin@gmail.com', hashedPassword, 'Super Admin']);
         }
 
         db = {
