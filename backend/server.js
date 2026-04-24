@@ -12,7 +12,7 @@ const { open } = require('sqlite');
 // --- CPANEL MODULE FIX (MANDATORY) ---
 // Memaksa Node.js mencari library di folder Virtualenv cPanel
 try {
-    module.paths.push('/home/they9636/nodevenv/ayaka_backend/18/lib/node_modules');
+    module.paths.push('/home/ptst2828/nodevenv/ayaka_backend/18/lib/node_modules');
 } catch (e) { }
 
 require('dotenv').config({ path: path.join(__dirname, '.env') });
