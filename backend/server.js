@@ -40,6 +40,16 @@ async function initDB() {
         // Test connection
         await pool.query('SELECT 1');
         console.log('Using MySQL database.');
+
+        // --- AUTO MIGRATION (MySQL) ---
+        await pool.query(`CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(255) UNIQUE, password VARCHAR(255), role VARCHAR(50))`);
+        await pool.query(`CREATE TABLE IF NOT EXISTS admins (id INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(255) UNIQUE, password VARCHAR(255), role VARCHAR(50))`);
+        await pool.query(`CREATE TABLE IF NOT EXISTS content (id INT AUTO_INCREMENT PRIMARY KEY, section_name VARCHAR(255) UNIQUE, content_data LONGTEXT, is_visible BOOLEAN DEFAULT 1, sort_order INT DEFAULT 0)`);
+        await pool.query(`CREATE TABLE IF NOT EXISTS posts (id INT AUTO_INCREMENT PRIMARY KEY, title VARCHAR(255), slug VARCHAR(255) UNIQUE, content LONGTEXT, image TEXT, status VARCHAR(50) DEFAULT 'draft', views INT DEFAULT 0, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)`);
+        await pool.query(`CREATE TABLE IF NOT EXISTS ebooks (id INT AUTO_INCREMENT PRIMARY KEY, title VARCHAR(255), description TEXT, file_url TEXT, category VARCHAR(100), version VARCHAR(50) DEFAULT 'v1.0', status VARCHAR(50) DEFAULT 'draft', views INT DEFAULT 0, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)`);
+        await pool.query(`CREATE TABLE IF NOT EXISTS analytics (id INT AUTO_INCREMENT PRIMARY KEY, type VARCHAR(50), item_id INT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)`);
+        await pool.query(`CREATE TABLE IF NOT EXISTS site_stats (id INT AUTO_INCREMENT PRIMARY KEY, metric_name VARCHAR(255) UNIQUE, metric_value INT DEFAULT 0)`);
+
         db = {
             query: async (sql, params) => {
                 const [rows] = await pool.query(sql, params);
