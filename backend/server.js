@@ -27,9 +27,14 @@ app.get(['/api/ping', '/ping'], (req, res) => {
 let db;
 
 async function initDB() {
+    console.log('--- DEBUG DATABASE ---');
+    console.log('DB_HOST:', process.env.DB_HOST);
+    console.log('DB_USER:', process.env.DB_USER);
+    console.log('DB_NAME:', process.env.DB_NAME);
+    
     try {
         const pool = mysql.createPool({
-            host: process.env.DB_HOST,
+            host: process.env.DB_HOST || 'localhost',
             user: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
             database: process.env.DB_NAME,
@@ -38,7 +43,7 @@ async function initDB() {
         });
         // Test connection
         await pool.query('SELECT 1');
-        console.log('Using MySQL database.');
+        console.log('SUCCESS: Connected to MySQL database.');
 
         // --- AUTO MIGRATION (MySQL) ---
         await pool.query(`CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(255) UNIQUE, password VARCHAR(255), role VARCHAR(50))`);
