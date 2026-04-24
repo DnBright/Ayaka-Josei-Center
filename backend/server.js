@@ -6,8 +6,7 @@ const jwt = require('jsonwebtoken');
 const path = require('path');
 const fs = require('fs');
 
-const sqlite3 = require('sqlite3');
-const { open } = require('sqlite');
+// SQLite imports moved inside initDB fallback to prevent startup crashes
 
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 
@@ -57,79 +56,43 @@ async function initDB() {
             }
         };
     } catch (err) {
-        console.warn('MySQL connection failed, falling back to SQLite:', err.message);
-        const sqliteDb = await open({
-            filename: path.join(__dirname, 'ayaka.db'),
-            driver: sqlite3.Database
-        });
-        console.log('Using SQLite database.');
-        
-        // --- AUTO MIGRATION (SQLite ONLY) ---
-        await sqliteDb.exec(`
-            CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                username TEXT UNIQUE,
-                password TEXT,
-                role TEXT
-            );
-            CREATE TABLE IF NOT EXISTS admins (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                username TEXT UNIQUE,
-                password TEXT,
-                role TEXT
-            );
-            CREATE TABLE IF NOT EXISTS content (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                section_name TEXT UNIQUE,
-                content_data TEXT,
-                is_visible INTEGER DEFAULT 1,
-                sort_order INTEGER DEFAULT 0
-            );
-            CREATE TABLE IF NOT EXISTS posts (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                title TEXT,
-                slug TEXT UNIQUE,
-                content TEXT,
-                image TEXT,
-                status TEXT DEFAULT 'draft',
-                views INTEGER DEFAULT 0,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-            );
-            CREATE TABLE IF NOT EXISTS ebooks (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                title TEXT,
-                description TEXT,
-                file_url TEXT,
-                category TEXT,
-                version TEXT DEFAULT 'v1.0',
-                status TEXT DEFAULT 'draft',
-                views INTEGER DEFAULT 0,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-            );
-            CREATE TABLE IF NOT EXISTS analytics (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                type TEXT,
-                item_id INTEGER,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-            );
-            CREATE TABLE IF NOT EXISTS site_stats (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                metric_name TEXT UNIQUE,
-                metric_value INTEGER DEFAULT 0
-            );
-        `);
-        
-        db = {
-            query: async (sql, params) => {
-                // SQLite uses ? for placeholders
-                return await sqliteDb.all(sql, params);
-            },
-            run: async (sql, params) => {
-                return await sqliteDb.run(sql, params);
-            }
-        };
+        console.warn('MySQL connection failed, trying to fallback to SQLite:', err.message);
+        try {
+            // Dynamic require to prevent crash if sqlite3 is missing/incompatible
+            const sqlite3 = require('sqlite3');
+            const { open } = require('sqlite');
+            const sqliteDb = await open({
+                filename: path.join(__dirname, 'ayaka.db'),
+                driver: sqlite3.Database
+            });
+            console.log('Using SQLite database.');
+            
+            await sqliteDb.exec(`
+                CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE, password TEXT, role TEXT);
+                CREATE TABLE IF NOT EXISTS admins (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE, password TEXT, role TEXT);
+                CREATE TABLE IF NOT EXISTS content (id INTEGER PRIMARY KEY AUTOINCREMENT, section_name TEXT UNIQUE, content_data TEXT, is_visible INTEGER DEFAULT 1, sort_order INTEGER DEFAULT 0);
+                CREATE TABLE IF NOT EXISTS posts (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, slug TEXT UNIQUE, content TEXT, image TEXT, status TEXT DEFAULT 'draft', views INTEGER DEFAULT 0, created_at DATETIME DEFAULT CURRENT_TIMESTAMP);
+                CREATE TABLE IF NOT EXISTS ebooks (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, description TEXT, file_url TEXT, category TEXT, version TEXT DEFAULT 'v1.0', status TEXT DEFAULT 'draft', views INTEGER DEFAULT 0, created_at DATETIME DEFAULT CURRENT_TIMESTAMP);
+                CREATE TABLE IF NOT EXISTS analytics (id INTEGER PRIMARY KEY AUTOINCREMENT, type TEXT, item_id INTEGER, created_at DATETIME DEFAULT CURRENT_TIMESTAMP);
+                CREATE TABLE IF NOT EXISTS site_stats (id INTEGER PRIMARY KEY AUTOINCREMENT, metric_name TEXT UNIQUE, metric_value INTEGER DEFAULT 0);
+            `);
+
+            db = {
+                query: async (sql, params) => {
+                    return await sqliteDb.all(sql, params);
+                },
+                run: async (sql, params) => {
+                    return await sqliteDb.run(sql, params);
+                }
+            };
+        } catch (sqliteErr) {
+            console.error('SQLite fallback also failed:', sqliteErr.message);
+            // Non-functional DB object to prevent further crashes
+            db = { query: async () => [], run: async () => {} };
+        }
     }
 }
+
 
 initDB();
 
