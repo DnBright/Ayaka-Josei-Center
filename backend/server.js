@@ -24,6 +24,14 @@ app.get(['/api/ping', '/ping'], (req, res) => {
     res.send('BACKEND AYAKA SUDAH HIDUP (MANUAL PATH FIX)!');
 });
 
+app.get(['/api', '/'], (req, res) => {
+    res.json({
+        message: 'Welcome to Ayaka Josei Center API',
+        status: 'online',
+        database: 'MySQL Connected'
+    });
+});
+
 let db;
 
 async function initDB() {
