@@ -26,8 +26,8 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: frontend/dist/
-          server-dir: public_html/
-          state-name: .frontend-deploy-state.json
+          server-dir: public_html/ayakajosseicenter.com/
+          dangerous-clean-slate: false
 
       # --- PROCESS BACKEND ---
       - name: Deploy Backend to cPanel
@@ -38,6 +38,7 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: backend/
           server-dir: ayaka_backend/
+          dangerous-clean-slate: false
           exclude: |
             **/node_modules/**
             ayaka.db
