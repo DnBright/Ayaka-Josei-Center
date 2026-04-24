@@ -1,3 +1,4 @@
+import { API_URL } from '../config';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Mail, Phone, MapPin, Clock, Send, Shield, Info, Instagram, Facebook, MessageCircle, CheckCircle2 } from 'lucide-react';
@@ -33,7 +34,7 @@ const ContactPage = ({ content }) => {
         e.preventDefault();
         setLoading(true);
         try {
-            const apiUrl = `http://${window.location.hostname}:5005/api/communications`;
+            const apiUrl = `${API_URL}/communications`;
             await axios.post(apiUrl, formData);
             setIsSubmitted(true);
             setTimeout(() => setIsSubmitted(false), 5000);

@@ -1,3 +1,4 @@
+import { API_URL } from '../../config';
 import React, { useState, useEffect } from 'react';
 import { Save, ArrowLeft, Image as ImageIcon, Globe, Lock, Calendar, Eye } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -36,7 +37,7 @@ const ArticleEditor = () => {
     const fetchPost = async () => {
         try {
             const token = localStorage.getItem(`${keyPrefix}token`);
-            const apiUrl = `http://${window.location.hostname}:5005/api/admin/posts`;
+            const apiUrl = `${API_URL}/admin/posts`;
             const resp = await axios.get(apiUrl, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -63,8 +64,8 @@ const ArticleEditor = () => {
         try {
             const token = localStorage.getItem(`${keyPrefix}token`);
             const apiUrl = id
-                ? `http://${window.location.hostname}:5005/api/admin/posts/${id}`
-                : `http://${window.location.hostname}:5005/api/admin/posts`;
+                ? `API_URL/admin/posts/${id}`
+                : `API_URL/admin/posts`;
 
             if (id) {
                 await axios.put(apiUrl, dataToSave, {

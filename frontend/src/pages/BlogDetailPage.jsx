@@ -1,3 +1,4 @@
+import { API_URL } from '../config';
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
@@ -28,7 +29,7 @@ const BlogDetailPage = ({ content }) => {
             // Check if we already have it in content prop (legacy fallback)
             const legacyArticle = data?.artikel?.find(a => a.slug === slug);
 
-            const resp = await axios.get('http://127.0.0.1:5005/api/posts');
+            const resp = await axios.get(`${API_URL}/posts`);
             setAllPosts(resp.data);
 
             const found = resp.data.find(a => a.slug === slug);
@@ -36,7 +37,7 @@ const BlogDetailPage = ({ content }) => {
             if (found) {
                 setArticle(found);
                 // Track post view
-                axios.post('http://127.0.0.1:5005/api/analytics/track', { type: 'post', id: found.id })
+                axios.post(`${API_URL}/analytics/track`, { type: 'post', id: found.id })
                     .catch(e => console.error('Failed to track post view:', e));
             } else if (legacyArticle) {
                 setArticle(legacyArticle);

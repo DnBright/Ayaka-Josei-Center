@@ -1,3 +1,4 @@
+import { API_URL } from '../../../config';
 import React, { useState, useEffect } from 'react';
 import { Save, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -44,7 +45,7 @@ const AboutEditor = ({ content, refreshContent }) => {
 
         try {
             const token = localStorage.getItem('token');
-            await axios.put('http://127.0.0.1:5005/api/content/tentang', {
+            await axios.put('API_URL/content/tentang', {
                 content_data: submissionData
             }, {
                 headers: { Authorization: `Bearer ${token}` }

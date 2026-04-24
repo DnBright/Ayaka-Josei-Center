@@ -1,3 +1,4 @@
+import { API_URL } from '../../../config';
 import React, { useState, useEffect } from 'react';
 import { Save, ArrowLeft, Plus, Trash2, Edit2, FileText } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -82,7 +83,7 @@ const BlogEditor = ({ content, refreshContent }) => {
                 posts: updatedPosts
             };
 
-            await axios.put('http://127.0.0.1:5005/api/content/blog', {
+            await axios.put('API_URL/content/blog', {
                 content_data: submissionData
             }, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -115,7 +116,7 @@ const BlogEditor = ({ content, refreshContent }) => {
                 posts: updatedPosts
             };
 
-            await axios.put('http://127.0.0.1:5005/api/content/blog', {
+            await axios.put('API_URL/content/blog', {
                 content_data: submissionData
             }, {
                 headers: { Authorization: `Bearer ${token}` }

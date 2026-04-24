@@ -1,3 +1,4 @@
+import { API_URL } from '../../config';
 import React, { useState, useEffect } from 'react';
 import { Bell, User, Search, LogOut, ChevronDown } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -32,7 +33,7 @@ const AdminHeader = ({ title }) => {
         try {
             const token = localStorage.getItem('admin_token');
             if (!token) return;
-            const apiUrl = `http://${window.location.hostname}:5005/api/admin/communications/unread-count`;
+            const apiUrl = `${API_URL}/admin/communications/unread-count`;
             const resp = await axios.get(apiUrl, {
                 headers: { Authorization: `Bearer ${token}` }
             });

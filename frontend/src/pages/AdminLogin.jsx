@@ -1,3 +1,4 @@
+import { API_URL } from '../config';
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -16,7 +17,7 @@ const AdminLogin = () => {
         setLoading(true);
         setError('');
         try {
-            const apiUrl = `http://${window.location.hostname}:5005/api/auth/login`;
+            const apiUrl = `${API_URL}/auth/login`;
             const resp = await axios.post(apiUrl, { username, password, source: 'admins' });
 
             // Validate if role is Admin or Editor

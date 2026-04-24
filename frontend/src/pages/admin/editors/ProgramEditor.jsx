@@ -1,3 +1,4 @@
+import { API_URL } from '../../../config';
 import React, { useState, useEffect } from 'react';
 import { Save, ArrowLeft, Plus, Trash2, Edit2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -66,7 +67,7 @@ const ProgramEditor = ({ content, refreshContent }) => {
                 items: updatedPrograms
             };
 
-            await axios.put('http://127.0.0.1:5005/api/content/program', {
+            await axios.put('API_URL/content/program', {
                 content_data: submissionData
             }, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -101,7 +102,7 @@ const ProgramEditor = ({ content, refreshContent }) => {
                 items: updatedPrograms
             };
 
-            await axios.put('http://127.0.0.1:5005/api/content/program', {
+            await axios.put('API_URL/content/program', {
                 content_data: submissionData
             }, {
                 headers: { Authorization: `Bearer ${token}` }

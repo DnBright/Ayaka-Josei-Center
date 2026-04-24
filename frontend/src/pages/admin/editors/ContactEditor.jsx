@@ -1,3 +1,4 @@
+import { API_URL } from '../../../config';
 import React, { useState, useEffect } from 'react';
 import { Save, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -39,7 +40,7 @@ const ContactEditor = ({ content, refreshContent }) => {
         try {
             const token = localStorage.getItem('token');
             // Assuming contact data is stored in 'kontak' section
-            await axios.put('http://127.0.0.1:5005/api/content/kontak', {
+            await axios.put('API_URL/content/kontak', {
                 content_data: formData
             }, {
                 headers: { Authorization: `Bearer ${token}` }

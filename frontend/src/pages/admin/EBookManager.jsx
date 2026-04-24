@@ -1,3 +1,4 @@
+import { API_URL } from '../../config';
 import React, { useState, useEffect } from 'react';
 import { Plus, Book, Trash2, Download, Search, Eye } from 'lucide-react';
 import axios from 'axios';
@@ -27,7 +28,7 @@ const EBookManager = () => {
     const fetchEbooks = async () => {
         try {
             const token = localStorage.getItem(`${keyPrefix}token`);
-            const apiUrl = `http://${window.location.hostname}:5005/api/admin/ebooks`;
+            const apiUrl = `${API_URL}/admin/ebooks`;
             const resp = await axios.get(apiUrl, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -45,7 +46,7 @@ const EBookManager = () => {
         e.preventDefault();
         try {
             const token = localStorage.getItem(`${keyPrefix}token`);
-            const apiUrl = `http://${window.location.hostname}:5005/api/admin/ebooks`;
+            const apiUrl = `${API_URL}/admin/ebooks`;
             await axios.post(apiUrl, formData, {
                 headers: { Authorization: `Bearer ${token}` }
             });

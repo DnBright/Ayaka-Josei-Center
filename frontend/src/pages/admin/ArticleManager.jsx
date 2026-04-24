@@ -1,3 +1,4 @@
+import { API_URL } from '../../config';
 import React, { useState, useEffect } from 'react';
 import { Plus, FileText, Edit2, Trash2, Eye, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -22,7 +23,7 @@ const ArticleManager = () => {
     const fetchArticles = async () => {
         try {
             const token = localStorage.getItem(`${keyPrefix}token`);
-            const apiUrl = `http://${window.location.hostname}:5005/api/admin/posts`;
+            const apiUrl = `${API_URL}/admin/posts`;
             const resp = await axios.get(apiUrl, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -39,7 +40,7 @@ const ArticleManager = () => {
 
         try {
             const token = localStorage.getItem(`${keyPrefix}token`);
-            const apiUrl = `http://${window.location.hostname}:5005/api/admin/posts/${id}`;
+            const apiUrl = `${API_URL}/admin/posts/${id}`;
             await axios.delete(apiUrl, {
                 headers: { Authorization: `Bearer ${token}` }
             });

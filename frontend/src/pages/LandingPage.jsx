@@ -1,3 +1,4 @@
+import { API_URL } from '../config';
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -13,7 +14,7 @@ const LandingPage = ({ content }) => {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const res = await axios.get('http://127.0.0.1:5005/api/posts');
+                const res = await axios.get(`${API_URL}/posts`);
                 setPosts(res.data);
             } catch (err) {
                 console.error('Failed to fetch posts:', err);
@@ -26,7 +27,7 @@ const LandingPage = ({ content }) => {
         // Track Website Visit
         const trackVisit = async () => {
             try {
-                await axios.post('http://127.0.0.1:5005/api/analytics/track', { type: 'visit' });
+                await axios.post(`${API_URL}/analytics/track`, { type: 'visit' });
             } catch (err) {
                 console.error('Failed to track visit:', err);
             }

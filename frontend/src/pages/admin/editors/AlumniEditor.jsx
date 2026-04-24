@@ -1,3 +1,4 @@
+import { API_URL } from '../../../config';
 import React, { useState, useEffect } from 'react';
 import { Save, ArrowLeft, Plus, Trash2, Edit2, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -72,7 +73,7 @@ const AlumniEditor = ({ content, refreshContent }) => {
                 items: updatedList
             };
 
-            await axios.put('http://127.0.0.1:5005/api/content/alumni', {
+            await axios.put('API_URL/content/alumni', {
                 content_data: submissionData
             }, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -104,7 +105,7 @@ const AlumniEditor = ({ content, refreshContent }) => {
                 items: updatedList
             };
 
-            await axios.put('http://127.0.0.1:5005/api/content/alumni', {
+            await axios.put('API_URL/content/alumni', {
                 content_data: submissionData
             }, {
                 headers: { Authorization: `Bearer ${token}` }

@@ -41,7 +41,9 @@ import ArticleEditor from './pages/admin/ArticleEditor';
 import EBookManager from './pages/admin/EBookManager';
 import AuthorProfile from './pages/admin/AuthorProfile';
 
-const API_URL = 'http://127.0.0.1:5005/api';
+import { API_URL } from './config';
+
+
 
 // ROLE GUARD COMPONENT
 const RoleGuard = ({ children, allowedRoles }) => {

@@ -1,3 +1,4 @@
+import { API_URL } from '../../../config';
 import React, { useState, useEffect } from 'react';
 import { Save, ArrowLeft, Plus, Trash2, Image } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -38,7 +39,7 @@ const GalleryEditor = ({ content, refreshContent }) => {
                 items: updatedItems
             };
 
-            await axios.put('http://127.0.0.1:5005/api/content/galeri', {
+            await axios.put('API_URL/content/galeri', {
                 content_data: submissionData
             }, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -70,7 +71,7 @@ const GalleryEditor = ({ content, refreshContent }) => {
                 items: updatedItems
             };
 
-            await axios.put('http://127.0.0.1:5005/api/content/galeri', {
+            await axios.put('API_URL/content/galeri', {
                 content_data: submissionData
             }, {
                 headers: { Authorization: `Bearer ${token}` }

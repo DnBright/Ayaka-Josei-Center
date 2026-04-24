@@ -1,3 +1,4 @@
+import { API_URL } from '../../../config';
 import React, { useState, useEffect } from 'react';
 import { Save, ArrowLeft } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -40,7 +41,7 @@ const HomeEditor = ({ content, refreshContent }) => {
 
         try {
             const token = localStorage.getItem('token');
-            await axios.put('http://127.0.0.1:5005/api/content/hero', {
+            await axios.put('API_URL/content/hero', {
                 content_data: formData
             }, {
                 headers: { Authorization: `Bearer ${token}` }

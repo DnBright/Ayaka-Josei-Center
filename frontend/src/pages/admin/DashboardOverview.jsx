@@ -1,3 +1,4 @@
+import { API_URL } from '../../config';
 import React from 'react';
 import { Users, FileText, BookOpen, MessageSquare, TrendingUp, Calendar, ArrowRight, Star } from 'lucide-react';
 import axios from 'axios';
@@ -18,7 +19,7 @@ const DashboardOverview = ({ content }) => {
                 const token = localStorage.getItem(`${keyPrefix}token`);
                 // Use a more robust URL approach or relative if proxy is set, 
                 // but sticking to the current port pattern for consistency with other parts of the app
-                const apiUrl = `http://${window.location.hostname}:5005/api/admin/stats`;
+                const apiUrl = `${API_URL}/admin/stats`;
                 const resp = await axios.get(apiUrl, {
                     headers: { Authorization: `Bearer ${token}` }
                 });

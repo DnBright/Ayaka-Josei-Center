@@ -1,3 +1,4 @@
+import { API_URL } from '../config';
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
@@ -85,7 +86,7 @@ const EBookPage = () => {
 
     const fetchEbooks = async () => {
         try {
-            const resp = await axios.get('http://127.0.0.1:5005/api/ebooks');
+            const resp = await axios.get(`${API_URL}/ebooks`);
             setEbooks(resp.data);
         } catch (err) {
             console.error('Error fetching ebooks:', err);
@@ -104,7 +105,7 @@ const EBookPage = () => {
 
     const trackEbookClick = async (id, url) => {
         try {
-            await axios.post('http://127.0.0.1:5005/api/analytics/track', { type: 'ebook', id });
+            await axios.post(`${API_URL}/analytics/track`, { type: 'ebook', id });
             window.open(url, '_blank');
         } catch (err) {
             console.error('Failed to track ebook click:', err);

@@ -1,3 +1,4 @@
+import { API_URL } from '../config';
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
@@ -20,7 +21,7 @@ const ChatBox = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const apiUrl = `http://${window.location.hostname}:5005/api/communications`;
+            const apiUrl = `${API_URL}/communications`;
             await axios.post(apiUrl, {
                 ...formData,
                 subject: t('chat.concierge')
