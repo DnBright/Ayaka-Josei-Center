@@ -41,8 +41,12 @@ const HomeEditor = ({ content, refreshContent }) => {
 
         try {
             const token = localStorage.getItem('token');
-            await axios.put(`${API_URL}/content/`hero', {
-                content_data: formData
+            await axios.post(`${API_URL}/admin/content`, {
+                section_name: 'hero',
+                content_data: formData,
+                is_visible: 1,
+                sort_order: 0
+            }, {
             }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
