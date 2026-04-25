@@ -68,8 +68,8 @@ const pool = mysql.createPool({
         if (existingUsers.length === 0) {
             const hashedPassword = await bcrypt.hash('Ayaka@Penulis2026', 10);
             await pool.query(
-                "INSERT INTO users (username, email, password, role, is_active) VALUES (?, ?, ?, 'Penulis', 1)",
-                ['penulis_ayaka', 'penulis@ayakajosseicenter.com', hashedPassword]
+                "INSERT INTO users (username, password, role) VALUES (?, ?, 'Penulis')",
+                ['penulis_ayaka', hashedPassword]
             );
             console.log('SUCCESS: Default Penulis account created.');
         } else {
