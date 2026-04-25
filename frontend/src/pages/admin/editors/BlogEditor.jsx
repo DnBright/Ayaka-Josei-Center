@@ -83,8 +83,11 @@ const BlogEditor = ({ content, refreshContent }) => {
                 posts: updatedPosts
             };
 
-            await axios.put(`${API_URL}/content/`blog', {
-                content_data: submissionData
+            await axios.post(`${API_URL}/admin/content`, {
+                section_name: 'blog',
+                content_data: submissionData,
+                is_visible: 1,
+                sort_order: 0
             }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -116,8 +119,11 @@ const BlogEditor = ({ content, refreshContent }) => {
                 posts: updatedPosts
             };
 
-            await axios.put(`${API_URL}/content/`blog', {
-                content_data: submissionData
+            await axios.post(`${API_URL}/admin/content`, {
+                section_name: 'blog',
+                content_data: submissionData,
+                is_visible: 1,
+                sort_order: 0
             }, {
                 headers: { Authorization: `Bearer ${token}` }
             });

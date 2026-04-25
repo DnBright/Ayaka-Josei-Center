@@ -67,8 +67,11 @@ const ProgramEditor = ({ content, refreshContent }) => {
                 items: updatedPrograms
             };
 
-            await axios.put(`${API_URL}/content/`program', {
-                content_data: submissionData
+            await axios.post(`${API_URL}/admin/content`, {
+                section_name: 'program',
+                content_data: submissionData,
+                is_visible: 1,
+                sort_order: 0
             }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -102,8 +105,11 @@ const ProgramEditor = ({ content, refreshContent }) => {
                 items: updatedPrograms
             };
 
-            await axios.put(`${API_URL}/content/`program', {
-                content_data: submissionData
+            await axios.post(`${API_URL}/admin/content`, {
+                section_name: 'program',
+                content_data: submissionData,
+                is_visible: 1,
+                sort_order: 0
             }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
