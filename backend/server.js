@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql2/promise');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
@@ -15,9 +15,10 @@ const SECRET_KEY = process.env.JWT_SECRET || 'ayaka_secret_key_2026';
 const logFile = path.join(__dirname, 'login_debug.log');
 const log = (msg) => {
     const time = new Date().toISOString();
-    try {
-        fs.appendFileSync(logFile, `[${time}] ${msg}\n`);
-    } catch (e) { }
+    // Disabled file logging due to massive file size (4.5GB)
+    // try {
+    //     fs.appendFileSync(logFile, `[${time}] ${msg}\n`);
+    // } catch (e) { }
     console.log(`[${time}] ${msg}`);
 };
 
