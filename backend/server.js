@@ -61,6 +61,23 @@ const pool = mysql.createPool({
     } catch (err) {
         console.error('Migration failed:', err.message);
     }
+
+    // Seed default Penulis account if not exists
+    try {
+        const [existingUsers] = await pool.query("SELECT id FROM users WHERE username = 'penulis_ayaka'");
+        if (existingUsers.length === 0) {
+            const hashedPassword = await bcrypt.hash('Ayaka@Penulis2026', 10);
+            await pool.query(
+                "INSERT INTO users (username, email, password, role, is_active) VALUES (?, ?, ?, 'Penulis', 1)",
+                ['penulis_ayaka', 'penulis@ayakajosseicenter.com', hashedPassword]
+            );
+            console.log('SUCCESS: Default Penulis account created.');
+        } else {
+            console.log('INFO: Penulis account already exists.');
+        }
+    } catch (err) {
+        console.error('Penulis seed failed:', err.message);
+    }
 })();
 
 // Auth Middleware
