@@ -64,8 +64,8 @@ const ArticleEditor = () => {
         try {
             const token = localStorage.getItem(`${keyPrefix}token`);
             const apiUrl = id
-                ? `API_URL/admin/posts/${id}`
-                : `API_URL/admin/posts`;
+                ? `${API_URL}/admin/posts/${id}`
+                : `${API_URL}/admin/posts`;
 
             if (id) {
                 await axios.put(apiUrl, dataToSave, {
