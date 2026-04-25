@@ -70,6 +70,20 @@ async function initDB() {
             await pool.query("INSERT INTO admins (username, password, role) VALUES (?, ?, ?)", ['admin@gmail.com', hashedPassword, 'Super Admin']);
         }
 
+        // --- AUTO SEED (Content) ---
+        const [contentRows] = await pool.query('SELECT * FROM content LIMIT 1');
+        if (contentRows.length === 0) {
+            console.log('Seeding default website content...');
+            const defaultContent = [
+                ['hero', JSON.stringify({ title: 'Ayaka Josei Center', tagline: 'Empowering Women, Inspiring Change', buttonText: 'Learn More' }), 1, 1],
+                ['profil', JSON.stringify({ title: 'Tentang Kami', tagline: 'Membangun Masa Depan Wanita Indonesia', text: 'Ayaka Josei Center adalah pusat pemberdayaan wanita yang berfokus pada pendidikan dan pengembangan karakter.', objective: 'Memberikan akses pendidikan berkualitas bagi wanita.' }), 1, 2],
+                ['program', JSON.stringify({ title: 'Program Unggulan', tagline: 'Pilih jalan kesuksesanmu', programs: [] }), 1, 3]
+            ];
+            for (const row of defaultContent) {
+                await pool.query("INSERT INTO content (section_name, content_data, is_visible, sort_order) VALUES (?, ?, ?, ?)", row);
+            }
+        }
+
         db = {
             query: async (sql, params) => {
                 const [rows] = await pool.query(sql, params);
