@@ -55,20 +55,18 @@ async function initDB() {
         const [contentRows] = await pool.query('SELECT * FROM content LIMIT 1');
         if (contentRows.length === 0) {
             console.log('MIGRATING FULL LOCAL DATA TO SERVER...');
-            const rawData = fs.readFileSync(path.join(__dirname, '../full_content.json'), 'utf8');
-            const data = JSON.parse(rawData);
-            
-            for (const section in data) {
-                await pool.query("INSERT INTO content (section_name, content_data, is_visible, sort_order) VALUES (?, ?, 1, 0)", 
-                    [section, JSON.stringify(data[section])]);
-            }
-
-            // Seed initial posts from the blog data if available
-            if (data.blog_halaman && data.blog_halaman.artikel) {
-                for (const art of data.blog_halaman.artikel) {
-                    await pool.query("INSERT IGNORE INTO posts (title, slug, content, image, category, status) VALUES (?, ?, ?, ?, ?, 'publish')",
-                        [art.title, art.slug, art.content, art.image, art.category]);
+            const dataPath = path.join(__dirname, 'full_content.json');
+            if (fs.existsSync(dataPath)) {
+                const rawData = fs.readFileSync(dataPath, 'utf8');
+                const data = JSON.parse(rawData);
+                
+                for (const section in data) {
+                    await pool.query("INSERT INTO content (section_name, content_data, is_visible, sort_order) VALUES (?, ?, 1, 0)", 
+                        [section, JSON.stringify(data[section])]);
                 }
+                console.log('SUCCESS: Migration completed.');
+            } else {
+                console.error('ERROR: full_content.json not found at', dataPath);
             }
         }
 
