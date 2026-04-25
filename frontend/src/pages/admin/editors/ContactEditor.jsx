@@ -40,7 +40,7 @@ const ContactEditor = ({ content, refreshContent }) => {
         try {
             const token = localStorage.getItem('token');
             // Assuming contact data is stored in 'kontak' section
-            await axios.put('API_URL/content/kontak', {
+            await axios.put(`${API_URL}/content/`kontak', {
                 content_data: formData
             }, {
                 headers: { Authorization: `Bearer ${token}` }

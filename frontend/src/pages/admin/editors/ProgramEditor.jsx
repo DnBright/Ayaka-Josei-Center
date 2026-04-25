@@ -67,7 +67,7 @@ const ProgramEditor = ({ content, refreshContent }) => {
                 items: updatedPrograms
             };
 
-            await axios.put('API_URL/content/program', {
+            await axios.put(`${API_URL}/content/`program', {
                 content_data: submissionData
             }, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -102,7 +102,7 @@ const ProgramEditor = ({ content, refreshContent }) => {
                 items: updatedPrograms
             };
 
-            await axios.put('API_URL/content/program', {
+            await axios.put(`${API_URL}/content/`program', {
                 content_data: submissionData
             }, {
                 headers: { Authorization: `Bearer ${token}` }

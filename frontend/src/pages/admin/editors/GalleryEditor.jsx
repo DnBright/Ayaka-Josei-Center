@@ -39,7 +39,7 @@ const GalleryEditor = ({ content, refreshContent }) => {
                 items: updatedItems
             };
 
-            await axios.put('API_URL/content/galeri', {
+            await axios.put(`${API_URL}/content/`galeri', {
                 content_data: submissionData
             }, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -71,7 +71,7 @@ const GalleryEditor = ({ content, refreshContent }) => {
                 items: updatedItems
             };
 
-            await axios.put('API_URL/content/galeri', {
+            await axios.put(`${API_URL}/content/`galeri', {
                 content_data: submissionData
             }, {
                 headers: { Authorization: `Bearer ${token}` }

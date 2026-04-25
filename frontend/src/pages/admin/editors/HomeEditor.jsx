@@ -41,7 +41,7 @@ const HomeEditor = ({ content, refreshContent }) => {
 
         try {
             const token = localStorage.getItem('token');
-            await axios.put('API_URL/content/hero', {
+            await axios.put(`${API_URL}/content/`hero', {
                 content_data: formData
             }, {
                 headers: { Authorization: `Bearer ${token}` }
