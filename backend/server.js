@@ -51,23 +51,21 @@ async function initDB() {
             await pool.query("INSERT INTO admins (username, password, role) VALUES (?, ?, ?)", ['admin@gmail.com', hashedPassword, 'Super Admin']);
         }
 
-        // --- FULL PRODUCTION DATA SEED ---
-        const [contentRows] = await pool.query('SELECT * FROM content LIMIT 1');
-        if (contentRows.length === 0) {
-            console.log('MIGRATING FULL LOCAL DATA TO SERVER...');
-            const dataPath = path.join(__dirname, 'full_content.json');
-            if (fs.existsSync(dataPath)) {
-                const rawData = fs.readFileSync(dataPath, 'utf8');
-                const data = JSON.parse(rawData);
-                
-                for (const section in data) {
-                    await pool.query("INSERT INTO content (section_name, content_data, is_visible, sort_order) VALUES (?, ?, 1, 0)", 
-                        [section, JSON.stringify(data[section])]);
-                }
-                console.log('SUCCESS: Migration completed.');
-            } else {
-                console.error('ERROR: full_content.json not found at', dataPath);
+        // --- FORCE PRODUCTION DATA MIGRATION ---
+        console.log('SYNCING PRODUCTION DATA FROM LOCALHOST...');
+        const dataPath = path.join(__dirname, 'full_content.json');
+        if (fs.existsSync(dataPath)) {
+            const rawData = fs.readFileSync(dataPath, 'utf8');
+            const data = JSON.parse(rawData);
+            
+            for (const section in data) {
+                // Use REPLACE INTO or DELETE then INSERT to ensure 100% match
+                await pool.query("REPLACE INTO content (section_name, content_data, is_visible, sort_order) VALUES (?, ?, 1, 0)", 
+                    [section, JSON.stringify(data[section])]);
             }
+            console.log('SUCCESS: Production data synced successfully.');
+        } else {
+            console.error('ERROR: full_content.json not found at', dataPath);
         }
 
         db = {
