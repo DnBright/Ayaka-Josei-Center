@@ -70,18 +70,27 @@ async function initDB() {
             await pool.query("INSERT INTO admins (username, password, role) VALUES (?, ?, ?)", ['admin@gmail.com', hashedPassword, 'Super Admin']);
         }
 
-        // --- AUTO SEED (Content) ---
+        // --- AUTO SEED (Full Data Migration) ---
         const [contentRows] = await pool.query('SELECT * FROM content LIMIT 1');
         if (contentRows.length === 0) {
-            console.log('Seeding default website content...');
-            const defaultContent = [
-                ['hero', JSON.stringify({ title: 'Ayaka Josei Center', tagline: 'Empowering Women, Inspiring Change', buttonText: 'Learn More' }), 1, 1],
-                ['profil', JSON.stringify({ title: 'Tentang Kami', tagline: 'Membangun Masa Depan Wanita Indonesia', text: 'Ayaka Josei Center adalah pusat pemberdayaan wanita yang berfokus pada pendidikan dan pengembangan karakter.', objective: 'Memberikan akses pendidikan berkualitas bagi wanita.' }), 1, 2],
-                ['program', JSON.stringify({ title: 'Program Unggulan', tagline: 'Pilih jalan kesuksesanmu', programs: [] }), 1, 3]
+            console.log('Migrating local production data to server...');
+            const fullContent = [
+                ['hero', JSON.stringify({"title":"Ayaka Josei Center","tagline":"Empowering Women, Inspiring Change","buttonText":"Pelajari Program","isVisible":true}), 1, 1],
+                ['profil', JSON.stringify({"title":"Profil Ayaka Josei Center","tagline":"Membangun Masa Depan Bersama","text":"Ayaka Josei Center adalah lembaga pembinaan dan pengembangan karakter khusus wanita Indonesia yang berorientasi pada peningkatan kualitas diri, kemandirian ekonomi, dan kesiapan berkarir di kancah internasional, khususnya Jepang. Kami percaya bahwa setiap wanita memiliki potensi luar biasa yang bisa dimaksimalkan melalui bimbingan yang tepat, kurikulum yang terarah, dan lingkungan yang mendukung.","objective":"Menciptakan ekosistem pembinaan yang transparan, profesional, dan berkelanjutan untuk melahirkan generasi wanita tangguh yang siap bersaing global.","isVisible":true}), 1, 2],
+                ['program', JSON.stringify({"title":"Program Kami","tagline":"Pilih Jalur Masa Depanmu","programs":[{"id":1,"title":"Program Tokutei Ginou (Kaigo)","desc":"Pelatihan intensif untuk menjadi tenaga ahli perawat lansia di Jepang dengan standar sertifikasi resmi.","image":"/assets/hero-bg.png"},{"id":2,"title":"Program Perhotelan & Hospitality","desc":"Persiapan karir di industri perhotelan Jepang dengan fokus pada etika pelayanan Omotenashi.","image":"/assets/hero-bg.png"},{"id":3,"title":"Program Bahasa & Budaya Jepang","desc":"Kursus bahasa Jepang intensif dari level dasar hingga JLPT N4/N3 untuk berbagai kebutuhan profesional.","image":"/assets/hero-bg.png"}],"isVisible":true}), 1, 3],
+                ['blog_halaman', JSON.stringify({"pengantar":{"title":"Ayaka Literacy & Journal","content":"Edukasi dan informasi resmi mengenai program kerja Jepang, bahasa, dan budaya untuk mempersiapkan masa depan yang lebih matang."},"kategori":[{"id":"all","label":"Semua Artikel"},{"id":"program","label":"Informasi Program"},{"id":"bahasa","label":"Edukasi Bahasa"},{"id":"budaya","label":"Budaya & Etika"},{"id":"umum","label":"Informasi Umum"}],"artikel":[],"isVisible":true}), 1, 4],
+                ['alumni_halaman', JSON.stringify({"pengantar":{"title":"Ayaka Alumni & Success Circle","content":"Halaman ini merupakan ruang apresiasi bagi para putri Indonesia yang telah menempuh jalur pembinaan di Ayaka."},"filter":[{"id":"all","label":"Semua Profil"},{"id":"alumni","label":"Alumni (Di Jepang)"},{"id":"proses","label":"Proses Pelatihan"}],"daftarAlumni":[{"id":1,"name":"Siti Aminah","program":"Kaigo (Perawatan)","year":"2024","status":"alumni","location":"Tokyo, Japan","image":"/assets/hero-bg.png"}],"isVisible":true}), 1, 5],
+                ['kontak_halaman', JSON.stringify({"pengantar":{"title":"Hubungi Ayaka Josei Center","content":"Kami siap mendampingi perjalanan Anda. Gunakan jalur komunikasi resmi di bawah ini."},"infoUtama":{"namaLembaga":"Ayaka Josei Center","alamat":"Remame, Jl. Magelang - Yogyakarta, Jl. Remame No.km 19.5, RT.002/RW.13, Jumoyo, Kec. Salam, Kabupaten Magelang, Jawa Tengah 56172","whatsapp":"0815 4200 7626","email":"official@ayakacenter.id","jamOperasional":"Senin - Jumat: 08.00 - 17.00 WIB"},"isVisible":true}), 1, 6]
             ];
-            for (const row of defaultContent) {
+            for (const row of fullContent) {
                 await pool.query("INSERT INTO content (section_name, content_data, is_visible, sort_order) VALUES (?, ?, ?, ?)", row);
             }
+        }
+
+        const [ebookRows] = await pool.query('SELECT * FROM ebooks LIMIT 1');
+        if (ebookRows.length === 0) {
+            await pool.query("INSERT INTO ebooks (title, description, file_url, category, version, status) VALUES ('Modul Bahasa Jepang Dasar', 'Panduan praktis belajar Hiragana dan Katakana.', 'https://example.com/ebook1.pdf', 'Bahasa', 'v1.0', 'publish')");
+            await pool.query("INSERT INTO ebooks (title, description, file_url, category, version, status) VALUES ('Budaya Jepang Modern', 'Mengenal etika dan budaya kerja di Jepang.', 'https://example.com/ebook2.pdf', 'Budaya', 'v1.1', 'publish')");
         }
 
         db = {
