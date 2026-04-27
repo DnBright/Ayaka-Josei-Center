@@ -42,9 +42,44 @@ const pool = mysql.createPool({
     queueLimit: 0
 });
 
-// Data Sync Initialization
+// Data Sync & Schema Fix Initialization
+async function ensureDBSchema(pool) {
+    try {
+        log('Ensuring Database Schema is up to date...');
+        // 1. Fix 'posts' table columns
+        const [columns] = await pool.query('SHOW COLUMNS FROM posts');
+        const columnNames = columns.map(c => c.Field);
+
+        const columnsToAdd = [
+            { name: 'excerpt', type: 'TEXT' },
+            { name: 'category', type: 'VARCHAR(100)' },
+            { name: 'author_id', type: 'INT' },
+            { name: 'author_source', type: "VARCHAR(50) DEFAULT 'admins'" },
+            { name: 'access_status', type: "VARCHAR(50) DEFAULT 'public'" },
+            { name: 'updated_at', type: 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP' }
+        ];
+
+        for (const col of columnsToAdd) {
+            if (!columnNames.includes(col.name)) {
+                log(`Adding column "${col.name}" to "posts" table...`);
+                await pool.query(`ALTER TABLE posts ADD COLUMN ${col.name} ${col.type}`);
+            }
+        }
+
+        // 2. Create missing tables
+        await pool.query(`CREATE TABLE IF NOT EXISTS communications (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255), subject VARCHAR(255), message TEXT, status VARCHAR(50) DEFAULT 'unread', created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)`);
+        await pool.query(`CREATE TABLE IF NOT EXISTS media (id INT AUTO_INCREMENT PRIMARY KEY, filename VARCHAR(255), url TEXT, type VARCHAR(50), uploaded_by INT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)`);
+        
+        log('Database Schema is verified.');
+    } catch (err) {
+        log('Schema fix error: ' + err.message);
+    }
+}
+
 (async function initSync() {
     try {
+        await ensureDBSchema(pool);
+        
         console.log('SYNCING PRODUCTION DATA FROM LOCALHOST...');
         const dataPath = path.join(__dirname, 'full_content.json');
         if (fs.existsSync(dataPath)) {
@@ -113,6 +148,17 @@ app.get('/api/posts', async (req, res) => {
     }
 });
 
+app.get('/api/posts/:slug', async (req, res) => {
+    const { slug } = req.params;
+    try {
+        const [rows] = await pool.query("SELECT * FROM posts WHERE slug = ? AND status = 'publish'", [slug]);
+        if (rows.length === 0) return res.status(404).json({ error: 'Post not found' });
+        res.json(rows[0]);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 app.get('/api/admin/posts', authenticateToken, authorizeRoles('Super Admin', 'Editor', 'Penulis'), async (req, res) => {
     let query = `
         SELECT p.*, COALESCE(u.username, a.username) as author_name 
@@ -132,6 +178,30 @@ app.get('/api/admin/posts', authenticateToken, authorizeRoles('Super Admin', 'Ed
     try {
         const [rows] = await pool.query(query, params);
         res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.get('/api/admin/posts/:id', authenticateToken, authorizeRoles('Super Admin', 'Editor', 'Penulis'), async (req, res) => {
+    const { id } = req.params;
+    try {
+        const [rows] = await pool.query(`
+            SELECT p.*, COALESCE(u.username, a.username) as author_name 
+            FROM posts p 
+            LEFT JOIN users u ON p.author_id = u.id AND p.author_source = 'users'
+            LEFT JOIN admins a ON p.author_id = a.id AND p.author_source = 'admins'
+            WHERE p.id = ?
+        `, [id]);
+        
+        if (rows.length === 0) return res.status(404).json({ error: 'Post not found' });
+        
+        const post = rows[0];
+        if (req.user.role === 'Penulis' && (post.author_id !== req.user.id || post.author_source !== 'users')) {
+            return res.status(403).json({ error: 'Not authorized' });
+        }
+        
+        res.json(post);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

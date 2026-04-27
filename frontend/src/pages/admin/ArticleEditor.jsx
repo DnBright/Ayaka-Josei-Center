@@ -37,13 +37,11 @@ const ArticleEditor = () => {
     const fetchPost = async () => {
         try {
             const token = localStorage.getItem(`${keyPrefix}token`);
-            const apiUrl = `${API_URL}/admin/posts`;
+            const apiUrl = `${API_URL}/admin/posts/${id}`;
             const resp = await axios.get(apiUrl, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            // Note: In production, fetch by ID directly to avoid large payloads
-            const post = resp.data.find(p => p.id === parseInt(id));
-            if (post) setFormData(post);
+            setFormData(resp.data);
         } catch (err) {
             console.error(err);
         }

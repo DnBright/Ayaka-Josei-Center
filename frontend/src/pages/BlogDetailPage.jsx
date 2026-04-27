@@ -26,27 +26,26 @@ const BlogDetailPage = ({ content }) => {
     const fetchArticleAndRecs = async () => {
         setLoading(true);
         try {
-            // Check if we already have it in content prop (legacy fallback)
-            const legacyArticle = data?.artikel?.find(a => a.slug === slug);
+            // 1. Fetch current article by slug
+            const artResp = await axios.get(`${API_URL}/posts/${slug}`);
+            setArticle(artResp.data);
 
-            const resp = await axios.get(`${API_URL}/posts`);
-            setAllPosts(resp.data);
+            // 2. Track post view
+            axios.post(`${API_URL}/analytics/track`, { type: 'post', id: artResp.data.id })
+                .catch(e => console.error('Failed to track post view:', e));
 
-            const found = resp.data.find(a => a.slug === slug);
+            // 3. Fetch all posts for recommendations
+            const allResp = await axios.get(`${API_URL}/posts`);
+            setAllPosts(allResp.data);
 
-            if (found) {
-                setArticle(found);
-                // Track post view
-                axios.post(`${API_URL}/analytics/track`, { type: 'post', id: found.id })
-                    .catch(e => console.error('Failed to track post view:', e));
-            } else if (legacyArticle) {
-                setArticle(legacyArticle);
-            }
         } catch (err) {
             console.error('Error fetching article detail:', err);
-            // Final fallback
+            // Fallback to legacy content if available
             const legacyArticle = data?.artikel?.find(a => a.slug === slug);
-            if (legacyArticle) setArticle(legacyArticle);
+            if (legacyArticle) {
+                setArticle(legacyArticle);
+                setAllPosts(data.artikel || []);
+            }
         } finally {
             setLoading(false);
         }

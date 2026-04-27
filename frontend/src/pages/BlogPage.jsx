@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { BookOpen, Calendar, Tag, ChevronRight, Search, Filter, Book, PenTool, Info, Lock, Eye } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
+import { API_URL } from '../config';
+
 const BlogPage = ({ content }) => {
     const { t } = useTranslation();
     const data = content?.blog_halaman;
@@ -36,7 +38,7 @@ const BlogPage = ({ content }) => {
 
     const fetchArticles = async () => {
         try {
-            const resp = await axios.get('http://127.0.0.1:5005/api/posts');
+            const resp = await axios.get(`${API_URL}/posts`);
             setArticles(resp.data);
         } catch (err) {
             console.error('Error fetching articles:', err);
