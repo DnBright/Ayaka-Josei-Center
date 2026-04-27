@@ -7,6 +7,8 @@ const EBookManager = () => {
     const [ebooks, setEbooks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
+    const [editingId, setEditingId] = useState(null);
+    const [uploading, setUploading] = useState(false);
 
     const path = window.location.pathname;
     const isPenulisPath = path.startsWith('/penulis');
@@ -32,8 +34,6 @@ const EBookManager = () => {
             const resp = await axios.get(apiUrl, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            // Since there's no specific admin route to list all yet (except public), 
-            // the backend currently returns public ones. This acts as a placeholder.
             setEbooks(resp.data);
         } catch (err) {
             console.error('Failed to fetch ebooks:', err);
@@ -42,18 +42,80 @@ const EBookManager = () => {
         }
     };
 
+    const handleFileUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        setUploading(true);
+        const uploadFormData = new FormData();
+        uploadFormData.append('file', file);
+
+        try {
+            const token = localStorage.getItem(`${keyPrefix}token`);
+            const resp = await axios.post(`${API_URL}/admin/upload-ebook`, uploadFormData, {
+                headers: { 
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${token}` 
+                }
+            });
+            setFormData({ ...formData, file_url: resp.data.url });
+            alert('File berhasil diupload!');
+        } catch (err) {
+            console.error('Upload failed:', err);
+            alert('Gagal mengupload file.');
+        } finally {
+            setUploading(false);
+        }
+    };
+
     const handleSave = async (e) => {
         e.preventDefault();
         try {
             const token = localStorage.getItem(`${keyPrefix}token`);
-            const apiUrl = `${API_URL}/admin/ebooks`;
-            await axios.post(apiUrl, formData, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            if (editingId) {
+                await axios.put(`${API_URL}/admin/ebooks/${editingId}`, formData, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+            } else {
+                await axios.post(`${API_URL}/admin/ebooks`, formData, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+            }
             setShowForm(false);
+            setEditingId(null);
+            setFormData({ title: '', description: '', file_url: '', category: '', version: 'v1.0', status: 'draft' });
             fetchEbooks();
+            alert('Materi berhasil disimpan!');
         } catch (err) {
             console.error('Failed to save ebook:', err);
+            alert('Gagal menyimpan materi.');
+        }
+    };
+
+    const handleEdit = (book) => {
+        setFormData({
+            title: book.title,
+            description: book.description,
+            file_url: book.file_url,
+            category: book.category,
+            version: book.version,
+            status: book.status
+        });
+        setEditingId(book.id);
+        setShowForm(true);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const handleDelete = async (id) => {
+        if (!window.confirm('Apakah Anda yakin ingin menghapus materi ini?')) return;
+        try {
+            const token = localStorage.getItem(`${keyPrefix}token`);
+            await axios.delete(`${API_URL}/admin/ebooks/${id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            fetchEbooks();
+        } catch (err) {
+            console.error('Delete failed:', err);
         }
     };
 
@@ -65,11 +127,17 @@ const EBookManager = () => {
                     <p>Kelola koleksi materi edukasi digital untuk member Ayaka Josei Center.</p>
                 </div>
                 <button
-                    onClick={() => setShowForm(!showForm)}
+                    onClick={() => {
+                        setShowForm(!showForm);
+                        if (showForm) {
+                            setEditingId(null);
+                            setFormData({ title: '', description: '', file_url: '', category: '', version: 'v1.0', status: 'draft' });
+                        }
+                    }}
                     className="btn-premium-action"
                 >
                     {showForm ? 'Batal & Tutup' : (
-                        <><Plus size={18} /> Upload E-Book Baru</>
+                        <><Plus size={18} /> {editingId ? 'Batal Edit' : 'Upload E-Book Baru'}</>
                     )}
                 </button>
             </div>
@@ -77,7 +145,7 @@ const EBookManager = () => {
             {showForm && (
                 <div className="premium-form-card">
                     <div className="form-head">
-                        <h3>Informasi Materi Baru</h3>
+                        <h3>{editingId ? 'Edit Materi' : 'Informasi Materi Baru'}</h3>
                     </div>
                     <form onSubmit={handleSave} className="premium-form-grid">
                         <div className="field-group">
@@ -93,8 +161,13 @@ const EBookManager = () => {
                             <textarea rows={3} placeholder="Berikan gambaran isi materi ini..." value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} />
                         </div>
                         <div className="field-group">
-                            <label>URL File (Akses G-Drive / Direct PDF)</label>
-                            <input type="text" placeholder="https://drive.google.com/..." value={formData.file_url} onChange={e => setFormData({ ...formData, file_url: e.target.value })} />
+                            <label>Upload File (PDF/Docs)</label>
+                            <input type="file" onChange={handleFileUpload} disabled={uploading} />
+                            {uploading && <small style={{ color: '#ef4444' }}>Sedang mengupload...</small>}
+                        </div>
+                        <div className="field-group">
+                            <label>URL File (Hasil Upload atau Link Luar)</label>
+                            <input type="text" placeholder="https://..." value={formData.file_url} onChange={e => setFormData({ ...formData, file_url: e.target.value })} />
                         </div>
                         <div className="field-group">
                             <label>Status Publikasi</label>
@@ -103,8 +176,14 @@ const EBookManager = () => {
                                 <option value="publish">Publikasikan Sekarang</option>
                             </select>
                         </div>
+                        <div className="field-group">
+                            <label>Versi</label>
+                            <input type="text" value={formData.version} onChange={e => setFormData({ ...formData, version: e.target.value })} />
+                        </div>
                         <div className="form-actions full-width">
-                            <button type="submit" className="btn-submit-premium">Simpan & Ajukan Publikasi</button>
+                            <button type="submit" className="btn-submit-premium" disabled={uploading}>
+                                {editingId ? 'Update Materi' : 'Simpan & Ajukan Publikasi'}
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -122,15 +201,18 @@ const EBookManager = () => {
                             </div>
                         </div>
                         <div className="ebook-info-lux">
-                            <span className="cat-tag">{book.category || 'Materi'}</span>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <span className="cat-tag">{book.category || 'Materi'}</span>
+                                <span className={`status-tag ${book.status}`}>{book.status}</span>
+                            </div>
                             <h4 title={book.title}>{book.title}</h4>
                             <p>{book.description || 'Tidak ada deskripsi tersedia untuk materi ini.'}</p>
 
                             <div className="ebook-meta-footer">
                                 <div className="ver">Version {book.version || '1.0'}</div>
                                 <div className="actions-mini">
-                                    <button className="act-mini edit">Edit</button>
-                                    <button className="act-mini delete">Delete</button>
+                                    <button onClick={() => handleEdit(book)} className="act-mini edit">Edit</button>
+                                    <button onClick={() => handleDelete(book.id)} className="act-mini delete">Delete</button>
                                 </div>
                             </div>
                         </div>
@@ -245,6 +327,13 @@ const EBookManager = () => {
                 }
                 .act-mini.edit { color: #3b82f6; } .act-mini.edit:hover { color: #2563eb; }
                 .act-mini.delete { color: #ef4444; } .act-mini.delete:hover { color: #b91c1c; }
+
+                .status-tag {
+                    font-size: 0.6rem; font-weight: 900; text-transform: uppercase;
+                    padding: 2px 6px; border-radius: 4px; letter-spacing: 0.5px;
+                }
+                .status-tag.publish { background: #dcfce7; color: #166534; }
+                .status-tag.draft { background: #f1f5f9; color: #64748b; }
 
                 @media (max-width: 1400px) { .ebook-grid-premium { grid-template-columns: 1fr 1fr; } }
                 @media (max-width: 900px) { .ebook-grid-premium { grid-template-columns: 1fr; } .premium-form-grid { grid-template-columns: 1fr; } .field-group.full-width { grid-column: span 1; } }
