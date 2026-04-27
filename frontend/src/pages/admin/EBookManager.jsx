@@ -62,7 +62,8 @@ const EBookManager = () => {
             alert('File berhasil diupload!');
         } catch (err) {
             console.error('Upload failed:', err);
-            alert('Gagal mengupload file.');
+            const errMsg = err.response?.data?.error || err.message;
+            alert(`Gagal mengupload file: ${errMsg}`);
         } finally {
             setUploading(false);
         }
