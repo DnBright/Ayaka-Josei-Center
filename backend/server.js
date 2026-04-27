@@ -31,6 +31,10 @@ app.get('/ping', (req, res) => {
     res.send('Ayaka Backend is Alive on Port ' + PORT);
 });
 
+app.get('/api/version', (req, res) => {
+    res.json({ version: '1.2.5', status: 'ready' });
+});
+
 // Database Connection Pool
 const pool = mysql.createPool({
     host: process.env.DB_HOST || 'localhost',
@@ -275,6 +279,57 @@ app.delete('/api/admin/posts/:id', authenticateToken, authorizeRoles('Super Admi
     }
 });
 
+// --- FILE UPLOAD SETUP ---
+const multer = require('multer');
+const uploadDir = path.join(__dirname, 'uploads');
+const ebookDir = path.join(uploadDir, 'ebooks');
+
+if (!fs.existsSync(uploadDir)) {
+    try {
+        fs.mkdirSync(uploadDir, { recursive: true });
+        log('Created upload directory: ' + uploadDir);
+    } catch (e) {
+        log('Failed to create upload directory: ' + e.message);
+    }
+}
+if (!fs.existsSync(ebookDir)) {
+    try {
+        fs.mkdirSync(ebookDir, { recursive: true });
+        log('Created ebooks directory: ' + ebookDir);
+    } catch (e) {
+        log('Failed to create ebooks directory: ' + e.message);
+    }
+}
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, ebookDir);
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ 
+    storage,
+    limits: { fileSize: 50 * 1024 * 1024 } // 50MB limit
+});
+
+app.use('/uploads', express.static(uploadDir));
+
+app.post('/api/admin/upload-ebook', authenticateToken, authorizeRoles('Super Admin', 'Editor', 'Penulis'), upload.single('file'), (req, res) => {
+    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+    const fileUrl = `/uploads/ebooks/${req.file.filename}`;
+    res.json({ url: fileUrl });
+});
+
+app.post('/api/admin/upload-media', authenticateToken, authorizeRoles('Super Admin', 'Editor', 'Penulis'), upload.single('file'), (req, res) => {
+    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+    const fileUrl = `/uploads/ebooks/${req.file.filename}`; // Using same ebooks dir for simplicity or could create mediaDir
+    res.json({ url: fileUrl });
+});
+
 // --- EBOOKS API ---
 app.get('/api/ebooks', async (req, res) => {
     try {
@@ -309,6 +364,30 @@ app.get('/api/admin/ebooks', authenticateToken, authorizeRoles('Super Admin', 'E
     }
 });
 
+app.get('/api/admin/ebooks/:id', authenticateToken, authorizeRoles('Super Admin', 'Editor', 'Penulis'), async (req, res) => {
+    const { id } = req.params;
+    try {
+        const [rows] = await pool.query(`
+            SELECT e.*, COALESCE(u.username, a.username) as author_name 
+            FROM ebooks e 
+            LEFT JOIN users u ON e.author_id = u.id AND e.author_source = 'users'
+            LEFT JOIN admins a ON e.author_id = a.id AND e.author_source = 'admins'
+            WHERE e.id = ?
+        `, [id]);
+
+        if (rows.length === 0) return res.status(404).json({ error: 'E-book not found' });
+
+        const ebook = rows[0];
+        if (req.user.role === 'Penulis' && (ebook.author_id !== req.user.id || ebook.author_source !== 'users')) {
+            return res.status(403).json({ error: 'Not authorized' });
+        }
+
+        res.json(ebook);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 app.post('/api/admin/ebooks', authenticateToken, authorizeRoles('Super Admin', 'Editor', 'Penulis'), async (req, res) => {
     const { title, description, file_url, category, version, status } = req.body;
     const author_id = req.user.id;
@@ -320,6 +399,46 @@ app.post('/api/admin/ebooks', authenticateToken, authorizeRoles('Super Admin', '
             [title, description, file_url, category, version, author_id, author_source, status]
         );
         res.json({ id: result.insertId, message: 'E-book created successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.put('/api/admin/ebooks/:id', authenticateToken, authorizeRoles('Super Admin', 'Editor', 'Penulis'), async (req, res) => {
+    const { id } = req.params;
+    const { title, description, file_url, category, version, status } = req.body;
+
+    try {
+        if (req.user.role === 'Penulis') {
+            const [books] = await pool.query("SELECT author_id, author_source FROM ebooks WHERE id = ?", [id]);
+            if (books.length === 0 || books[0].author_id !== req.user.id || books[0].author_source !== 'users') {
+                return res.status(403).json({ error: 'Not authorized' });
+            }
+        }
+
+        await pool.execute(
+            `UPDATE ebooks SET title = ?, description = ?, file_url = ?, category = ?, version = ?, status = ? WHERE id = ?`,
+            [title, description, file_url, category, version, status, id]
+        );
+        res.json({ message: 'E-book updated successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.delete('/api/admin/ebooks/:id', authenticateToken, authorizeRoles('Super Admin', 'Editor', 'Penulis'), async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        if (req.user.role === 'Penulis') {
+            const [books] = await pool.query("SELECT author_id, author_source FROM ebooks WHERE id = ?", [id]);
+            if (books.length === 0 || books[0].author_id !== req.user.id || books[0].author_source !== 'users') {
+                return res.status(403).json({ error: 'Not authorized' });
+            }
+        }
+
+        await pool.execute("DELETE FROM ebooks WHERE id = ?", [id]);
+        res.json({ message: 'E-book deleted successfully' });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
