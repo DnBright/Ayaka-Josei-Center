@@ -71,10 +71,22 @@ async function ensureDBSchema(pool) {
         await pool.query(`CREATE TABLE IF NOT EXISTS media (id INT AUTO_INCREMENT PRIMARY KEY, filename VARCHAR(255), url TEXT, type VARCHAR(50), uploaded_by INT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)`);
         
         log('Database Schema is verified.');
+        return { success: true, message: 'Database schema verified/updated' };
     } catch (err) {
         log('Schema fix error: ' + err.message);
+        return { success: false, error: err.message };
     }
 }
+
+// Emergency DB Repair Route
+app.get('/api/admin/db-repair', async (req, res) => {
+    const result = await ensureDBSchema(pool);
+    if (result.success) {
+        res.send('<h1>✅ Database Ayaka Berhasil Diperbaiki!</h1><p>Kolom "excerpt" dan tabel lainnya telah ditambahkan. Silakan coba tambah artikel lagi.</p><a href="/admin/articles">Kembali ke Dashboard</a>');
+    } else {
+        res.status(500).send('<h1>❌ Gagal Memperbaiki Database</h1><p>Error: ' + result.error + '</p>');
+    }
+});
 
 (async function initSync() {
     try {
