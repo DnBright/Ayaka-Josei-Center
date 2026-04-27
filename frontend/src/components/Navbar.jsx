@@ -49,7 +49,7 @@ const Navbar = () => {
     { name: t('nav.program'), href: '/program', isAnchor: false },
     { name: t('nav.galeri'), href: '/galeri', isAnchor: false },
     { name: t('nav.blog'), href: '/blog', isAnchor: false },
-    { name: t('nav.ebook'), href: '/ebook', isAnchor: false },
+    ...(member ? [{ name: t('nav.ebook'), href: '/ebook', isAnchor: false }] : []),
     { name: t('nav.alumni'), href: '/alumni', isAnchor: false },
     { name: t('nav.kontak'), href: '/kontak', isAnchor: false },
   ];

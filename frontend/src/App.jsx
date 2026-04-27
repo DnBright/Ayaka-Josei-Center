@@ -45,6 +45,13 @@ import { API_URL } from './config';
 
 
 
+// MEMBER GUARD COMPONENT
+const MemberGuard = ({ children }) => {
+  const token = localStorage.getItem('member_token');
+  if (!token) return <Navigate to="/login" replace />;
+  return children;
+};
+
 // ROLE GUARD COMPONENT
 const RoleGuard = ({ children, allowedRoles }) => {
   const path = window.location.pathname;
@@ -115,7 +122,7 @@ function App() {
             <Route path="/alumni" element={<AlumniPage content={content} />} />
             <Route path="/kontak" element={<ContactPage content={content} />} />
             <Route path="/login" element={<MemberLogin />} />
-            <Route path="/ebook" element={<EBookPage />} />
+            <Route path="/ebook" element={<MemberGuard><EBookPage /></MemberGuard>} />
           </Route>
 
           {/* Member Auth Routes */}
