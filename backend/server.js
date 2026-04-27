@@ -70,7 +70,24 @@ async function ensureDBSchema(pool) {
             }
         }
 
-        // 2. Create missing tables
+        // 2. Fix 'ebooks' table columns
+        const [ebookColumns] = await pool.query('SHOW COLUMNS FROM ebooks');
+        const ebookColumnNames = ebookColumns.map(c => c.Field);
+
+        const ebookColumnsToAdd = [
+            { name: 'author_id', type: 'INT' },
+            { name: 'author_source', type: "VARCHAR(50) DEFAULT 'admins'" },
+            { name: 'status', type: "VARCHAR(50) DEFAULT 'draft'" }
+        ];
+
+        for (const col of ebookColumnsToAdd) {
+            if (!ebookColumnNames.includes(col.name)) {
+                log(`Adding column "${col.name}" to "ebooks" table...`);
+                await pool.query(`ALTER TABLE ebooks ADD COLUMN ${col.name} ${col.type}`);
+            }
+        }
+
+        // 3. Create missing tables
         await pool.query(`CREATE TABLE IF NOT EXISTS communications (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255), subject VARCHAR(255), message TEXT, status VARCHAR(50) DEFAULT 'unread', created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)`);
         await pool.query(`CREATE TABLE IF NOT EXISTS media (id INT AUTO_INCREMENT PRIMARY KEY, filename VARCHAR(255), url TEXT, type VARCHAR(50), uploaded_by INT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)`);
         
