@@ -1,10 +1,10 @@
 import { API_URL } from '../../config';
 import React, { useState, useEffect } from 'react';
-import { Bell, User, Search, LogOut, ChevronDown } from 'lucide-react';
+import { Bell, User, Search, LogOut, ChevronDown, Menu } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
-const AdminHeader = ({ title }) => {
+const AdminHeader = ({ title, onToggleSidebar }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const isPenulisPath = location.pathname.startsWith('/penulis');
@@ -59,10 +59,15 @@ const AdminHeader = ({ title }) => {
     return (
         <header className="admin-header glass">
             <div className="header-content">
-                <h2 className="page-title">{title}</h2>
+                <div className="header-left">
+                    <button className="mobile-menu-btn" onClick={onToggleSidebar}>
+                        <Menu size={24} />
+                    </button>
+                    <h2 className="page-title">{title}</h2>
+                </div>
 
                 <div className="header-actions">
-                    <form onSubmit={handleSearch} className="search-bar">
+                    <form onSubmit={handleSearch} className="search-bar desktop-only">
                         <Search size={18} className="search-icon" />
                         <input
                             type="text"
@@ -76,7 +81,7 @@ const AdminHeader = ({ title }) => {
                         {!isPenulisPath && (
                             <button
                                 className="icon-btn"
-                                onClick={() => navigate('/admin/communication')}
+                                onClick={() => navigate('/admin/communications')}
                                 title="Pesan Masuk"
                             >
                                 <Bell size={20} />
@@ -92,11 +97,11 @@ const AdminHeader = ({ title }) => {
                                 <div className="avatar">
                                     <User size={20} />
                                 </div>
-                                <div className="user-info">
+                                <div className="user-info desktop-only">
                                     <span className="name">{username}</span>
                                     <span className="role">{role}</span>
                                 </div>
-                                <ChevronDown size={16} className={`chevron ${showProfileMenu ? 'rotate' : ''}`} />
+                                <ChevronDown size={16} className={`chevron ${showProfileMenu ? 'rotate' : ''} desktop-only`} />
                             </div>
 
                             {showProfileMenu && (
@@ -119,7 +124,7 @@ const AdminHeader = ({ title }) => {
 
             <style>{`
         .admin-header {
-          height: 80px;
+          height: var(--admin-header-height);
           position: sticky;
           top: 0;
           z-index: 1001; /* Higher than sidebar */
@@ -137,6 +142,40 @@ const AdminHeader = ({ title }) => {
           justify-content: space-between;
           max-width: 1600px;
           margin: 0 auto;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            color: #0f172a;
+            transition: all 0.2s;
+        }
+
+        .mobile-menu-btn:hover {
+            background: #f1f5f9;
+            color: #ef4444;
+        }
+
+        @media (max-width: 1024px) {
+            .admin-header { padding: 0 1.5rem; }
+            .mobile-menu-btn { display: flex; }
+            .desktop-only { display: none !important; }
+        }
+
+        @media (max-width: 640px) {
+            .admin-header { padding: 0 1rem; }
+            .page-title { font-size: 1.1rem; }
+            .header-actions { gap: 1rem; }
         }
 
         .page-title {

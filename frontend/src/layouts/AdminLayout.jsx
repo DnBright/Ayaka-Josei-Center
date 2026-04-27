@@ -4,6 +4,7 @@ import Sidebar from '../components/admin/Sidebar';
 import AdminHeader from '../components/admin/AdminHeader';
 
 const AdminLayout = () => {
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     const path = window.location.pathname;
     const isPenulisPath = path.startsWith('/penulis');
     const keyPrefix = isPenulisPath ? 'penulis_' : 'admin_';
@@ -16,10 +17,21 @@ const AdminLayout = () => {
 
     return (
         <div className="admin-layout">
-            <Sidebar />
+            {/* Mobile Overlay */}
+            {sidebarOpen && (
+                <div 
+                    className="sidebar-overlay" 
+                    onClick={() => setSidebarOpen(false)}
+                />
+            )}
 
-            <div className="admin-main">
-                <AdminHeader title="Dashboard Overview" />
+            <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+            <div className={`admin-main ${sidebarOpen ? 'sidebar-pushed' : ''}`}>
+                <AdminHeader 
+                    title="Dashboard Overview" 
+                    onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+                />
 
                 <div className="admin-content-wrapper">
                     <Outlet />
@@ -41,6 +53,16 @@ const AdminLayout = () => {
                     min-height: 100vh;
                     background: var(--admin-bg);
                     font-family: 'DM Sans', 'Inter', sans-serif;
+                    overflow-x: hidden;
+                }
+
+                .sidebar-overlay {
+                    position: fixed;
+                    inset: 0;
+                    background: rgba(0,0,0,0.5);
+                    z-index: 45;
+                    backdrop-filter: blur(4px);
+                    transition: opacity 0.3s;
                 }
 
                 .admin-main {
@@ -49,6 +71,7 @@ const AdminLayout = () => {
                     display: flex;
                     flex-direction: column;
                     width: calc(100% - var(--admin-sidebar-width));
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 }
 
                 .admin-content-wrapper {
@@ -57,6 +80,22 @@ const AdminLayout = () => {
                     max-width: 1600px;
                     margin: 0 auto;
                     width: 100%;
+                }
+
+                @media (max-width: 1024px) {
+                    .admin-main {
+                        margin-left: 0;
+                        width: 100%;
+                    }
+                    .admin-content-wrapper {
+                        padding: 1.5rem;
+                    }
+                }
+
+                @media (max-width: 640px) {
+                    .admin-content-wrapper {
+                        padding: 1rem;
+                    }
                 }
 
                 /* STANDARDIZED ADMIN COMPONENTS */
@@ -123,8 +162,65 @@ const AdminLayout = () => {
                 .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
                 .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
                 
+                @media (max-width: 640px) {
+                    .admin-content-wrapper {
+                        padding: 1rem;
+                    }
+                }
+
+                /* Responsive Tables Global */
+                .premium-table-container {
+                    overflow-x: auto;
+                    -webkit-overflow-scrolling: touch;
+                }
+                .premium-table-lux {
+                    min-width: 800px; /* Force scroll on small screens */
+                }
                 @media (max-width: 1024px) {
-                    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+                    .premium-table-lux { min-width: 700px; }
+                }
+
+                /* Responsive Grids & Wrappers */
+                .manager-header {
+                    flex-direction: column;
+                    align-items: flex-start !important;
+                    gap: 1.5rem;
+                }
+                @media (min-width: 768px) {
+                    .manager-header {
+                        flex-direction: row;
+                        align-items: center !important;
+                    }
+                }
+
+                .manager-filters {
+                    flex-direction: column;
+                    align-items: stretch !important;
+                    gap: 1rem !important;
+                }
+                @media (min-width: 768px) {
+                    .manager-filters {
+                        flex-direction: row;
+                        align-items: center !important;
+                    }
+                }
+
+                /* 6. Form Grids */
+                .premium-form-grid {
+                    grid-template-columns: 1fr !important;
+                }
+                @media (min-width: 768px) {
+                    .premium-form-grid {
+                        grid-template-columns: repeat(2, 1fr) !important;
+                    }
+                }
+                .field-group.full-width {
+                    grid-column: span 1 !important;
+                }
+                @media (min-width: 768px) {
+                    .field-group.full-width {
+                        grid-column: span 2 !important;
+                    }
                 }
             `}</style>
         </div>

@@ -10,7 +10,7 @@ import {
   LogOut
 } from 'lucide-react';
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -58,11 +58,15 @@ const Sidebar = () => {
   const navItems = (role === 'Super Admin' || role === 'Editor') ? adminItems : authorItems;
 
   return (
-    <aside className="admin-sidebar glass">
+    <aside className={`admin-sidebar ${isOpen ? 'mobile-open' : ''}`}>
       <div className="sidebar-header">
         <div className="logo-section">
           <span className="brand-red">Ayaka</span> Josei Center
         </div>
+        {/* Mobile Close Button */}
+        <button className="mobile-close" onClick={onClose}>
+            <X size={24} />
+        </button>
       </div>
 
       <nav className="sidebar-nav">
@@ -72,6 +76,7 @@ const Sidebar = () => {
             to={item.path}
             end={item.end}
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+            onClick={() => { if (window.innerWidth < 1024) onClose(); }}
           >
             {item.icon}
             <span>{item.label}</span>
@@ -99,6 +104,29 @@ const Sidebar = () => {
           z-index: 50;
           box-shadow: 10px 0 40px rgba(0,0,0,0.1);
           border-right: 1px solid rgba(255,255,255,0.05);
+          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media (max-width: 1024px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+            }
+            .admin-sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            .mobile-close {
+                display: flex !important;
+            }
+        }
+
+        .mobile-close {
+            display: none;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 8px;
+            border-radius: 10px;
+            cursor: pointer;
         }
 
         .sidebar-header {
