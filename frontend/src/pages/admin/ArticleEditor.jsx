@@ -115,6 +115,11 @@ const ArticleEditor = () => {
                     background: #f0f0f1; /* WP Admin Background */
                     padding: 2rem;
                 }
+                @media (max-width: 768px) {
+                    .article-editor-wp {
+                        padding: 1rem;
+                    }
+                }
                 .wp-input-title {
                     font-size: 1.5rem;
                     border: 1px solid #ddd;

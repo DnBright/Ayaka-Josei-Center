@@ -337,7 +337,34 @@ const EBookManager = () => {
                 .status-tag.draft { background: #f1f5f9; color: #64748b; }
 
                 @media (max-width: 1400px) { .ebook-grid-premium { grid-template-columns: 1fr 1fr; } }
-                @media (max-width: 900px) { .ebook-grid-premium { grid-template-columns: 1fr; } .premium-form-grid { grid-template-columns: 1fr; } .field-group.full-width { grid-column: span 1; } }
+                @media (max-width: 900px) { 
+                    .ebook-grid-premium { grid-template-columns: 1fr; } 
+                    .premium-form-grid { grid-template-columns: 1fr; } 
+                    .field-group.full-width { grid-column: span 1; } 
+                }
+                @media (max-width: 640px) {
+                    .ebook-card-lux {
+                        flex-direction: column;
+                        align-items: center;
+                        text-align: center;
+                        padding: 1.2rem;
+                    }
+                    .ebook-thumb {
+                        width: 120px;
+                        height: 150px;
+                        margin-bottom: 1rem;
+                    }
+                    .ebook-info-lux {
+                        width: 100%;
+                    }
+                    .ebook-info-lux h4 {
+                        white-space: normal;
+                    }
+                    .ebook-meta-footer {
+                        flex-direction: column;
+                        gap: 1rem;
+                    }
+                }
             `}</style>
         </div>
     );

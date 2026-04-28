@@ -252,7 +252,16 @@ const UserManager = () => {
                 .premium-tabs-lux { 
                     display: flex; gap: 2rem; border-bottom: 2px solid #f1f5f9; 
                     margin-bottom: 2.5rem; padding-bottom: 2px;
+                    overflow-x: auto;
+                    -webkit-overflow-scrolling: touch;
                 }
+                .premium-tabs-lux::-webkit-scrollbar { display: none; } /* Hide scrollbar but keep functionality */
+
+                @media (max-width: 768px) {
+                    .premium-tabs-lux { gap: 1rem; }
+                    .tab-item-lux { font-size: 0.9rem; white-space: nowrap; }
+                }
+                
                 .tab-item-lux { 
                     background: none; border: none; padding: 0.8rem 0;
                     font-size: 1rem; font-weight: 700; color: #94a3b8;

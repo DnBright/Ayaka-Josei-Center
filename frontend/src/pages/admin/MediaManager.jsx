@@ -179,8 +179,13 @@ const MediaManager = () => {
 
                 @media (max-width: 768px) {
                     .media-header { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
-                    .premium-toolbar-lux { flex-direction: column; gap: 1rem; }
+                    .premium-toolbar-lux { flex-direction: column; gap: 1rem; padding: 1.2rem; }
                     .search-box-lux { width: 100%; }
+                    .filter-actions-lux { width: 100%; justify-content: space-between; }
+                    .premium-media-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; }
+                }
+                @media (max-width: 480px) {
+                    .premium-media-grid { grid-template-columns: 1fr; }
                 }
             `}</style>
         </div>
