@@ -7,7 +7,8 @@ import {
   MessageSquare,
   Users,
   Settings,
-  LogOut
+  LogOut,
+  X
 } from 'lucide-react';
 
 const Sidebar = ({ isOpen, onClose }) => {
