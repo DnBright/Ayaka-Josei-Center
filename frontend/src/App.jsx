@@ -157,6 +157,8 @@ function App() {
             <Route path="communications" element={<Communication />} />
             <Route path="users" element={<UserManager />} />
             <Route path="settings" element={<Settings />} />
+            {/* Catch-all to fix white screen on old bookmarked URLs like /admin/dashboard */}
+            <Route path="*" element={<Navigate to="/admin" replace />} />
           </Route>
 
           {/* PENULIS ROUTES (Author) */}
@@ -176,6 +178,7 @@ function App() {
             <Route path="ebooks" element={<EBookManager />} />
             <Route path="media" element={<MediaManager />} />
             <Route path="profile" element={<AuthorProfile />} />
+            <Route path="*" element={<Navigate to="/penulis" replace />} />
           </Route>
         </Routes>
       </div>
